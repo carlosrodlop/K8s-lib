@@ -1,0 +1,39 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: oc-casc-bundle
+data:
+  bundle.yaml: |-
+    {{ .Files.Get "casc/oc/{{ .Values.OperationCenter.Casc.OperationCenterBundle }}/bundle.yaml" | indent 4 }}
+  main.yaml: |-
+    {{ .Files.Get "casc/oc/{{ .Values.OperationCenter.Casc.OperationCenterBundle }}/main.yaml" | indent 4 }}
+  location.yaml: |-
+    unclassified:
+      location:
+        url: {{ .Values.OperationCenter.Protocol }}://{{ .Values.OperationCenter.Hostname }}/cjoc/
+  controllerBundleStorageSCM.yaml: |-
+    unclassified:
+      # Best-Practice: Use SCM for Managed Master Casc Bundles
+      # https://docs.cloudbees.com/docs/cloudbees-ci/2.332.3.4/casc-controller/add-bundle#_adding_casc_bundles_from_an_scm_tool
+      bundleStorageService:
+        activated: true
+        activeBundle:
+          name: "casc-store"
+          retriever:
+            SCM:
+              scmSource:
+                git:
+                  credentialsId: "GH-token"
+                  remote: {{ .Values.OperationCenter.Casc.ControllerBundleStorageSCM }}
+                  traits:
+                    - "gitBranchDiscovery"
+  credentials.yaml: |-
+    {{ .Files.Get "casc/oc/{{ .Values.OperationCenter.Casc.OperationCenterBundle }}/credentials.yaml" | indent 4 }}
+  security.yaml: |-
+    {{ .Files.Get "casc/oc/{{ .Values.OperationCenter.Casc.OperationCenterBundle }}/security.yaml" | indent 4 }}
+  plugins.yaml: |-
+    {{ .Files.Get "casc/oc/{{ .Values.OperationCenter.Casc.OperationCenterBundle }}/plugins.yaml" | indent 4 }}
+  items-controllers.yaml: |-
+    {{ .Files.Get "casc/oc/{{ .Values.OperationCenter.Casc.OperationCenterBundle }}/items-controllers.yaml" | indent 4 }}
+  rbac.yaml: |-
+    {{ .Files.Get "casc/oc/{{ .Values.OperationCenter.Casc.OperationCenterBundle }}/rbac.yaml" | indent 4 }}
