@@ -26,5 +26,3 @@ repos:
     hooks:
       - id: helm-docs
         files: ^charts/
-      - id: helm-docs-built
-        files: ^charts/
