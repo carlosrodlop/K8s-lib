@@ -1,6 +1,6 @@
 MKFILE   		:= $(abspath $(dir $(lastword $(MAKEFILE_LIST))))
-PARENT_MKFILE   := $(HOME)/.Makefile
-#PARENT_MKFILE   := $(MKFILE)/../../carlosrodlop/Makefile # local
+#PARENT_MKFILE   := $(HOME)/.Makefile
+PARENT_MKFILE   := $(MKFILE)/../../carlosrodlop/Makefile # local
 DEBUG			:= true
 DIR_SHARED_CB	:= $(MKFILE)/../shared/cb
 DIR_TF_ROOT		:= $(MKFILE)/../terraform/root
