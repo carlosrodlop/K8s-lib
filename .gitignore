@@ -1,0 +1,10 @@
+.env
+!.env.example
+secrets.yaml
+*secrets.yaml
+!*oc-secrets.yaml
+!*secrets.yaml.example
+!*secrets.yaml.example.enc
+kubeconfig-*.yaml
+!kubeconfig-*.yaml.enc
+root/cloudbees/values.yaml
