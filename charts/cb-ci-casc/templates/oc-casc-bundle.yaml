@@ -2,11 +2,13 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: oc-casc-bundle
+  annotations:
+    docs: "https://docs.cloudbees.com/docs/cloudbees-ci/latest/casc-oc/configure-oc-modern"
 data:
   bundle.yaml: |-
-    {{ .Files.Get "casc/oc/{{ .Values.OperationCenter.Casc.OperationCenterBundle }}/bundle.yaml" | indent 4 }}
+{{ .Files.Get "casc/oc/general/bundle.yaml" | indent 4 }}
   main.yaml: |-
-    {{ .Files.Get "casc/oc/{{ .Values.OperationCenter.Casc.OperationCenterBundle }}/main.yaml" | indent 4 }}
+{{ .Files.Get "casc/oc/general/main.yaml" | indent 4 }}
   location.yaml: |-
     unclassified:
       location:
@@ -28,12 +30,12 @@ data:
                   traits:
                     - "gitBranchDiscovery"
   credentials.yaml: |-
-    {{ .Files.Get "casc/oc/{{ .Values.OperationCenter.Casc.OperationCenterBundle }}/credentials.yaml" | indent 4 }}
+{{ .Files.Get "casc/oc/general/credentials.yaml" | indent 4 }}
   security.yaml: |-
-    {{ .Files.Get "casc/oc/{{ .Values.OperationCenter.Casc.OperationCenterBundle }}/security.yaml" | indent 4 }}
+{{ .Files.Get "casc/oc/general/security.yaml" | indent 4 }}
   plugins.yaml: |-
-    {{ .Files.Get "casc/oc/{{ .Values.OperationCenter.Casc.OperationCenterBundle }}/plugins.yaml" | indent 4 }}
+{{ .Files.Get "casc/oc/general/plugins.yaml" | indent 4 }}
   items-controllers.yaml: |-
-    {{ .Files.Get "casc/oc/{{ .Values.OperationCenter.Casc.OperationCenterBundle }}/items-controllers.yaml" | indent 4 }}
+{{ .Files.Get "casc/oc/general/items-controllers.yaml" | indent 4 }}
   rbac.yaml: |-
-    {{ .Files.Get "casc/oc/{{ .Values.OperationCenter.Casc.OperationCenterBundle }}/rbac.yaml" | indent 4 }}
+{{ .Files.Get "casc/oc/general/rbac.yaml" | indent 4 }}
