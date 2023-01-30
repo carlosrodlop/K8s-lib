@@ -6,3 +6,4 @@
 ## References
 
 - [Artifact Hub](https://artifacthub.io/)
+- https://github.com/komodorio/helm-dashboard

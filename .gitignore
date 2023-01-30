@@ -8,3 +8,5 @@ secrets.yaml
 kubeconfig-*.yaml
 !kubeconfig-*.yaml.enc
 root/cloudbees/values.yaml
+nohup.out
+values.*.yaml
