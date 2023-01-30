@@ -2,8 +2,9 @@
 
 - It contains charts and roots deployments for different Applications and Kubernetes add-ons-
 - It uses the [Docker Labs](https://github.com/carlosrodlop/docker-labs) repository to run its content and make this content portable.
+- It uses
 
 ## References
 
+- [Helm dashboard | komodorio](https://github.com/komodorio/helm-dashboard)
 - [Artifact Hub](https://artifacthub.io/)
-- https://github.com/komodorio/helm-dashboard
