@@ -35,7 +35,7 @@ helm-dashboard:
 	nohup helm dashboard --no-browser --port=$(HELM_DB_PORT) &
 
 .PHONY: cbci-helm-update
-cbci-helm-update: ## Install and Update CloudBees Core via Helm. It requires the file .env
+cbci-helm-update: ## Install and Update CloudBees Core via Helm. It requires the file .env and KUBECTL environment variable
 cbci-helm-update: check_kubeconfig check_envfile guard-CLOUD_TPL
 	$(call print_subtitle,Update Casc values.yaml)
 	source .env && \
@@ -59,7 +59,7 @@ cbci-helm-update: check_kubeconfig check_envfile guard-CLOUD_TPL
 
 
 .PHONY: cbci-helm-delete
-cbci-helm-delete: ## Delete CloudBees Core via Helm
+cbci-helm-delete: ## Delete CloudBees Core via Helm. It requires the file .env and KUBECTL environment variable
 cbci-helm-delete: check_kubeconfig check_envfile
 	$(call print_title,Uninstall CloudBees Core via Helm)
 	source .env && \
