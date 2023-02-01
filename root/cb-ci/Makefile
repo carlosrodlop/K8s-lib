@@ -57,7 +57,6 @@ cbci-helm-update: check_kubeconfig check_envfile guard-CLOUD_TPL
 		helm repo update && \
 		helm upgrade --install cbci cloudbees/cloudbees-core --create-namespace --namespace "$$CBCI_NS" --version "$$CBCI_VERSION" -f "helm/values.cb-ci.yaml"
 
-
 .PHONY: cbci-helm-delete
 cbci-helm-delete: ## Delete CloudBees Core via Helm. It requires the file .env and KUBECTL environment variable
 cbci-helm-delete: check_kubeconfig check_envfile
