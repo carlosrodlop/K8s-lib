@@ -29,11 +29,6 @@ else
 	@exit 1
 endif
 
-.PHONY: helm-dashboard
-helm-dashboard: ## Open Helm Dashboard
-helm-dashboard:
-	nohup helm dashboard --no-browser --port=$(HELM_DB_PORT) &
-
 .PHONY: cbci-helm-update
 cbci-helm-update: ## Install and Update CloudBees Core via Helm. It requires the file .env and KUBECTL environment variable
 cbci-helm-update: check_kubeconfig check_envfile guard-CLOUD_TPL

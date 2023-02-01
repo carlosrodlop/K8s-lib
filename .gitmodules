@@ -1,3 +1,6 @@
 [submodule "charts/cb-ci-casc/casc/oc"]
 	path = charts/cb-ci-casc/casc/oc
 	url = git@github.com:carlosrodlop/cb-casc-oc.git
+[submodule "charts/cb-ci-casc/casc/controllers"]
+	path = charts/cb-ci-casc/casc/controllers
+	url = git@github.com:carlosrodlop/cb-casc-controllers.git
