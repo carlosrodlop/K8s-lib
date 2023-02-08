@@ -1,6 +1,6 @@
 MKFILE   		:= $(abspath $(dir $(lastword $(MAKEFILE_LIST))))
-#PARENT_MKFILE   := $(HOME)/.Makefile # docker
-PARENT_MKFILE   := $(MKFILE)/../../../carlosrodlop/Makefile # local
+PARENT_MKFILE   := $(HOME)/.Makefile # docker
+#PARENT_MKFILE   := $(MKFILE)/../../../carlosrodlop/Makefile # local
 DIR_TF_ROOT		:= $(MKFILE)/../../../terraform-labs/aws/root/aws
 DIR_CHARTS 		:= $(MKFILE)/../../charts
 
@@ -21,7 +21,7 @@ ifndef KUBECONFIG
 endif
 
 .PHONY: check_envfile
-check_envfile: ## Check for the required KUBECONFIG environment variable
+check_envfile: ## Check for the required .env file
 check_envfile:
 ifneq ("$(wildcard .env)","")
 else
@@ -30,7 +30,7 @@ else
 endif
 
 .PHONY: cbci-helm-update
-cbci-helm-update: ## Install and Update CloudBees Core via Helm. It requires the file .env and KUBECTL environment variable
+cbci-helm-update: ## Install and Update CloudBees Core via Helm.
 cbci-helm-update: check_kubeconfig check_envfile guard-CLOUD_TPL
 	$(call print_subtitle,Update Casc values.yaml)
 	source .env && \
@@ -40,7 +40,8 @@ cbci-helm-update: check_kubeconfig check_envfile guard-CLOUD_TPL
 			s/<OC_BUNDLE>/$$OC_BUNDLE/g; \
 			s/<SECRET_GH_TOKEN>/$$SECRET_GH_TOKEN/g; \
 			s/<SECRET_GH_USER>/$$SECRET_GH_USER/g; \
-			s/<SECRET_JENKINS_PASS>/$$SECRET_JENKINS_PASS/g;" < helm/values.cb-ci-casc.yaml.tpl > helm/values.cb-ci-casc.yaml && \
+			s/<SECRET_JENKINS_PASS>/$$SECRET_JENKINS_PASS/g; \
+			s/<AGENT_NAMESPACE>/$$AGENT_NA/g;" < helm/values.cb-ci-casc.yaml.tpl > helm/values.cb-ci-casc.yaml && \
 		helm upgrade --install cbci-casc $(DIR_CHARTS)/cb-ci-casc --create-namespace --namespace "$$CBCI_NS" -f "helm/values.cb-ci-casc.yaml"
 	$(call print_subtitle,Update CloudBees values.yaml)
 	source .env && \
@@ -51,9 +52,12 @@ cbci-helm-update: check_kubeconfig check_envfile guard-CLOUD_TPL
 		helm repo add cloudbees https://public-charts.artifacts.cloudbees.com/repository/public/ && \
 		helm repo update && \
 		helm upgrade --install cbci cloudbees/cloudbees-core --create-namespace --namespace "$$CBCI_NS" --version "$$CBCI_VERSION" -f "helm/values.cb-ci.yaml"
+	sleep 3
+	kubectl rollout status sts cjoc --namespace cbci
+	kubectl get secret oc-secrets -n cbci -o jsonpath='{.data.jenkinsPass}' | base64 --decode
 
 .PHONY: cbci-helm-delete
-cbci-helm-delete: ## Delete CloudBees Core via Helm. It requires the file .env and KUBECTL environment variable
+cbci-helm-delete: ## Delete CloudBees Core via Helm.
 cbci-helm-delete: check_kubeconfig check_envfile
 	$(call print_title,Uninstall CloudBees Core via Helm)
 	source .env && \

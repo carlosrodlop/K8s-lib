@@ -6,7 +6,7 @@ OperationCenter:
   Protocol: "http"
   Hostname:
   Casc:
-    OperationCenterBundle: "general"
+    OperationCenterBundle: "modern.general"
     ControllerBundleStorageSCM:
   Credentials:
     Github:
@@ -14,3 +14,7 @@ OperationCenter:
       User:
   Security:
     JenkinsPass:
+ManagedControllers:
+  loadCount: 5
+Agents:
+  Namespace:

@@ -36,4 +36,3 @@ Agents:
   SeparateNamespace:
     Enabled: true
     Name: <AGENT_NAMESPACE>
-    Create: true

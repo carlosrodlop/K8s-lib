@@ -10,3 +10,5 @@ OperationCenter:
       User: <SECRET_GH_USER>
   Security:
     JenkinsPass: <SECRET_JENKINS_PASS>
+Agents:
+  Namespace: <AGENT_NAMESPACE>
