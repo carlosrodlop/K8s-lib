@@ -6,9 +6,9 @@ metadata:
     docs: "https://docs.cloudbees.com/docs/cloudbees-ci/latest/casc-oc/configure-oc-modern"
 data:
   bundle.yaml: |-
-{{ .Files.Get "casc/oc/general/bundle.yaml" | indent 4 }}
+{{ .Files.Get "casc/oc/modern/bundle.yaml" | indent 4 }}
   main.yaml: |-
-{{ .Files.Get "casc/oc/general/main.yaml" | indent 4 }}
+{{ .Files.Get "casc/oc/modern/main.yaml" | indent 4 }}
   location.yaml: |-
     unclassified:
       location:
@@ -30,12 +30,34 @@ data:
                   traits:
                     - "gitBranchDiscovery"
   credentials.yaml: |-
-{{ .Files.Get "casc/oc/general/credentials.yaml" | indent 4 }}
+{{ .Files.Get "casc/oc/modern/credentials.yaml" | indent 4 }}
   security.yaml: |-
-{{ .Files.Get "casc/oc/general/security.yaml" | indent 4 }}
+{{ .Files.Get "casc/oc/modern/security.yaml" | indent 4 }}
   plugins.yaml: |-
-{{ .Files.Get "casc/oc/general/plugins.yaml" | indent 4 }}
+{{ .Files.Get "casc/oc/modern/plugins.yaml" | indent 4 }}
   items-controllers.yaml: |-
-{{ .Files.Get "casc/oc/general/items-controllers.yaml" | indent 4 }}
+{{ .Files.Get "casc/oc/modern/items-controllers.yaml" | indent 4 }}
+  items-load-controllers.yaml: |-
+    removeStrategy:
+      items: NONE
+      rbac: SYNC
+{{- if gt (int .Values.ManagedControllers.loadCount) 0 }}
+    items:
+{{- range (untilStep 0 (int .Values.ManagedControllers.loadCount) 1) }}
+    - kind: managedController
+      name: load-boy{{ . }}
+      properties:
+      - configurationAsCode:
+          bundle: "modern.load-boy"
+      configuration:
+        kubernetes:
+          domain: load-boy{{ . }}
+          memory: 1500
+          cpus: 1.0
+          disk: 30
+{{- end }}
+{{- else }}
+    items: []
+{{- end }}
   rbac.yaml: |-
-{{ .Files.Get "casc/oc/general/rbac.yaml" | indent 4 }}
+{{ .Files.Get "casc/oc/modern/rbac.yaml" | indent 4 }}
