@@ -20,7 +20,7 @@ k8s_db-eks_update: check_kubeconfig
 
 	kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.5.0/aio/deploy/recommended.yaml
 	kubectl apply -f eks-admin
-	kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep eks-admin | awk '{print $1}')
+	kubectl -n kube-system describe secret $(shell kubectl -n kube-system get secret | grep eks-admin | awk '{print $1}')
 
 .PHONY: k8s_db-eks_delete
 k8s_db-eks_delete: ## Remove K8s Dashboard in EKS
