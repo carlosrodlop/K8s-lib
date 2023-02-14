@@ -10,5 +10,7 @@ OperationCenter:
       User: <SECRET_GH_USER>
   Security:
     JenkinsPass: <SECRET_JENKINS_PASS>
+ManagedControllers:
+  loadCount: <N_LOAD_CONTROLLERS>
 Agents:
   Namespace: <AGENT_NAMESPACE>

@@ -7,8 +7,7 @@ DIR_CHARTS 		:= $(MKFILE)/../../charts
 include $(PARENT_MKFILE)
 
 #DEFAULTS
-CLOUD_TPL		?= eks.alb.yaml.tpl
-HELM_DB_PORT	?= 8989
+CLOUD_TPL		?= eks.nginx+nlp.yaml.tpl
 
 #https://kubernetes.io/docs/concepts/configuration/organize-cluster-access-kubeconfig/#the-kubeconfig-environment-variable
 .PHONY: check_kubeconfig
@@ -41,6 +40,7 @@ cbci-helm-update: check_kubeconfig check_envfile guard-CLOUD_TPL
 			s/<SECRET_GH_TOKEN>/$$SECRET_GH_TOKEN/g; \
 			s/<SECRET_GH_USER>/$$SECRET_GH_USER/g; \
 			s/<SECRET_JENKINS_PASS>/$$SECRET_JENKINS_PASS/g; \
+			s/<N_LOAD_CONTROLLERS>/$$N_LOAD_CONTROLLERS/g; \
 			s/<AGENT_NAMESPACE>/$$AGENT_NA/g;" < helm/values.cb-ci-casc.yaml.tpl > helm/values.cb-ci-casc.yaml && \
 		helm upgrade --install cbci-casc $(DIR_CHARTS)/cb-ci-casc --create-namespace --namespace "$$CBCI_NS" -f "helm/values.cb-ci-casc.yaml"
 	$(call print_subtitle,Update CloudBees values.yaml)
@@ -52,8 +52,7 @@ cbci-helm-update: check_kubeconfig check_envfile guard-CLOUD_TPL
 		helm repo add cloudbees https://public-charts.artifacts.cloudbees.com/repository/public/ && \
 		helm repo update && \
 		helm upgrade --install cbci cloudbees/cloudbees-core --create-namespace --namespace "$$CBCI_NS" --version "$$CBCI_VERSION" -f "helm/values.cb-ci.yaml"
-	sleep 3
-	kubectl rollout status sts cjoc --namespace cbci
+	kubectl rollout status sts cjoc --namespace cbci && wait
 	kubectl get secret oc-secrets -n cbci -o jsonpath='{.data.jenkinsPass}' | base64 --decode
 
 .PHONY: cbci-helm-delete
