@@ -29,7 +29,6 @@ k8s_db-eks_delete: check_kubeconfig
 	kubectl delete -f K8s-manifest/eks-admin
 	kubectl delete -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.5.0/aio/deploy/recommended.yaml
 
-
 .PHONY: komodor_update
 komodor_update: ## Install Komodor Agent passing KOMODOR_API_KEY and CLUSTER_NAME (enabing Helm Dashboard)
 komodor_update: check_kubeconfig
