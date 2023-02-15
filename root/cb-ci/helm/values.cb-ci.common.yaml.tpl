@@ -1,10 +1,4 @@
-#https://docs.aws.amazon.com/eks/latest/userguide/network-load-balancing.html
-Subdomain: true
-OperationsCenter:
-  HostName: <HOSTNAME>
-  Protocol: <PROTOCOL>
-  #https://support.cloudbees.com/hc/en-us/articles/360058867672
-  Platform: aws
+#Common_Configuration
   CasC:
     Enabled: true
   ConfigMapName: oc-casc-bundle
@@ -29,4 +23,4 @@ OperationsCenter:
 Agents:
   SeparateNamespace:
     Enabled: true
-    Name: <AGENT_NAMESPACE>
+    Name: cbci-agents

@@ -7,7 +7,7 @@ DIR_CHARTS 		:= $(MKFILE)/../../charts
 include $(PARENT_MKFILE)
 
 #DEFAULTS
-CLOUD_TPL		?= eks.nginx+nlp.yaml.tpl
+CLOUD_TPL		?= eks.alb.yaml.tpl
 
 #https://kubernetes.io/docs/concepts/configuration/organize-cluster-access-kubeconfig/#the-kubeconfig-environment-variable
 .PHONY: check_kubeconfig
@@ -44,11 +44,12 @@ cbci-helm-update: check_kubeconfig check_envfile guard-CLOUD_TPL
 			s/<AGENT_NAMESPACE>/$$AGENT_NA/g;" < helm/values.cb-ci-casc.yaml.tpl > helm/values.cb-ci-casc.yaml && \
 		helm upgrade --install cbci-casc $(DIR_CHARTS)/cb-ci-casc --create-namespace --namespace "$$CBCI_NS" -f "helm/values.cb-ci-casc.yaml"
 	$(call print_subtitle,Update CloudBees values.yaml)
+	sed "/#Common_Configuration/e cat helm/flavour/$(CLOUD_TPL)" < helm/values.cb-ci.common.yaml.tpl > /tmp/values.cb-ci.$(CLOUD_TPL).yaml.tpl
 	source .env && \
 		sed "s/<HOSTNAME>/$$HOSTNAME/g; \
 			s/<PROTOCOL>/$$PROTOCOL/g; \
 			s|<CERTIFICATE>|$(shell terraform -chdir=$(DIR_TF_ROOT) output --raw acm_certificate_arn)|g ; \
-			s/<AGENT_NAMESPACE>/$$AGENT_NA/g;" < helm/cloud/$(CLOUD_TPL) > helm/values.cb-ci.yaml && \
+			s/<AGENT_NAMESPACE>/$$AGENT_NA/g;" < /tmp/values.cb-ci.$(CLOUD_TPL).yaml.tpl > helm/values.cb-ci.yaml && \
 		helm repo add cloudbees https://public-charts.artifacts.cloudbees.com/repository/public/ && \
 		helm repo update && \
 		helm upgrade --install cbci cloudbees/cloudbees-core --create-namespace --namespace "$$CBCI_NS" --version "$$CBCI_VERSION" -f "helm/values.cb-ci.yaml"
