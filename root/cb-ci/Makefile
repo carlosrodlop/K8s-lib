@@ -57,7 +57,7 @@ cbci-helm-update: check_kubeconfig check_envfile guard-CLOUD_TPL
 	kubectl get secret oc-secrets -n cbci -o jsonpath='{.data.jenkinsPass}' | base64 --decode
 
 .PHONY: cbci-helm-delete
-cbci-helm-delete: ## Delete CloudBees Core via Helm.
+cbci-helm-delete: ## Delete CloudBees Core via Helm. Ref: https://docs.cloudbees.com/docs/cloudbees-ci/latest/kubernetes-install-guide/kubernetes-uninstall
 cbci-helm-delete: check_kubeconfig check_envfile
 	$(call print_title,Uninstall CloudBees Core via Helm)
 	source .env && \
