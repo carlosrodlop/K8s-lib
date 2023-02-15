@@ -36,10 +36,8 @@ cbci-helm-update: check_kubeconfig check_envfile guard-CLOUD_TPL
 		sed "s/<HOSTNAME>/$$HOSTNAME/g; \
 			s/<PROTOCOL>/$$PROTOCOL/g; \
 			s|<C_CASC_REPO>|$$C_CASC_REPO|g ; \
-			s/<OC_BUNDLE>/$$OC_BUNDLE/g; \
 			s/<SECRET_GH_TOKEN>/$$SECRET_GH_TOKEN/g; \
 			s/<SECRET_GH_USER>/$$SECRET_GH_USER/g; \
-			s/<SECRET_JENKINS_PASS>/$$SECRET_JENKINS_PASS/g; \
 			s/<N_LOAD_CONTROLLERS>/$$N_LOAD_CONTROLLERS/g; \
 			s/<AGENT_NAMESPACE>/$$AGENT_NA/g;" < helm/templates/cb-ci-casc.yaml.tpl > helm/values.cb-ci-casc.yaml && \
 		helm upgrade --install cbci-casc $(DIR_CHARTS)/cb-ci-casc --create-namespace --namespace "$$CBCI_NS" -f "helm/values.cb-ci-casc.yaml"

@@ -3,18 +3,16 @@
 # Declare variables to be passed into your templates.
 
 OperationCenter:
-  Protocol: "http"
-  Hostname:
+  Protocol: "https"
+  Hostname: "ci.example.com"
   Casc:
-    OperationCenterBundle: "modern.general"
-    ControllerBundleStorageSCM:
+    OperationCenterBundle: "modern"
+    ControllerBundleStorageSCM: "https://github.com/carlosrodlop/cb-casc-controllers.git"
   Credentials:
     Github:
-      Token:
-      User:
-  Security:
-    JenkinsPass:
+      Token: "ghp_xxxxxxxxxxxxxxxxxxxxExampleToken"
+      User: "gh_ExampleUser"
 ManagedControllers:
   loadCount: 5
 Agents:
-  Namespace:
+  Namespace: "cbci-agents"
