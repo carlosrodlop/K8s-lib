@@ -5,6 +5,8 @@
 OperationCenter:
   Protocol: "https"
   Hostname: "ci.example.com"
+  Ingress:
+    Class: alb
   Casc:
     OperationCenterBundle: "modern"
     ControllerBundleStorageSCM: "https://github.com/carlosrodlop/cb-casc-controllers.git"

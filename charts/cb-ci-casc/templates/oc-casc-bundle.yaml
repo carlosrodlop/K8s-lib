@@ -12,7 +12,11 @@ data:
   location.yaml: |-
     unclassified:
       location:
-        url: {{ .Values.OperationCenter.Protocol }}://{{ .Values.OperationCenter.Hostname }}/cjoc/
+{{- if eq .Values.OperationCenter.Ingress.Class "alb" }}
+          url: {{ .Values.OperationCenter.Protocol }}://cjoc.{{ .Values.OperationCenter.Hostname }}
+{{- else }}
+          url: {{ .Values.OperationCenter.Protocol }}://{{ .Values.OperationCenter.Hostname }}/cjoc/
+{{- end }}
   controllerBundleStorageSCM.yaml: |-
     unclassified:
       # Best-Practice: Use SCM for Managed Master Casc Bundles
