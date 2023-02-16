@@ -46,6 +46,10 @@ cbci-helm-update: check_kubeconfig check_envfile guard-CLOUD_TPL
 	source .env && \
 		sed "s/<HOSTNAME>/$$HOSTNAME/g; \
 			s/<PROTOCOL>/$$PROTOCOL/g; \
+			s/<LIC_FIRSTNAME>/$$LIC_FIRSTNAME/g; \
+			s/<LIC_LASTNAME>/$$LIC_LASTNAME/g; \
+			s/<LIC_MAIL>/$$LIC_MAIL/g; \
+			s/<LIC_COMPANY>/$$LIC_COMPANY/g; \
 			s|<CERTIFICATE>|$(shell terraform -chdir=$(DIR_TF_ROOT) output --raw acm_certificate_arn)|g ; \
 			s/<AGENT_NAMESPACE>/$$AGENT_NA/g;" < helm/values.tmp.cb-ci.yaml > helm/values.cb-ci.yaml && \
 		helm repo add cloudbees https://public-charts.artifacts.cloudbees.com/repository/public/ && \
