@@ -2,7 +2,7 @@
 #https://docs.aws.amazon.com/eks/latest/userguide/network-load-balancing.html
 #Trying to create NLP without NGINX as explained in https://www.eksworkshop.com/docs/fundamentals/exposing/loadbalancer/adding-lb fails with
 #Error: UPGRADE FAILED: failed to create resource: admission webhook vingress.elbv2.k8s.aws denied the request: invalid ingress class: IngressClass.networking.k8s.io nginx not found
-Subdomain: true
+Subdomain: false
 OperationsCenter:
   HostName: <HOSTNAME>
   Protocol: <PROTOCOL>

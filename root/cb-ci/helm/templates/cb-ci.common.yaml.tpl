@@ -16,10 +16,10 @@
   License:
     Evaluation:
       Enabled: true
-      FirstName: Carlos
-      LastName: Lopez
-      Email: crodriguezlopez@cloudbees.com
-      Company: cloudbees.com
+      FirstName: <LIC_FIRSTNAME>
+      LastName: <LIC_LASTNAME>
+      Email: <LIC_MAIL>
+      Company: <LIC_COMPANY>
 Agents:
   SeparateNamespace:
     Enabled: true
