@@ -45,7 +45,7 @@ komodor_update: check_kubeconfig
 			--set watcher.actions.basic=true \
 			--set watcher.actions.advanced=true \
 			--set watcher.actions.podExec=true \
-			--reuse-values \
+			--values helm/komodor-watcher.yaml \
 			--set helm.enableActions=true --wait --timeout=90s
 
 .PHONY: komodor_delete
