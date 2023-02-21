@@ -1,7 +1,7 @@
 .env
 !.env.example
-secrets.*
-*secrets.*
+*secret*
+*secret*.*
 !*oc-secrets.yaml
 !*secrets.yaml.example
 !*secrets.yaml.example.enc
