@@ -4,12 +4,11 @@ PARENT_MKFILE   := $(HOME)/.Makefile # docker
 DIR_TF_ROOT		:= $(MKFILE)/../../../../clouds/aws/root/eks-bp-v4
 DIR_CHARTS 		:= $(MKFILE)/../../../helm/charts
 DIR_HELM_VALUES := $(MKFILE)/../../../helm/values
-CI_OC_URL		:= https://ci.crl.core.pscbdemos.com/cjoc/
 
 include $(PARENT_MKFILE)
 
 #DEFAULTS
-CLOUD_TPL		?= cb-ci.eks.nginx.nlp.yaml
+CLOUD_TPL		?= cb-ci.eks.alb.yaml
 
 #https://kubernetes.io/docs/concepts/configuration/organize-cluster-access-kubeconfig/#the-kubeconfig-environment-variable
 .PHONY: check_kubeconfig
@@ -36,7 +35,7 @@ else
 endif
 
 define getTFValue
-	terraform -chdir=$(DIR_TF_ROOT) output --raw $(1)
+	$(shell terraform -chdir=$(DIR_TF_ROOT) output --raw $(1))
 endef
 
 .PHONY: cbci-helm-update
@@ -71,13 +70,13 @@ cbci-helm-update: check_kubeconfig check_envfile guard-CLOUD_TPL
 	kubectl get secret oc-secrets -n cbci -o jsonpath='{.data.jenkinsPass}' | base64 --decode > $(MKFILE)/secret.jenkinsPass
 
 .PHONY: check_availability
-check_availability: ## Check availability of the OC
-check_availability: guard-OC-URL
+check_availability: ## Check availability of the OC Example: make check_availability OC_URL=https://cjoc.ci.crl.core.pscbdemos.com/
+check_availability: guard-OC_URL
 	source .env && \
 		until kubectl get ing -n $$CBCI_NS cjoc; do sleep 2 && echo "Waiting for Ingress to get ready"; done
-	echo "Ingress Ready"		
+	@echo "Ingress Ready"		
 	until curl -u admin:$(shell cat $(MKFILE)/secret.jenkinsPass) -s $(OC_URL)  > /dev/null; do sleep 10 && echo "Waiting for Operation Center"; done
-	echo "Operation Center Ready"
+	@echo "Operation Center Ready"
 
 .PHONY: cbci-helm-delete
 cbci-helm-delete: ## Delete CloudBees Core via Helm. Ref: https://docs.cloudbees.com/docs/cloudbees-ci/latest/kubernetes-install-guide/kubernetes-uninstall

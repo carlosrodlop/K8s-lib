@@ -1,3 +1,18 @@
 nodeSelector:
   kubernetes.io/os: linux
   kubernetes.io/arch: amd64
+apiKey: ${apiKey}
+watcher:
+  clusterName: ${clusterName}
+  allowReadingPodLogs: true
+  enableAgentTaskExecution: true
+  enableAgentTaskExecutionV2: true
+  enableHelm: true
+  resources:
+    secret: true
+  actions:
+    basic: true
+    advanced: true
+    podExec: true
+helm:
+  enableActions: true

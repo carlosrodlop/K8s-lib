@@ -1,4 +1,4 @@
-#Defaults to https://artifacthub.io/packages/helm/prometheus-community/kube-prometheus-stack
+#https://artifacthub.io/packages/helm/prometheus-community/kube-prometheus-stack
 grafana:
   ingress:
     #Examples
@@ -28,3 +28,4 @@ grafana:
             backend:
               serviceName: grafana
               servicePort: 80
+

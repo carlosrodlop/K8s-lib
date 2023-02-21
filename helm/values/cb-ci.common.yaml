@@ -24,3 +24,4 @@ Agents:
   SeparateNamespace:
     Enabled: true
     Name: cbci-agents
+

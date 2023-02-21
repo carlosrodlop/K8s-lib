@@ -1,4 +1,5 @@
-
+#https://kubernetes.github.io/ingress-nginx/
+#https://artifacthub.io/packages/helm/ingress-nginx/ingress-nginx
 controller:
   service:
     type: LoadBalancer
@@ -11,7 +12,7 @@ controller:
       service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
 
       # SSL Annotations
-      service.beta.kubernetes.io/aws-load-balancer-ssl-cert: ${ssl_cert_arn}
+      service.beta.kubernetes.io/aws-load-balancer-ssl-cert: ${cert_arn}
       service.beta.kubernetes.io/aws-load-balancer-ssl-ports: '443'
 
       # External DNS Annotations

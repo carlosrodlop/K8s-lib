@@ -1,6 +1,7 @@
 MKFILE   		:= $(abspath $(dir $(lastword $(MAKEFILE_LIST))))
 PARENT_MKFILE   := $(HOME)/.Makefile # docker
 #PARENT_MKFILE   := $(MKFILE)/../../../carlosrodlop/Makefile # local
+DIR_HELM_VALUES := $(MKFILE)/../../../helm/values
 
 include $(PARENT_MKFILE)
 
@@ -32,21 +33,11 @@ k8s_db-eks_delete: check_kubeconfig
 .PHONY: komodor_update
 komodor_update: ## Install Komodor Agent passing KOMODOR_API_KEY and CLUSTER_NAME (enabing Helm Dashboard)
 komodor_update: check_kubeconfig
-	helm repo add komodorio https://helm-charts.komodor.io && helm repo update
 	source .env && \
-		helm upgrade --install k8s-watcher komodorio/k8s-watcher --create-namespace --namespace "$$MONITORING_NS" \
-			--set apiKey=$$KOMODOR_API_KEY \
-			--set watcher.clusterName=$$CLUSTER_NAME \
-			--set watcher.allowReadingPodLogs=true \
-			--set watcher.enableAgentTaskExecution=true \
-			--set watcher.enableAgentTaskExecutionV2=true \
-			--set watcher.enableHelm=true \
-			--set watcher.resources.secret=true \
-			--set watcher.actions.basic=true \
-			--set watcher.actions.advanced=true \
-			--set watcher.actions.podExec=true \
-			--values helm/komodor-watcher.yaml \
-			--set helm.enableActions=true --wait --timeout=90s
+		sed "s/\$${apiKey}/$$KOMODOR_API_KEY/g; \
+			s/\$${clusterName}/$$CLUSTER_NAME/g;" < $(DIR_HELM_VALUES)/komodor-watcher.yaml > $(MKFILE)/values.komodor-watcher.yaml && \
+		helm repo add komodorio https://helm-charts.komodor.io && helm repo update
+		helm upgrade --install k8s-watcher komodorio/k8s-watcher --create-namespace --namespace "$$MONITORING_NS" -f "$(MKFILE)/values.komodor-watcher.yaml" --wait --timeout=90s
 
 .PHONY: komodor_delete
 komodor_delete: ## Delete Komodor Agent

@@ -3,7 +3,7 @@
 #https://docs.aws.amazon.com/eks/latest/userguide/network-load-balancing.html
 Subdomain: false
 OperationsCenter:
-  HostName: ${hostname}
+  HostName: ci.${hostname}
   Protocol: ${protocol}
   #https://support.cloudbees.com/hc/en-us/articles/360058867672
   Platform: aws
