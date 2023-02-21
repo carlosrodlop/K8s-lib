@@ -1,10 +1,10 @@
 OperationCenter:
-  Protocol: <PROTOCOL>
-  Hostname: <HOSTNAME>
+  Protocol: ${protocol}
+  Hostname: ${hostname}
   Ingress:
     Class: alb
   Casc:
-    ControllerBundleStorageSCM: <C_CASC_REPO>
+    ControllerBundleStorageSCM: ${c_casc_repo}
   Credentials:
     Github:
       Token: <SECRET_GH_TOKEN>

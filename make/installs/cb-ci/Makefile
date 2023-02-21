@@ -39,8 +39,8 @@ cbci-helm-update: check_kubeconfig check_envfile guard-CLOUD_TPL
 			s/<SECRET_GH_TOKEN>/$$SECRET_GH_TOKEN/g; \
 			s/<SECRET_GH_USER>/$$SECRET_GH_USER/g; \
 			s/<N_LOAD_CONTROLLERS>/$$N_LOAD_CONTROLLERS/g; \
-			s/<AGENT_NAMESPACE>/$$AGENT_NA/g;" < helm/templates/cb-ci-casc.yaml.tpl > helm/values.cb-ci-casc.yaml && \
-		helm upgrade --install cbci-casc $(DIR_CHARTS)/cb-ci-casc --create-namespace --namespace "$$CBCI_NS" -f "helm/values.cb-ci-casc.yaml"
+			s/<AGENT_NAMESPACE>/$$AGENT_NA/g;" < helm/templates/cb-ci-casc.yaml.tpl > $(MKFILE)/values.cb-ci-casc.yaml && \
+		helm upgrade --install cbci-casc $(DIR_CHARTS)/cb-ci-casc --create-namespace --namespace "$$CBCI_NS" -f "$(MKFILE)/values.cb-ci-casc.yaml"
 	$(call print_subtitle,Update CloudBees values.yaml)
 	sed "/#Common_Configuration/e cat helm/templates/$(CLOUD_TPL)" < helm/templates/cb-ci.common.yaml.tpl > helm/values.tmp.cb-ci.yaml
 	source .env && \
@@ -57,6 +57,14 @@ cbci-helm-update: check_kubeconfig check_envfile guard-CLOUD_TPL
 		helm upgrade --install cbci cloudbees/cloudbees-core --create-namespace --namespace "$$CBCI_NS" --version "$$CBCI_VERSION" -f "helm/values.cb-ci.yaml"
 	kubectl rollout status sts cjoc --namespace cbci && wait
 	kubectl get secret oc-secrets -n cbci -o jsonpath='{.data.jenkinsPass}' | base64 --decode
+
+.PHONY: test
+test: ## Install and Update CloudBees Core via Helm.
+test: check_kubeconfig check_envfile guard-CLOUD_TPL
+	$(call print_subtitle,Update Casc values.yaml)
+	source .env &&  \
+		sed "s/\$${HOSTNAME}/$$HOSTNAME/g; \
+			s/\$${PROTOCOL}/$$PROTOCOL/g; " < ../../values/mk/cb-ci-casc.yaml.tpl > ../../values/mk/values.cb-ci-casc.yaml
 
 .PHONY: cbci-helm-delete
 cbci-helm-delete: ## Delete CloudBees Core via Helm. Ref: https://docs.cloudbees.com/docs/cloudbees-ci/latest/kubernetes-install-guide/kubernetes-uninstall
