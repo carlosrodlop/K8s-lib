@@ -1,13 +1,14 @@
 MKFILE   		:= $(abspath $(dir $(lastword $(MAKEFILE_LIST))))
 PARENT_MKFILE   := $(HOME)/.Makefile # docker
 #PARENT_MKFILE   := $(MKFILE)/../../../carlosrodlop/Makefile # local
-DIR_TF_ROOT		:= $(MKFILE)/../../../terraform-labs/aws/root/aws
-DIR_CHARTS 		:= $(MKFILE)/../../charts
+DIR_TF_ROOT		:= $(MKFILE)/../eks_bp_v4
+DIR_CHARTS 		:= $(MKFILE)/../../../charts
+DIR_HELM_VALUES := $(MKFILE)/../../values
 
 include $(PARENT_MKFILE)
 
 #DEFAULTS
-CLOUD_TPL		?= cb-ci.eks.alb.yaml.tpl
+CLOUD_TPL		?= cb-ci.eks.nginx.nlp.yaml
 
 #https://kubernetes.io/docs/concepts/configuration/organize-cluster-access-kubeconfig/#the-kubeconfig-environment-variable
 .PHONY: check_kubeconfig
@@ -33,38 +34,31 @@ cbci-helm-update: ## Install and Update CloudBees Core via Helm.
 cbci-helm-update: check_kubeconfig check_envfile guard-CLOUD_TPL
 	$(call print_subtitle,Update Casc values.yaml)
 	source .env && \
-		sed "s/<HOSTNAME>/$$HOSTNAME/g; \
-			s/<PROTOCOL>/$$PROTOCOL/g; \
-			s|<C_CASC_REPO>|$$C_CASC_REPO|g ; \
-			s/<SECRET_GH_TOKEN>/$$SECRET_GH_TOKEN/g; \
-			s/<SECRET_GH_USER>/$$SECRET_GH_USER/g; \
-			s/<N_LOAD_CONTROLLERS>/$$N_LOAD_CONTROLLERS/g; \
-			s/<AGENT_NAMESPACE>/$$AGENT_NA/g;" < helm/templates/cb-ci-casc.yaml.tpl > $(MKFILE)/values.cb-ci-casc.yaml && \
+		sed "s/\$${hostname}/$$HOSTNAME/g; \
+			s/\$${protocol}/$$PROTOCOL/g; \
+			s|\$${c_casc_repo}|$$C_CASC_REPO|g ; \
+			s/\$${ingressClass}/$$ING_CLASS/g; \
+			s/\$${secretGHToken}/$$SECRET_GH_TOKEN/g; \
+			s/\$${secretGHUser}/$$SECRET_GH_USER/g; \
+			s/\$${nLoadControllers}/$$N_LOAD_CONTROLLERS/g; \
+			s/\$${agentNamespace}/$$AGENT_NA/g;" < $(DIR_HELM_VALUES)/cb-ci-casc.yaml > $(MKFILE)/values.cb-ci-casc.yaml && \
 		helm upgrade --install cbci-casc $(DIR_CHARTS)/cb-ci-casc --create-namespace --namespace "$$CBCI_NS" -f "$(MKFILE)/values.cb-ci-casc.yaml"
 	$(call print_subtitle,Update CloudBees values.yaml)
-	sed "/#Common_Configuration/e cat helm/templates/$(CLOUD_TPL)" < helm/templates/cb-ci.common.yaml.tpl > helm/values.tmp.cb-ci.yaml
+	sed "/#Common_Configuration/e cat $(DIR_HELM_VALUES)/$(CLOUD_TPL)" < $(DIR_HELM_VALUES)/cb-ci.common.yaml > $(MKFILE)/values.tmp.cb-ci.yaml
 	source .env && \
-		sed "s/<HOSTNAME>/$$HOSTNAME/g; \
-			s/<PROTOCOL>/$$PROTOCOL/g; \
-			s/<LIC_FIRSTNAME>/$$LIC_FIRSTNAME/g; \
-			s/<LIC_LASTNAME>/$$LIC_LASTNAME/g; \
-			s/<LIC_MAIL>/$$LIC_MAIL/g; \
-			s/<LIC_COMPANY>/$$LIC_COMPANY/g; \
-			s|<CERTIFICATE>|$(shell terraform -chdir=$(DIR_TF_ROOT) output --raw acm_certificate_arn)|g ; \
-			s/<AGENT_NAMESPACE>/$$AGENT_NA/g;" < helm/values.tmp.cb-ci.yaml > helm/values.cb-ci.yaml && \
+		sed "s/\$${hostname}/$$HOSTNAME/g; \
+			s/\$${protocol}/$$PROTOCOL/g; \
+			s/\$${LicFirstName}/$$LIC_FIRSTNAME/g; \
+			s/\$${LicLastName}/$$LIC_LASTNAME/g; \
+			s/\$${LicEmail}/$$LIC_MAIL/g; \
+			s/\$${LicCompany}/$$LIC_COMPANY/g; \
+			s|\$${cert_arn}|$(shell terraform -chdir=$(DIR_TF_ROOT) output --raw acm_certificate_arn)|g ; \
+			s/\$${agentNamespace}/$$AGENT_NA/g;" < helm/values.tmp.cb-ci.yaml > helm/values.cb-ci.yaml && \
 		helm repo add cloudbees https://public-charts.artifacts.cloudbees.com/repository/public/ && \
 		helm repo update && \
 		helm upgrade --install cbci cloudbees/cloudbees-core --create-namespace --namespace "$$CBCI_NS" --version "$$CBCI_VERSION" -f "helm/values.cb-ci.yaml"
 	kubectl rollout status sts cjoc --namespace cbci && wait
 	kubectl get secret oc-secrets -n cbci -o jsonpath='{.data.jenkinsPass}' | base64 --decode
-
-.PHONY: test
-test: ## Install and Update CloudBees Core via Helm.
-test: check_kubeconfig check_envfile guard-CLOUD_TPL
-	$(call print_subtitle,Update Casc values.yaml)
-	source .env &&  \
-		sed "s/\$${HOSTNAME}/$$HOSTNAME/g; \
-			s/\$${PROTOCOL}/$$PROTOCOL/g; " < ../../values/mk/cb-ci-casc.yaml.tpl > ../../values/mk/values.cb-ci-casc.yaml
 
 .PHONY: cbci-helm-delete
 cbci-helm-delete: ## Delete CloudBees Core via Helm. Ref: https://docs.cloudbees.com/docs/cloudbees-ci/latest/kubernetes-install-guide/kubernetes-uninstall
