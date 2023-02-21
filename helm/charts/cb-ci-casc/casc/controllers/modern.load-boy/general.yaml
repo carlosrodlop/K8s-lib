@@ -1,0 +1,46 @@
+jenkins:
+  quietPeriod: 1
+  views:
+    - all:
+        name: all
+  labelAtoms:
+  - name: "built-in"
+  labelString: "built-in"
+  numExecutors: 2
+beekeeper:
+  enabled: false
+unclassified:
+  # Best-Practice: Discard Old Builds
+  # https://support.cloudbees.com/hc/en-us/articles/215549798
+  buildDiscarders:
+    configuredBuildDiscarders:
+      - "jobBuildDiscarder"
+      - simpleBuildDiscarder:
+          discarder:
+            logRotator:
+              numToKeepStr: "3"
+kube:
+  podTemplatesConfiguration:
+    templates:
+      - containers:
+          - args: "cat"
+            command: "/bin/sh -c"
+            image: "maven:3.8.1-jdk-8"
+            name: "maven"
+            ttyEnabled: true
+            workingDir: "/home/jenkins/agent"
+        idleMinutes: 5
+        idleMinutesStr: "5"
+        label: "maven"
+        name: "maven"
+        nodeUsageMode: "NORMAL"
+        # yaml: |-
+        #   apiVersion: v1
+        #   kind: Pod
+        #   spec:
+        #     tolerations:
+        #       - key: "dedicated"
+        #         operator: "Equal"
+        #         value: "build"
+        #         effect: "NoSchedule"
+        # yamlMergeStrategy: "override"

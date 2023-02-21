@@ -1,0 +1,105 @@
+jenkins:
+  quietPeriod: 1
+  views:
+    - all:
+        name: all
+  # Best-Practice: Do not use In-Build agents
+  # https://support.cloudbees.com/hc/en-us/articles/115002654991
+  numExecutors: 0
+# Best-Practice: Enable Beekeeper
+# https://docs.cloudbees.com/docs/admin-resources/latest/plugin-management/beekeeper-upgrade-assistant
+beekeeper:
+  enabled: true
+  securityWarnings:
+    enabledForCore: true
+    enabledForPlugins: true
+  upgrades:
+    autoDowngradePlugins: false
+    autoUpgradePlugins: false
+advisor:
+  acceptToS: true
+  email: "example.user@mail.com"
+  excludedComponents:
+    - "AgentsSystemConfiguration"
+    - "AgentsJVMProcessSystemMetricsContents"
+    - "GCLogs"
+    - "AgentsConfigFile"
+    - "ConfigFileComponent"
+    - "RootCAs"
+    - "SlaveLogs"
+    - "OtherConfigFilesComponent"
+    - "HeapUsageHistogram"
+    - "OtherLogs"
+    - "SlaveLaunchLogs"
+  nagDisabled: false
+# Best-Practice: Pipeline Templates
+# https://docs.cloudbees.com/docs/admin-resources/latest/pipeline-templates-user-guide/
+# globalCloudBeesPipelineTemplateCatalog:
+#   catalogs:
+#   - branchOrTag: "demo"
+#     scm:
+#       git:
+#         credentialsId: "GH-token-merck"
+#         remote: "https://github.com/cloudbees-oss/pipeline-home-demo"
+#     updateInterval: "1d"
+unclassified:
+  # Best-Practice: Controller Hibernation for Optimicin Resources
+  # https://docs.cloudbees.com/docs/cloudbees-ci/2.332.3.4/cloud-admin-guide/managing-masters#_hibernation_in_managed_masters
+  hibernationConfiguration:
+    enabled: true
+    gracePeriod: 1800
+  usageStatisticsCloudBees:
+    disabledJenkinsUsageStatistics: true
+    usageStatisticsCollected: false
+  # Best-Practice: Set timestamper for pipeline troubleshotting
+  # https://support.cloudbees.com/hc/en-us/articles/360058746291
+  timestamper:
+    allPipelines: true
+  # Best-Practice: Discard Old Builds
+  # https://support.cloudbees.com/hc/en-us/articles/215549798
+  buildDiscarders:
+    configuredBuildDiscarders:
+      - "jobBuildDiscarder"
+      - simpleBuildDiscarder:
+          discarder:
+            logRotator:
+              numToKeepStr: "3"
+  #Avoid
+  provisioningLimitConfiguration:
+    limit:
+      nodes: 50
+kube:
+  podTemplatesConfiguration:
+    templates:
+    - containers:
+      - args: "cat"
+        command: "/bin/sh -c"
+        image: "maven:3.8.1-jdk-8"
+        livenessProbe:
+          failureThreshold: 0
+          initialDelaySeconds: 0
+          periodSeconds: 0
+          successThreshold: 0
+          timeoutSeconds: 0
+        name: "maven"
+        ttyEnabled: true
+        workingDir: "/home/jenkins/agent"
+      idleMinutes: 5
+      idleMinutesStr: "5"
+      label: "maven"
+      name: "maven"
+      nodeUsageMode: "NORMAL"
+      yaml: |-
+        kind: Pod
+        spec:
+          containers:
+          - name: "maven"
+            volumeMounts:
+              - mountPath: "/root/.m2/repository"
+                name: "maven-pv-storage"
+        volumes:
+          - name: "maven-pv-storage"
+            persistentVolumeClaim:
+              claimName: "maven-cache"
+              readOnly: false
+      yamlMergeStrategy: "override"

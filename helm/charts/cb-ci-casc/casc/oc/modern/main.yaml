@@ -1,0 +1,83 @@
+jenkins:
+  views:
+    - masters:
+        name: "Controllers"
+        jobFilters:
+          - "connectedMasterViewFilter"
+        recurse: true
+        columns:
+          - "status"
+          - "weather"
+          - "jobName"
+          - "manageMaster"
+          - "masterConfigurationStaleViewColumn"
+          - "totalJobsViewColumn"
+          - "queueSizeViewColumn"
+          - "jenkinsVersionViewColumn"
+          - "cascViewColumn"
+          - "listSelectionColumn"
+    - all:
+        name: "all"
+  # Best-Practice: Do not use In-Build agents
+  # https://support.cloudbees.com/hc/en-us/articles/115002654991
+  numExecutors: 0
+unclassified:
+  cascAutoControllerProvisioning:
+    provisionControllerOnCreation: true
+    # Best-Practice: Discard Old Builds
+    # https://support.cloudbees.com/hc/en-us/articles/215549798
+  buildDiscarders:
+    configuredBuildDiscarders:
+      - "jobBuildDiscarder"
+      - simpleBuildDiscarder:
+          discarder:
+            logRotator:
+              numToKeepStr: "3"
+  usageStatisticsCloudBees:
+    disabledJenkinsUsageStatistics: true
+    usageStatisticsCollected: false
+cloudBeesCasCServer:
+  defaultBundle: "good-boy"
+  visibility: true
+# Best-Practice: Enable Beekeeper
+beekeeper:
+  enabled: true
+  securityWarnings:
+    enabledForCore: true
+    enabledForPlugins: true
+  upgrades:
+    autoDowngradePlugins: false
+    autoUpgradePlugins: true
+# Best-Practice: Operations at Scale. CloudBees Advisor
+advisor:
+  acceptToS: true
+  email: "example.user@mail.com"
+  excludedComponents:
+    - "AgentsSystemConfiguration"
+    - "KubernetesMasterLogs"
+    - "AgentsJVMProcessSystemMetricsContents"
+    - "GCLogs"
+    - "AgentsConfigFile"
+    - "ConfigFileComponent"
+    - "RootCAs"
+    - "SlaveLogs"
+    - "OtherConfigFilesComponent"
+    - "HeapUsageHistogram"
+    - "OtherLogs"
+    - "SlaveLaunchLogs"
+  # Node pools for Kubernetes installation
+  # masterprovisioning:
+  #   kubernetes:
+  #     yaml: |-
+  #       kind: StatefulSet
+  #       spec:
+  #         template:
+  #           metadata:
+  #             annotations:
+  #               cluster-autoscaler.kubernetes.io/safe-to-evict: "false"
+  #           spec:
+  #             tolerations:
+  #               - key: "dedicated"
+  #                 operator: "Equal"
+  #                 value: "apps"
+  #                 effect: "NoSchedule"

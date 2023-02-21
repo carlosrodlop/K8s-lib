@@ -1,0 +1,105 @@
+removeStrategy:
+  rbac: SYNC
+  items: NONE
+
+items:
+  - kind: pipeline
+    name: pipeline-scripted-load
+    concurrentBuild: true
+    properties:
+      - pipelineTriggers:
+          triggers:
+            - cron:
+                spec: H/30 * * * *
+    definition:
+      cpsFlowDefinition:
+        sandbox: true
+        script: |
+          parallel([0, 1].collectEntries {b -> ["branch-$b", {
+          podTemplate {
+            node("maven") {
+              stage('prep') {
+                sh 'curl https://ipinfo.io/'
+              }
+              stage('build') {
+                mockLoad 180
+              }
+          }
+          checkpoint 'middle'
+          podTemplate {
+            node("maven") {
+              stage('publish') {
+                archiveArtifacts allowEmptyArchive: true, artifacts: 'mock-artifact-*.txt'
+                fingerprint 'mock-artifact-*.txt'
+                junit 'mock-junit.xml'
+              }
+            }
+          }
+          }}]})
+          build job: JOB_NAME, wait: false
+  - kind: pipeline
+    name: pipeline-declarative
+    concurrentBuild: false
+    properties:
+      - pipelineTriggers:
+          triggers:
+            - cron:
+                spec: H/30 * * * *
+    definition:
+      cpsFlowDefinition:
+        sandbox: true
+        script: |
+          pipeline {
+            agent {
+              kubernetes {
+                yaml '''
+                  apiVersion: v1
+                  kind: Pod
+                  metadata:
+                    labels:
+                      some-label: some-label-value
+                  spec:
+                    containers:
+                    - name: maven
+                      image: maven:alpine
+                      command:
+                      - cat
+                      tty: true
+                    - name: busybox
+                      image: busybox
+                      command:
+                      - cat
+                      tty: true
+                  '''
+                retries 2
+              }
+            }
+            stages {
+              stage('Beginning') {
+                steps {
+                  container('maven') {
+                    sh 'mvn -version'
+                    sh 'sleep 30'
+                    sh 'date > date.txt'
+                    stash name: 'stuff', includes: 'date.txt'
+                  }
+                }
+              }
+              stage("Checkpoint") {
+                agent none //running outside of any node or workspace
+                steps {
+                  checkpoint 'middle'
+                }
+              }
+              stage('End') {
+                steps {
+                  container('busybox') {
+                    sh '/bin/busybox'
+                    unstash 'stuff'
+                    sh 'cat date.txt'
+                    sh 'sleep 2m'
+                  }
+                }
+              }
+            }
+          }
