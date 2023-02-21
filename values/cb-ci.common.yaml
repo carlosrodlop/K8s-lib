@@ -16,10 +16,10 @@
   License:
     Evaluation:
       Enabled: true
-      FirstName: <LIC_FIRSTNAME>
-      LastName: <LIC_LASTNAME>
-      Email: <LIC_MAIL>
-      Company: <LIC_COMPANY>
+      FirstName: ${LicFirstName}
+      LastName: ${LicLastName}
+      Email: ${LicEmail}
+      Company: ${LicCompany}
 Agents:
   SeparateNamespace:
     Enabled: true

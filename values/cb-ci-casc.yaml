@@ -2,14 +2,14 @@ OperationCenter:
   Protocol: ${protocol}
   Hostname: ${hostname}
   Ingress:
-    Class: alb
+    Class: ${ingressClass}
   Casc:
     ControllerBundleStorageSCM: ${c_casc_repo}
   Credentials:
     Github:
-      Token: <SECRET_GH_TOKEN>
-      User: <SECRET_GH_USER>
+      Token: ${secretGHToken}
+      User: ${secretGHUser}
 ManagedControllers:
-  loadCount: <N_LOAD_CONTROLLERS>
+  loadCount: ${nLoadControllers}
 Agents:
-  Namespace: <AGENT_NAMESPACE>
+  Namespace: ${agentNamespace}

@@ -4,8 +4,8 @@
 #Error: UPGRADE FAILED: failed to create resource: admission webhook vingress.elbv2.k8s.aws denied the request: invalid ingress class: IngressClass.networking.k8s.io nginx not found
 Subdomain: false
 OperationsCenter:
-  HostName: <HOSTNAME>
-  Protocol: <PROTOCOL>
+  HostName: ${hostname}
+  Protocol: ${protocol}
   #https://support.cloudbees.com/hc/en-us/articles/360058867672
   Platform: aws
   ServiceType: LoadBalancer
