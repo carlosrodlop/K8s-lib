@@ -40,7 +40,6 @@ velero_remove_schedule:
 velero_trigger_backup: ## Create a puntual Backup from Schedule
 velero_trigger_backup:
 
-	$(call print_title, Velero Create Puntual Backup)
 	velero backup create --from-schedule $(BACKUP_SQUED_NAME) --wait
 
 .PHONY: velero_restore_backup
