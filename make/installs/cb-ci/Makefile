@@ -6,7 +6,6 @@ DIR_CHARTS 		:= $(MKFILE)/../../../helm/charts
 DIR_HELM_VALUES := $(MKFILE)/../../../helm/values
 CI_OC_URL		:= https://ci.crl.core.pscbdemos.com/cjoc/
 
-
 include $(PARENT_MKFILE)
 
 #DEFAULTS
@@ -72,12 +71,12 @@ cbci-helm-update: check_kubeconfig check_envfile guard-CLOUD_TPL
 	kubectl get secret oc-secrets -n cbci -o jsonpath='{.data.jenkinsPass}' | base64 --decode > $(MKFILE)/secret.jenkinsPass
 
 .PHONY: check_availability
-check_availability:
 check_availability: ## Check availability of the OC
+check_availability: guard-OC-URL
 	source .env && \
 		until kubectl get ing -n $$CBCI_NS cjoc; do sleep 2 && echo "Waiting for Ingress to get ready"; done
 	echo "Ingress Ready"		
-	until curl -u admin:$(shell cat $(MKFILE)/secret.jenkinsPass) -s $(CI_OC_URL)  > /dev/null; do sleep 10 && echo "Waiting for Operation Center"; done
+	until curl -u admin:$(shell cat $(MKFILE)/secret.jenkinsPass) -s $(OC_URL)  > /dev/null; do sleep 10 && echo "Waiting for Operation Center"; done
 	echo "Operation Center Ready"
 
 .PHONY: cbci-helm-delete
