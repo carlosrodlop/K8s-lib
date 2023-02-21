@@ -63,11 +63,10 @@ cbci-helm-update: check_kubeconfig check_envfile guard-CLOUD_TPL
 			s/\$${LicCompany}/$$LIC_COMPANY/g; \
 			s|\$${cert_arn}|$(call getTFValue,acm_certificate_arn)|g ; \
 			s/\$${agentNamespace}/$$AGENT_NA/g;" < /tmp/values.tmp.cb-ci.yaml > $(MKFILE)/values.cb-ci.yaml && \
-		helm repo add cloudbees https://public-charts.artifacts.cloudbees.com/repository/public/ && \
-		helm repo update && \
+		helm repo add cloudbees https://public-charts.artifacts.cloudbees.com/repository/public/ && helm repo update && \
 		helm upgrade --install cbci cloudbees/cloudbees-core --create-namespace --namespace "$$CBCI_NS" --version "$$CBCI_VERSION" -f "$(MKFILE)/values.cb-ci.yaml"
 	kubectl rollout status sts cjoc --namespace cbci && wait
-	kubectl get secret oc-secrets -n cbci -o jsonpath='{.data.jenkinsPass}' | base64 --decode > $(MKFILE)/secret.jenkinsPass
+	@kubectl get secret oc-secrets -n cbci -o jsonpath='{.data.jenkinsPass}' | base64 --decode > $(MKFILE)/secret.jenkinsPass
 
 .PHONY: check_availability
 check_availability: ## Check availability of the OC Example: make check_availability OC_URL=https://cjoc.ci.crl.core.pscbdemos.com/
@@ -75,7 +74,7 @@ check_availability: guard-OC_URL
 	source .env && \
 		until kubectl get ing -n $$CBCI_NS cjoc; do sleep 2 && echo "Waiting for Ingress to get ready"; done
 	@echo "Ingress Ready"		
-	until curl -u admin:$(shell cat $(MKFILE)/secret.jenkinsPass) -s $(OC_URL)  > /dev/null; do sleep 10 && echo "Waiting for Operation Center"; done
+	@until curl -u admin:$(shell cat $(MKFILE)/secret.jenkinsPass) -s $(OC_URL)  > /dev/null; do sleep 10 && echo "Waiting for Operation Center"; done
 	@echo "Operation Center Ready"
 
 .PHONY: cbci-helm-delete

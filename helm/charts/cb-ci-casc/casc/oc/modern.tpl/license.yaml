@@ -1,6 +1,0 @@
-# 1.2.1 | Licensing of CloudBees Operation Center
-license:
-  certificate: |
-    ${licenseCert}
-  key: |
-    ${licenseKey}
