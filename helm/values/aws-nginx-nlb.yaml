@@ -1,9 +1,12 @@
 #https://kubernetes.github.io/ingress-nginx/
 #https://artifacthub.io/packages/helm/ingress-nginx/ingress-nginx
 controller:
+  nodeSelector:
+      kubernetes.io/os: linux
+      kubernetes.io/arch: amd64
   service:
     type: LoadBalancer
-    externalTrafficPolicy: "Local"
+    externalTrafficPolicy: Local
     annotations:
       # AWS Load Balancer Controller Annotations
       service.beta.kubernetes.io/aws-load-balancer-type: external
@@ -12,12 +15,11 @@ controller:
       service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
 
       # SSL Annotations
-      service.beta.kubernetes.io/aws-load-balancer-ssl-cert: ${cert_arn}
+      service.beta.kubernetes.io/aws-load-balancer-ssl-cert: '${cert_arn}'
       service.beta.kubernetes.io/aws-load-balancer-ssl-ports: '443'
 
       # External DNS Annotations
-      external-dns.alpha.kubernetes.io/hostname: ${hostname}
-
+      external-dns.alpha.kubernetes.io/hostname: nginx.${hostname}
     targetPorts:
       http: http
       https: http

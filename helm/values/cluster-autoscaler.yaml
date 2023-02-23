@@ -1,4 +1,4 @@
 #https://github.com/kubernetes/autoscaler/tree/master/charts/cluster-autoscaler
 nodeSelector:
-  kubernetes.io/os: ${os}
+  kubernetes.io/os: linux
   kubernetes.io/arch: amd64

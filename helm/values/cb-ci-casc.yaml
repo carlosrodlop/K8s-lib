@@ -9,7 +9,9 @@ OperationCenter:
     Github:
       Token: ${secretGHToken}
       User: ${secretGHUser}
-ManagedControllers:
-  loadCount: ${nLoadControllers}
+LoadControllers:
+  ControllersNumber: ${LoadControllers}
+  JobsPerController: ${JobsPerController}
+  JobFrequency: ${JobFrequency}
 Agents:
   Namespace: ${agentNamespace}

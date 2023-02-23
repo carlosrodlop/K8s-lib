@@ -9,10 +9,16 @@
     - name: oc-secrets
       secret:
         secretName: oc-secrets
+    - name: mc-load-casc-bundle
+      configMap:
+        name: mc-load-casc-bundle  
   ExtraVolumeMounts:
     - name: oc-secrets
       mountPath: /var/run/secrets/cjoc
       readOnly: true
+    - name: mc-load-casc-bundle
+      mountPath: /var/jenkins_home/jcasc-bundles-store/mc
+      readOnly: true  
   License:
     Evaluation:
       Enabled: true

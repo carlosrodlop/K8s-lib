@@ -15,7 +15,7 @@ data:
 {{- if eq .Values.OperationCenter.Ingress.Class "alb" }}
           url: {{ .Values.OperationCenter.Protocol }}://cjoc.{{ .Values.OperationCenter.Hostname }}
 {{- else }}
-          url: {{ .Values.OperationCenter.Protocol }}://{{ .Values.OperationCenter.Hostname }}/cjoc/
+          url: {{ .Values.OperationCenter.Protocol }}://{{ .Values.OperationCenter.Subdomain }}.{{ .Values.OperationCenter.Hostname }}/cjoc/
 {{- end }}
   controllerBundleStorageSCM.yaml: |-
     unclassified:
@@ -47,9 +47,9 @@ data:
     removeStrategy:
       items: NONE
       rbac: SYNC
-{{- if gt (int .Values.ManagedControllers.loadCount) 0 }}
+{{- if gt (int .Values.LoadControllers.ControllersNumber) 0 }}
     items:
-{{- range (untilStep 0 (int .Values.ManagedControllers.loadCount) 1) }}
+{{- range (untilStep 0 (int .Values.LoadControllers.ControllersNumber) 1) }}
     - kind: managedController
       name: load-boy{{ . }}
       properties:

@@ -4,7 +4,8 @@
 
 OperationCenter:
   Protocol: "https"
-  Hostname: "ci.example.com"
+  Hostname: "example.com"
+  Subdomain: "ci"
   Ingress:
     Class: alb
   Casc:
@@ -14,7 +15,9 @@ OperationCenter:
     Github:
       Token: "ghp_xxxxxxxxxxxxxxxxxxxxExampleToken"
       User: "gh_ExampleUser"
-ManagedControllers:
-  loadCount: 5
+LoadControllers:
+  ControllersNumber: 5
+  JobsPerController: 2
+  JobFrequency: 30
 Agents:
   Namespace: "cbci-agents"

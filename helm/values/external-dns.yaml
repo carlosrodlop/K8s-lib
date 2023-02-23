@@ -8,5 +8,5 @@ aws:
   zonesCacheDuration: "1m"
 logLevel: "debug"
 nodeSelector:
-  kubernetes.io/os: ${os}
+  kubernetes.io/os: linux
   kubernetes.io/arch: amd64
