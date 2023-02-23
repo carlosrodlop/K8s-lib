@@ -54,7 +54,7 @@ data:
       name: load-boy{{ . }}
       properties:
       - configurationAsCode:
-          bundle: "modern.load-boy"
+          bundle: "modern.load-boy.items"
       configuration:
         kubernetes:
           domain: load-boy{{ . }}

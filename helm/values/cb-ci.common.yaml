@@ -17,7 +17,7 @@
       mountPath: /var/run/secrets/cjoc
       readOnly: true
     - name: mc-load-casc-bundle
-      mountPath: /var/jenkins_home/jcasc-bundles-store/mc
+      mountPath: /var/jenkins_home/cb-casc-bundles-store/modern.load-boy.items
       readOnly: true  
   License:
     Evaluation:
