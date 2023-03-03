@@ -16,7 +16,7 @@ validate() {
     fi
     rm -rf "$output_folder"
     mkdir -p "$output_folder"
-    #vaidate that the target namespaces exist
+    #validate that the target namespaces exist
     for n in "${target_namespaces[@]}"
     do
         existNamespace=$(kubectl get ns "$n" | grep -c "$n")
