@@ -8,12 +8,12 @@ alertmanager:
     receivers:
     - name: 'email'
       email_configs:
-      - to: 'crodriguezlopez@gmail.com'
-        from: 'it.carlosrodlop@gmail.com'
-        smarthost: smtp.gmail.com:587
-        auth_username: 'it.carlosrodlop@gmail.com'
-        auth_identity: 'it.carlosrodlop@gmail.com'
-        auth_password: 'Gmail$09052004'
+      - to:  ${alertmanager_to_mail}
+        from: ${alertmanager_from_mail}
+        smarthost: ${alertmanager_from_mail_smarthost}
+        auth_username: ${alertmanager_from_mail}
+        auth_identity: ${alertmanager_from_mail}
+        auth_password: ${alertmanager_from_mail_password}
 prometheusOperator:
   admissionWebhooks:
     patch:
