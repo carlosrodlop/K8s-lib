@@ -1,0 +1,2676 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "datasource",
+          "uid": "grafana"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "target": {
+          "limit": 100,
+          "matchAny": false,
+          "tags": [],
+          "type": "dashboard"
+        },
+        "type": "dashboard"
+      }
+    ]
+  },
+  "description": "Dashboard for when you are using multiple Jenkins Masters",
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 1,
+  "id": 34,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "collapsed": true,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 20,
+      "panels": [
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "decimals": 3,
+          "description": "The ratio of ok (200) request out of all requests.",
+          "fill": 1,
+          "fillGradient": 0,
+          "gridPos": {
+            "h": 6,
+            "w": 6,
+            "x": 0,
+            "y": 1
+          },
+          "hiddenSeries": false,
+          "id": 36,
+          "legend": {
+            "alignAsTable": true,
+            "avg": false,
+            "current": true,
+            "max": false,
+            "min": false,
+            "rightSide": true,
+            "show": true,
+            "total": false,
+            "values": true
+          },
+          "lines": true,
+          "linewidth": 1,
+          "links": [],
+          "nullPointMode": "null",
+          "options": {
+            "alertThreshold": true
+          },
+          "percentage": false,
+          "pluginVersion": "9.2.1",
+          "pointradius": 2,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "expr": "sum(http_responseCodes_ok_total{kubernetes_namespace=~\"$namespace\", app_kubernetes_io_instance=~\"$instance\"}) \nby (app_kubernetes_io_instance) / \nsum(http_requests_count{kubernetes_namespace=~\"$namespace\", app_kubernetes_io_instance=~\"$instance\"}) \nby (app_kubernetes_io_instance)",
+              "format": "time_series",
+              "intervalFactor": 1,
+              "legendFormat": "{{app_kubernetes_io_instance}}",
+              "refId": "A"
+            }
+          ],
+          "thresholds": [
+            {
+              "colorMode": "warning",
+              "fill": true,
+              "line": true,
+              "op": "lt",
+              "value": 0.991,
+              "yaxis": "left"
+            },
+            {
+              "colorMode": "critical",
+              "fill": true,
+              "line": true,
+              "op": "lt",
+              "value": 0.981,
+              "yaxis": "left"
+            }
+          ],
+          "timeRegions": [],
+          "title": "Good HTTP Request Ratio",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "mode": "time",
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "decimals": 3,
+              "format": "percentunit",
+              "logBase": 1,
+              "max": "1",
+              "min": "0.95",
+              "show": true
+            },
+            {
+              "format": "short",
+              "logBase": 1,
+              "show": false
+            }
+          ],
+          "yaxis": {
+            "align": false
+          }
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "decimals": 0,
+          "description": "Http Server Errors (500)",
+          "fill": 1,
+          "fillGradient": 0,
+          "gridPos": {
+            "h": 6,
+            "w": 5,
+            "x": 6,
+            "y": 1
+          },
+          "hiddenSeries": false,
+          "id": 38,
+          "legend": {
+            "alignAsTable": true,
+            "avg": false,
+            "current": true,
+            "hideEmpty": true,
+            "hideZero": false,
+            "max": false,
+            "min": false,
+            "rightSide": true,
+            "show": true,
+            "total": false,
+            "values": true
+          },
+          "lines": true,
+          "linewidth": 1,
+          "links": [],
+          "nullPointMode": "null",
+          "options": {
+            "alertThreshold": true
+          },
+          "percentage": false,
+          "pluginVersion": "9.2.1",
+          "pointradius": 2,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "expr": "http_responseCodes_serverError_total{kubernetes_namespace=~\"$namespace\", app_kubernetes_io_instance=~\"$instance\"}",
+              "format": "time_series",
+              "intervalFactor": 1,
+              "legendFormat": "{{app_kubernetes_io_instance}}",
+              "refId": "A"
+            }
+          ],
+          "thresholds": [
+            {
+              "colorMode": "warning",
+              "fill": true,
+              "line": true,
+              "op": "gt",
+              "value": 1,
+              "yaxis": "left"
+            }
+          ],
+          "timeRegions": [],
+          "title": "Server Errors",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "mode": "time",
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "short",
+              "logBase": 1,
+              "show": true
+            },
+            {
+              "format": "short",
+              "logBase": 1,
+              "show": true
+            }
+          ],
+          "yaxis": {
+            "align": false
+          }
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "fill": 1,
+          "fillGradient": 0,
+          "gridPos": {
+            "h": 6,
+            "w": 6,
+            "x": 11,
+            "y": 1
+          },
+          "hiddenSeries": false,
+          "id": 42,
+          "interval": "1m",
+          "legend": {
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": false
+          },
+          "lines": true,
+          "linewidth": 1,
+          "links": [],
+          "nullPointMode": "null",
+          "options": {
+            "alertThreshold": true
+          },
+          "percentage": false,
+          "pluginVersion": "9.2.1",
+          "pointradius": 2,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "expr": "sum (jenkins_job_waiting_duration{kubernetes_namespace=~\"$namespace\", app_kubernetes_io_instance=~\"$instance\"}) by (app_kubernetes_io_instance)",
+              "format": "time_series",
+              "instant": false,
+              "intervalFactor": 1,
+              "legendFormat": "{{app_kubernetes_io_instance}}",
+              "refId": "A"
+            }
+          ],
+          "thresholds": [],
+          "timeRegions": [],
+          "title": "Job Wait Duration",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "mode": "time",
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "s",
+              "logBase": 2,
+              "show": true
+            },
+            {
+              "format": "short",
+              "logBase": 1,
+              "show": false
+            }
+          ],
+          "yaxis": {
+            "align": false
+          }
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "fill": 1,
+          "fillGradient": 0,
+          "gridPos": {
+            "h": 6,
+            "w": 6,
+            "x": 17,
+            "y": 1
+          },
+          "hiddenSeries": false,
+          "id": 44,
+          "interval": "1m",
+          "legend": {
+            "avg": false,
+            "current": false,
+            "hideEmpty": false,
+            "hideZero": false,
+            "max": false,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": false
+          },
+          "lines": true,
+          "linewidth": 1,
+          "links": [],
+          "nullPointMode": "null",
+          "options": {
+            "alertThreshold": true
+          },
+          "percentage": false,
+          "pluginVersion": "9.2.1",
+          "pointradius": 2,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "expr": "sum(jenkins_job_building_duration{quantile=\"0.5\",kubernetes_namespace=~\"$namespace\", app_kubernetes_io_instance=~\"$instance\"})\nby (app_kubernetes_io_instance) / 60",
+              "format": "time_series",
+              "instant": false,
+              "interval": "",
+              "intervalFactor": 1,
+              "legendFormat": "p50-{{app_kubernetes_io_instance}}",
+              "refId": "A"
+            },
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "expr": "sum(jenkins_node_builds{quantile=\"0.999\",kubernetes_namespace=~\"$namespace\", app_kubernetes_io_instance=~\"$instance\"})\nby (app_kubernetes_io_instance) / 60",
+              "format": "time_series",
+              "intervalFactor": 1,
+              "legendFormat": "p999-{{app_kubernetes_io_instance}}",
+              "refId": "B"
+            }
+          ],
+          "thresholds": [],
+          "timeRegions": [],
+          "title": "Avg Build Duration Minutes",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "mode": "time",
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "m",
+              "logBase": 2,
+              "show": true
+            },
+            {
+              "decimals": 1,
+              "format": "m",
+              "logBase": 1,
+              "show": false
+            }
+          ],
+          "yaxis": {
+            "align": false
+          }
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "description": "How long the health check takes to complete at the 99th percentile.\nHigher numbers signify problems",
+          "fill": 1,
+          "fillGradient": 0,
+          "gridPos": {
+            "h": 6,
+            "w": 7,
+            "x": 0,
+            "y": 7
+          },
+          "hiddenSeries": false,
+          "id": 18,
+          "interval": "1m",
+          "legend": {
+            "avg": false,
+            "current": false,
+            "hideEmpty": true,
+            "hideZero": true,
+            "max": false,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": false
+          },
+          "lines": true,
+          "linewidth": 1,
+          "links": [],
+          "nullPointMode": "null as zero",
+          "options": {
+            "alertThreshold": true
+          },
+          "percentage": false,
+          "pluginVersion": "9.2.1",
+          "pointradius": 2,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "expr": "sum(jenkins_health_check_duration{kubernetes_namespace=~\"$namespace\", app_kubernetes_io_instance=~\"$instance\", quantile=\"0.99\"}) \n    by (app_kubernetes_io_instance)",
+              "format": "time_series",
+              "intervalFactor": 1,
+              "legendFormat": "{{app_kubernetes_io_instance}}",
+              "refId": "A"
+            }
+          ],
+          "thresholds": [],
+          "timeRegions": [],
+          "title": "Health Check Duration (99%)",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "mode": "time",
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "short",
+              "logBase": 1,
+              "show": true
+            },
+            {
+              "format": "short",
+              "logBase": 1,
+              "show": true
+            }
+          ],
+          "yaxis": {
+            "align": false
+          }
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "description": "The 99% percentile of HTTP Requests handled by Jenkins masters.",
+          "fill": 1,
+          "fillGradient": 0,
+          "gridPos": {
+            "h": 6,
+            "w": 8,
+            "x": 7,
+            "y": 7
+          },
+          "hiddenSeries": false,
+          "id": 52,
+          "legend": {
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": false
+          },
+          "lines": true,
+          "linewidth": 1,
+          "links": [],
+          "nullPointMode": "null",
+          "options": {
+            "alertThreshold": true
+          },
+          "percentage": false,
+          "pluginVersion": "9.2.1",
+          "pointradius": 2,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "expr": "sum(http_requests{kubernetes_namespace=~\"$namespace\", app_kubernetes_io_instance=~\"$instance\",quantile=\"0.99\"} ) by (app_kubernetes_io_instance)",
+              "format": "time_series",
+              "intervalFactor": 1,
+              "legendFormat": "{{app_kubernetes_io_instance}}",
+              "refId": "A"
+            }
+          ],
+          "thresholds": [],
+          "timeRegions": [],
+          "title": "HTTP Request Duration (99%)",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "mode": "time",
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "short",
+              "logBase": 1,
+              "show": true
+            },
+            {
+              "format": "short",
+              "logBase": 1,
+              "show": true
+            }
+          ],
+          "yaxis": {
+            "align": false
+          }
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "description": "Shows performance of Ingress Controller connection that lasts longer than 250 milliseconds",
+          "fill": 1,
+          "fillGradient": 0,
+          "gridPos": {
+            "h": 6,
+            "w": 8,
+            "x": 15,
+            "y": 7
+          },
+          "hiddenSeries": false,
+          "id": 32,
+          "legend": {
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": false
+          },
+          "lines": true,
+          "linewidth": 1,
+          "links": [],
+          "nullPointMode": "null",
+          "options": {
+            "alertThreshold": true
+          },
+          "percentage": false,
+          "pluginVersion": "9.2.1",
+          "pointradius": 2,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "expr": "sum(rate(\n  nginx_ingress_controller_request_duration_seconds_bucket{\n    le=\"0.25\",\n    namespace=~\"$namespace\",\n   ingress=~\"jenkins*\"\n  }[5m]\n)) \nby (ingress) / \nsum(rate(\n  nginx_ingress_controller_request_duration_seconds_count{\n   namespace=~\"$namespace\",\n   ingress=~\"jenkins*\"\n  }[5m]\n)) \nby (ingress) ",
+              "format": "time_series",
+              "intervalFactor": 1,
+              "legendFormat": "{{ingress}}",
+              "refId": "A"
+            }
+          ],
+          "thresholds": [
+            {
+              "colorMode": "custom",
+              "fill": false,
+              "fillColor": "rgba(50, 116, 217, 0.2)",
+              "line": true,
+              "lineColor": "#B877D9",
+              "op": "gt",
+              "value": 0.5,
+              "yaxis": "left"
+            },
+            {
+              "colorMode": "warning",
+              "fill": false,
+              "fillColor": "rgba(50, 116, 217, 0.2)",
+              "line": true,
+              "lineColor": "rgba(31, 96, 196, 0.6)",
+              "op": "gt",
+              "value": 1.5,
+              "yaxis": "left"
+            },
+            {
+              "colorMode": "critical",
+              "fill": false,
+              "line": true,
+              "op": "gt",
+              "value": 3,
+              "yaxis": "left"
+            }
+          ],
+          "timeRegions": [],
+          "title": "Ingress Perfomance",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "mode": "time",
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "short",
+              "logBase": 1,
+              "show": true
+            },
+            {
+              "format": "short",
+              "logBase": 1,
+              "show": true
+            }
+          ],
+          "yaxis": {
+            "align": false
+          }
+        }
+      ],
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "refId": "A"
+        }
+      ],
+      "title": "Performance",
+      "type": "row"
+    },
+    {
+      "collapsed": true,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 1
+      },
+      "id": 12,
+      "panels": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "description": "Amount of Masters healthy",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "mappings": [
+                {
+                  "options": {
+                    "match": "null",
+                    "result": {
+                      "text": "N/A"
+                    }
+                  },
+                  "type": "special"
+                }
+              ],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "#F2495C",
+                    "value": null
+                  },
+                  {
+                    "color": "#FFCB7D",
+                    "value": 0
+                  },
+                  {
+                    "color": "#5794F2",
+                    "value": 1
+                  }
+                ]
+              },
+              "unit": "none"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 6,
+            "w": 4,
+            "x": 0,
+            "y": 14
+          },
+          "id": 26,
+          "links": [],
+          "maxDataPoints": 100,
+          "options": {
+            "colorMode": "background",
+            "graphMode": "none",
+            "justifyMode": "auto",
+            "orientation": "horizontal",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "textMode": "auto"
+          },
+          "pluginVersion": "9.2.1",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "expr": "sum(jenkins_health_check_score{kubernetes_namespace=~\"$namespace\", app_kubernetes_io_instance=~\"$instance\"})",
+              "format": "time_series",
+              "intervalFactor": 1,
+              "legendFormat": "",
+              "refId": "A"
+            }
+          ],
+          "title": "Number of Masters",
+          "type": "stat"
+        },
+        {
+          "columns": [
+            {
+              "text": "Avg",
+              "value": "avg"
+            }
+          ],
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "description": "Dropwizard based Health Score derived from other metrics",
+          "fontSize": "100%",
+          "gridPos": {
+            "h": 6,
+            "w": 5,
+            "x": 4,
+            "y": 14
+          },
+          "id": 40,
+          "links": [],
+          "pageSize": 5,
+          "pluginVersion": "6.2.4",
+          "scroll": true,
+          "showHeader": true,
+          "sort": {
+            "col": 0,
+            "desc": true
+          },
+          "styles": [
+            {
+              "alias": "Score",
+              "align": "auto",
+              "colorMode": "row",
+              "colors": [
+                "#5794F2",
+                "#FF9830",
+                "#F2495C"
+              ],
+              "decimals": 0,
+              "pattern": "/.*/",
+              "thresholds": [
+                "90",
+                "95"
+              ],
+              "type": "number",
+              "unit": "percentunit"
+            }
+          ],
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "expr": "jenkins_health_check_score{kubernetes_namespace=~\"$namespace\", app_kubernetes_io_instance=~\"$instance\"}",
+              "format": "time_series",
+              "instant": true,
+              "intervalFactor": 1,
+              "legendFormat": "{{app_kubernetes_io_instance}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Health Score",
+          "transform": "timeseries_aggregations",
+          "type": "table-old"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "decimals": 1,
+              "displayName": "",
+              "mappings": [],
+              "max": 100,
+              "min": 0,
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "red",
+                    "index": 0,
+                    "value": null
+                  },
+                  {
+                    "color": "purple",
+                    "index": 1,
+                    "value": 50
+                  },
+                  {
+                    "color": "blue",
+                    "index": 2,
+                    "value": 75
+                  }
+                ]
+              },
+              "unit": "percent"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 6,
+            "w": 14,
+            "x": 9,
+            "y": 14
+          },
+          "id": 46,
+          "links": [],
+          "options": {
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "last"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showThresholdLabels": false,
+            "showThresholdMarkers": true
+          },
+          "pluginVersion": "9.2.1",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "expr": "sum(jenkins_runs_success_total{kubernetes_namespace=~\"$namespace\", app_kubernetes_io_instance=~\"$instance\"})\nby (app_kubernetes_io_instance) /\nsum(jenkins_runs_total_total{kubernetes_namespace=~\"$namespace\", app_kubernetes_io_instance=~\"$instance\"})\nby (app_kubernetes_io_instance) * 100",
+              "format": "time_series",
+              "intervalFactor": 1,
+              "legendFormat": "{{app_kubernetes_io_instance}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Job Success Ratio",
+          "type": "gauge"
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "decimals": 0,
+          "description": "Amount of Jobs Currenty in the Queue",
+          "fill": 1,
+          "fillGradient": 0,
+          "gridPos": {
+            "h": 6,
+            "w": 7,
+            "x": 0,
+            "y": 20
+          },
+          "hiddenSeries": false,
+          "id": 30,
+          "legend": {
+            "alignAsTable": false,
+            "avg": false,
+            "current": false,
+            "hideEmpty": false,
+            "hideZero": true,
+            "max": false,
+            "min": false,
+            "rightSide": false,
+            "show": true,
+            "total": false,
+            "values": false
+          },
+          "lines": true,
+          "linewidth": 1,
+          "links": [],
+          "nullPointMode": "null",
+          "options": {
+            "alertThreshold": true
+          },
+          "percentage": false,
+          "pluginVersion": "9.2.1",
+          "pointradius": 2,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "expr": "sum(jenkins_queue_size_value{kubernetes_namespace=~\"$namespace\", app_kubernetes_io_instance=~\"$instance\"}) by (app_kubernetes_io_instance)",
+              "format": "time_series",
+              "intervalFactor": 1,
+              "legendFormat": "{{app_kubernetes_io_instance}}",
+              "refId": "A"
+            }
+          ],
+          "thresholds": [
+            {
+              "colorMode": "critical",
+              "fill": false,
+              "line": true,
+              "op": "gt",
+              "value": 10,
+              "yaxis": "left"
+            },
+            {
+              "colorMode": "warning",
+              "fill": false,
+              "line": true,
+              "op": "gt",
+              "value": 5,
+              "yaxis": "left"
+            }
+          ],
+          "timeRegions": [],
+          "title": "Job Queue",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "mode": "time",
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "short",
+              "logBase": 1,
+              "show": true
+            },
+            {
+              "format": "short",
+              "logBase": 1,
+              "show": true
+            }
+          ],
+          "yaxis": {
+            "align": false
+          }
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "decimals": 0,
+          "fill": 1,
+          "fillGradient": 0,
+          "gridPos": {
+            "h": 6,
+            "w": 8,
+            "x": 7,
+            "y": 20
+          },
+          "hiddenSeries": false,
+          "hideTimeOverride": false,
+          "id": 50,
+          "interval": "",
+          "legend": {
+            "alignAsTable": true,
+            "avg": false,
+            "current": false,
+            "hideEmpty": true,
+            "hideZero": true,
+            "max": true,
+            "min": false,
+            "rightSide": true,
+            "show": true,
+            "total": false,
+            "values": true
+          },
+          "lines": true,
+          "linewidth": 2,
+          "links": [],
+          "nullPointMode": "null",
+          "options": {
+            "alertThreshold": true
+          },
+          "percentage": false,
+          "pluginVersion": "9.2.1",
+          "pointradius": 2,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "expr": "sum(increase(jenkins_runs_total_total{kubernetes_namespace=~\"$namespace\", app_kubernetes_io_instance=~\"$instance\"}[24h])) by (app_kubernetes_io_instance)",
+              "format": "time_series",
+              "interval": "",
+              "intervalFactor": 1,
+              "legendFormat": "{{app_kubernetes_io_instance}}-total",
+              "refId": "A"
+            },
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "expr": "sum(increase(jenkins_runs_failure_total{kubernetes_namespace=~\"$namespace\", app_kubernetes_io_instance=~\"$instance\"}[24h])) by (app_kubernetes_io_instance)",
+              "format": "time_series",
+              "interval": "",
+              "intervalFactor": 1,
+              "legendFormat": "{{app_kubernetes_io_instance}}-failed",
+              "refId": "B"
+            },
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "expr": "sum(increase(jenkins_runs_aborted_total{kubernetes_namespace=~\"$namespace\", app_kubernetes_io_instance=~\"$instance\"}[24h])) by (app_kubernetes_io_instance)",
+              "format": "time_series",
+              "interval": "",
+              "intervalFactor": 1,
+              "legendFormat": "{{app_kubernetes_io_instance}}-aborted",
+              "refId": "C"
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": "12h",
+          "timeRegions": [],
+          "title": "Runs Per Day",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "mode": "time",
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "decimals": 0,
+              "format": "short",
+              "logBase": 1,
+              "show": true
+            },
+            {
+              "decimals": 0,
+              "format": "short",
+              "logBase": 1,
+              "show": true
+            }
+          ],
+          "yaxis": {
+            "align": false
+          }
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "description": "Active Build Runs",
+          "fill": 1,
+          "fillGradient": 0,
+          "gridPos": {
+            "h": 6,
+            "w": 8,
+            "x": 15,
+            "y": 20
+          },
+          "hiddenSeries": false,
+          "id": 56,
+          "legend": {
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": false
+          },
+          "lines": true,
+          "linewidth": 1,
+          "links": [],
+          "nullPointMode": "null",
+          "options": {
+            "alertThreshold": true
+          },
+          "percentage": false,
+          "pluginVersion": "9.2.1",
+          "pointradius": 2,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "expr": "sum(jenkins_executor_in_use_history{kubernetes_namespace=~\"$namespace\", app_kubernetes_io_instance=~\"$instance\"}) by (app_kubernetes_io_instance)",
+              "format": "time_series",
+              "intervalFactor": 1,
+              "legendFormat": "{{app_kubernetes_io_instance}}",
+              "refId": "A"
+            }
+          ],
+          "thresholds": [],
+          "timeRegions": [],
+          "title": "Build Runs",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "mode": "time",
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "short",
+              "logBase": 1,
+              "show": true
+            },
+            {
+              "format": "short",
+              "logBase": 1,
+              "show": true
+            }
+          ],
+          "yaxis": {
+            "align": false
+          }
+        },
+        {
+          "cards": {},
+          "color": {
+            "cardColor": "#F2495C",
+            "colorScale": "sqrt",
+            "colorScheme": "interpolateSpectral",
+            "exponent": 0.8,
+            "min": 0,
+            "mode": "spectrum"
+          },
+          "dataFormat": "tsbuckets",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "description": "Heatmap of when Jobs are scheduled",
+          "fieldConfig": {
+            "defaults": {
+              "custom": {
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "scaleDistribution": {
+                  "type": "linear"
+                }
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 23,
+            "x": 0,
+            "y": 26
+          },
+          "heatmap": {},
+          "hideTimeOverride": false,
+          "hideZeroBuckets": false,
+          "highlightCards": true,
+          "id": 58,
+          "interval": "5m",
+          "legend": {
+            "show": true
+          },
+          "links": [],
+          "options": {
+            "calculate": false,
+            "calculation": {},
+            "cellGap": 2,
+            "cellValues": {},
+            "color": {
+              "exponent": 0.5,
+              "fill": "#F2495C",
+              "min": 0,
+              "mode": "scheme",
+              "reverse": false,
+              "scale": "exponential",
+              "scheme": "Spectral",
+              "steps": 128
+            },
+            "exemplars": {
+              "color": "rgba(255,0,255,0.7)"
+            },
+            "filterValues": {
+              "le": 1e-9
+            },
+            "legend": {
+              "show": true
+            },
+            "rowsFrame": {
+              "layout": "auto"
+            },
+            "showValue": "never",
+            "tooltip": {
+              "show": true,
+              "yHistogram": false
+            },
+            "yAxis": {
+              "axisPlacement": "left",
+              "decimals": 0,
+              "min": "0",
+              "reverse": false,
+              "unit": "short"
+            }
+          },
+          "pluginVersion": "9.2.1",
+          "reverseYBuckets": false,
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "expr": "sum(increase(jenkins_runs_total_total{kubernetes_namespace=~\"$namespace\", app_kubernetes_io_instance=~\"$instance\"}[2h])) by (app_kubernetes_io_instance)",
+              "format": "heatmap",
+              "instant": false,
+              "interval": "",
+              "intervalFactor": 10,
+              "legendFormat": "{{app_kubernetes_io_instance}}",
+              "refId": "A"
+            }
+          ],
+          "timeFrom": "168h",
+          "title": "Job Runs Heatmap",
+          "tooltip": {
+            "show": true,
+            "showHistogram": false
+          },
+          "type": "heatmap",
+          "xAxis": {
+            "show": true
+          },
+          "yAxis": {
+            "decimals": 0,
+            "format": "short",
+            "logBase": 1,
+            "min": "0",
+            "show": true
+          },
+          "yBucketBound": "auto"
+        },
+        {
+          "columns": [
+            {
+              "text": "Current",
+              "value": "current"
+            }
+          ],
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "description": "Jenkins Master Plugin Count",
+          "fontSize": "100%",
+          "gridPos": {
+            "h": 5,
+            "w": 7,
+            "x": 0,
+            "y": 33
+          },
+          "id": 14,
+          "interval": "1m",
+          "links": [],
+          "pluginVersion": "6.2.4",
+          "scroll": true,
+          "showHeader": true,
+          "sort": {
+            "col": 0,
+            "desc": true
+          },
+          "styles": [
+            {
+              "alias": "Time",
+              "align": "auto",
+              "dateFormat": "YYYY-MM-DD HH:mm:ss",
+              "pattern": "Time",
+              "type": "date"
+            },
+            {
+              "alias": "Master",
+              "align": "auto",
+              "colorMode": "row",
+              "colors": [
+                "#5794F2",
+                "#FF9830",
+                "#F2495C"
+              ],
+              "decimals": 0,
+              "link": false,
+              "pattern": "/.*/",
+              "thresholds": [
+                "95",
+                "130"
+              ],
+              "type": "number",
+              "unit": "short"
+            }
+          ],
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "expr": "jenkins_plugins_active{kubernetes_namespace=~\"$namespace\", app_kubernetes_io_instance=~\"$instance\"}",
+              "format": "time_series",
+              "instant": true,
+              "intervalFactor": 1,
+              "legendFormat": "{{app_kubernetes_io_instance}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Plugin Count",
+          "transform": "timeseries_to_rows",
+          "type": "table-old"
+        },
+        {
+          "columns": [
+            {
+              "text": "Current",
+              "value": "current"
+            }
+          ],
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "description": "Amount of plugins that are available for updating",
+          "fontSize": "100%",
+          "gridPos": {
+            "h": 5,
+            "w": 8,
+            "x": 7,
+            "y": 33
+          },
+          "id": 22,
+          "links": [],
+          "scroll": true,
+          "showHeader": true,
+          "sort": {
+            "col": 0,
+            "desc": true
+          },
+          "styles": [
+            {
+              "alias": "Time",
+              "align": "auto",
+              "dateFormat": "YYYY-MM-DD HH:mm:ss",
+              "pattern": "Time",
+              "type": "date"
+            },
+            {
+              "alias": "",
+              "align": "auto",
+              "colorMode": "row",
+              "colors": [
+                "#5794F2",
+                "#FF9830",
+                "#F2495C"
+              ],
+              "decimals": 0,
+              "pattern": "/.*/",
+              "thresholds": [
+                "3",
+                "10"
+              ],
+              "type": "number",
+              "unit": "short"
+            }
+          ],
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "expr": "sum(jenkins_plugins_withUpdate{kubernetes_namespace=~\"$namespace\", app_kubernetes_io_instance=~\"$instance\"}) by (app_kubernetes_io_instance)",
+              "format": "time_series",
+              "instant": true,
+              "intervalFactor": 1,
+              "legendFormat": "{{app_kubernetes_io_instance}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Plugin Updates Available",
+          "transform": "timeseries_aggregations",
+          "type": "table-old"
+        },
+        {
+          "columns": [
+            {
+              "text": "Current",
+              "value": "current"
+            },
+            {
+              "text": "Max",
+              "value": "max"
+            }
+          ],
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "description": "Jenkins Master Job Count",
+          "fontSize": "100%",
+          "gridPos": {
+            "h": 5,
+            "w": 8,
+            "x": 15,
+            "y": 33
+          },
+          "id": 16,
+          "links": [],
+          "scroll": true,
+          "showHeader": true,
+          "sort": {
+            "col": 0,
+            "desc": true
+          },
+          "styles": [
+            {
+              "alias": "Time",
+              "align": "auto",
+              "dateFormat": "YYYY-MM-DD HH:mm:ss",
+              "pattern": "Time",
+              "type": "date"
+            },
+            {
+              "alias": "",
+              "align": "auto",
+              "colorMode": "row",
+              "colors": [
+                "#F2495C",
+                "#FF9830",
+                "#5794F2"
+              ],
+              "decimals": 0,
+              "pattern": "/.*/",
+              "thresholds": [
+                "1"
+              ],
+              "type": "number",
+              "unit": "short"
+            }
+          ],
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "expr": "jenkins_job_count_value{kubernetes_namespace=~\"$namespace\", app_kubernetes_io_instance=~\"$instance\"}",
+              "format": "time_series",
+              "instant": true,
+              "intervalFactor": 1,
+              "legendFormat": "{{app_kubernetes_io_instance}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Job Count",
+          "transform": "timeseries_aggregations",
+          "type": "table-old"
+        },
+        {
+          "columns": [
+            {
+              "text": "Current",
+              "value": "current"
+            }
+          ],
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "description": "Counts offline build nodes that are connected to this master",
+          "fontSize": "100%",
+          "gridPos": {
+            "h": 6,
+            "w": 7,
+            "x": 0,
+            "y": 38
+          },
+          "id": 24,
+          "links": [],
+          "scroll": true,
+          "showHeader": true,
+          "sort": {
+            "col": 0,
+            "desc": true
+          },
+          "styles": [
+            {
+              "alias": "Time",
+              "align": "auto",
+              "dateFormat": "YYYY-MM-DD HH:mm:ss",
+              "pattern": "Time",
+              "type": "date"
+            },
+            {
+              "alias": "",
+              "align": "auto",
+              "colorMode": "row",
+              "colors": [
+                "#5794F2",
+                "#B877D9",
+                "#F2495C"
+              ],
+              "decimals": 2,
+              "pattern": "/.*/",
+              "thresholds": [
+                "1",
+                "3"
+              ],
+              "type": "number",
+              "unit": "short"
+            }
+          ],
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "expr": "sum(jenkins_node_offline_value{kubernetes_namespace=~\"$namespace\", app_kubernetes_io_instance=~\"$instance\"}) by (app_kubernetes_io_instance)",
+              "format": "time_series",
+              "instant": true,
+              "intervalFactor": 1,
+              "legendFormat": "{{app_kubernetes_io_instance}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Offline Nodes",
+          "transform": "timeseries_aggregations",
+          "type": "table-old"
+        },
+        {
+          "columns": [
+            {
+              "text": "Current",
+              "value": "current"
+            }
+          ],
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "description": "Uptime in hours",
+          "fontSize": "100%",
+          "gridPos": {
+            "h": 6,
+            "w": 8,
+            "x": 7,
+            "y": 38
+          },
+          "id": 6,
+          "links": [],
+          "pluginVersion": "6.2.4",
+          "scroll": true,
+          "showHeader": true,
+          "sort": {
+            "desc": false
+          },
+          "styles": [
+            {
+              "alias": "Time",
+              "align": "auto",
+              "dateFormat": "YYYY-MM-DD HH:mm:ss",
+              "pattern": "Time",
+              "type": "date"
+            },
+            {
+              "alias": "",
+              "align": "auto",
+              "colorMode": "row",
+              "colors": [
+                "#F2495C",
+                "#FF9830",
+                "#5794F2"
+              ],
+              "decimals": 0,
+              "pattern": "/.*/",
+              "thresholds": [
+                "1",
+                "24"
+              ],
+              "type": "number",
+              "unit": "short"
+            }
+          ],
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "expr": "vm_uptime_milliseconds{kubernetes_namespace=~\"$namespace\", app_kubernetes_io_instance=~\"$instance\"} / 3600000 ",
+              "format": "time_series",
+              "instant": true,
+              "intervalFactor": 1,
+              "legendFormat": "{{app_kubernetes_io_instance}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Uptime",
+          "transform": "timeseries_aggregations",
+          "type": "table-old"
+        },
+        {
+          "columns": [
+            {
+              "text": "Current",
+              "value": "current"
+            }
+          ],
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "description": "The current Master executor count, masters should not have executors, so only 0 is green.",
+          "fontSize": "100%",
+          "gridPos": {
+            "h": 6,
+            "w": 8,
+            "x": 15,
+            "y": 38
+          },
+          "id": 34,
+          "interval": "",
+          "links": [],
+          "scroll": true,
+          "showHeader": true,
+          "sort": {
+            "col": 0,
+            "desc": true
+          },
+          "styles": [
+            {
+              "alias": "Time",
+              "align": "auto",
+              "dateFormat": "YYYY-MM-DD HH:mm:ss",
+              "pattern": "Time",
+              "type": "date"
+            },
+            {
+              "alias": "",
+              "align": "auto",
+              "colorMode": "row",
+              "colors": [
+                "#F2495C",
+                "#FF9830",
+                "#5794F2"
+              ],
+              "decimals": 2,
+              "pattern": "/.*/",
+              "thresholds": [
+                "0",
+                "0",
+                "1"
+              ],
+              "type": "number",
+              "unit": "short"
+            }
+          ],
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "expr": "sum(jenkins_executor_count_value{kubernetes_namespace=~\"$namespace\", app_kubernetes_io_instance=~\"$instance\"}) by (app_kubernetes_io_instance)",
+              "format": "time_series",
+              "instant": true,
+              "intervalFactor": 1,
+              "legendFormat": "{{app_kubernetes_io_instance}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Master Executor Count",
+          "transform": "timeseries_aggregations",
+          "type": "table-old"
+        }
+      ],
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "refId": "A"
+        }
+      ],
+      "title": "General Info",
+      "type": "row"
+    },
+    {
+      "collapsed": true,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 2
+      },
+      "id": 2,
+      "panels": [
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "fill": 1,
+          "fillGradient": 0,
+          "gridPos": {
+            "h": 7,
+            "w": 10,
+            "x": 0,
+            "y": 15
+          },
+          "hiddenSeries": false,
+          "id": 48,
+          "legend": {
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": false
+          },
+          "lines": true,
+          "linewidth": 1,
+          "links": [],
+          "nullPointMode": "null",
+          "options": {
+            "alertThreshold": true
+          },
+          "percentage": false,
+          "pluginVersion": "9.2.1",
+          "pointradius": 2,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "expr": "1 - sum(vm_gc_G1_Young_Generation_time{kubernetes_namespace=~\"$namespace\", app_kubernetes_io_instance=~\"$instance\"})by (app_kubernetes_io_instance) \n/ \nsum (vm_uptime_milliseconds{kubernetes_namespace=~\"$namespace\", app_kubernetes_io_instance=~\"$instance\"}) by (app_kubernetes_io_instance)",
+              "format": "time_series",
+              "instant": false,
+              "intervalFactor": 1,
+              "legendFormat": "{{app_kubernetes_io_instance}}",
+              "refId": "A"
+            }
+          ],
+          "thresholds": [
+            {
+              "colorMode": "warning",
+              "fill": true,
+              "line": true,
+              "op": "lt",
+              "value": 0.998,
+              "yaxis": "left"
+            },
+            {
+              "colorMode": "critical",
+              "fill": true,
+              "line": true,
+              "op": "lt",
+              "value": 0.98,
+              "yaxis": "left"
+            }
+          ],
+          "timeRegions": [],
+          "title": "JVM GC Throughput",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "mode": "time",
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "decimals": 5,
+              "format": "percentunit",
+              "logBase": 1,
+              "max": "1",
+              "show": true
+            },
+            {
+              "format": "short",
+              "logBase": 1,
+              "show": false
+            }
+          ],
+          "yaxis": {
+            "align": false
+          }
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "description": "Ratio of JVM Memory used",
+          "fill": 1,
+          "fillGradient": 0,
+          "gridPos": {
+            "h": 7,
+            "w": 13,
+            "x": 10,
+            "y": 15
+          },
+          "hiddenSeries": false,
+          "id": 10,
+          "legend": {
+            "alignAsTable": false,
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": false
+          },
+          "lines": true,
+          "linewidth": 2,
+          "links": [],
+          "nullPointMode": "null",
+          "options": {
+            "alertThreshold": true
+          },
+          "percentage": false,
+          "pluginVersion": "9.2.1",
+          "pointradius": 2,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "expr": "sum(vm_memory_heap_usage{kubernetes_namespace=~\"$namespace\", app_kubernetes_io_instance=~\"$instance\"}) by (app_kubernetes_io_instance)",
+              "format": "time_series",
+              "intervalFactor": 1,
+              "legendFormat": "{{app_kubernetes_io_instance}}",
+              "refId": "A"
+            }
+          ],
+          "thresholds": [
+            {
+              "colorMode": "critical",
+              "fill": true,
+              "line": true,
+              "op": "gt",
+              "value": 0.75,
+              "yaxis": "left"
+            }
+          ],
+          "timeRegions": [],
+          "title": "Memory Ratio",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "mode": "time",
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "percentunit",
+              "logBase": 1,
+              "show": true
+            },
+            {
+              "format": "short",
+              "logBase": 1,
+              "show": false
+            }
+          ],
+          "yaxis": {
+            "align": false
+          }
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "decimals": 4,
+          "description": "JVM CPU Load",
+          "fill": 1,
+          "fillGradient": 0,
+          "gridPos": {
+            "h": 7,
+            "w": 10,
+            "x": 0,
+            "y": 22
+          },
+          "hiddenSeries": false,
+          "id": 4,
+          "legend": {
+            "alignAsTable": true,
+            "avg": false,
+            "current": true,
+            "hideEmpty": true,
+            "hideZero": true,
+            "max": true,
+            "min": false,
+            "rightSide": true,
+            "show": false,
+            "total": false,
+            "values": true
+          },
+          "lines": true,
+          "linewidth": 2,
+          "links": [],
+          "nullPointMode": "connected",
+          "options": {
+            "alertThreshold": true
+          },
+          "percentage": false,
+          "pluginVersion": "9.2.1",
+          "pointradius": 1,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": true,
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "expr": "vm_cpu_load{kubernetes_namespace=~\"$namespace\", app_kubernetes_io_instance=~\"$instance\"}",
+              "format": "time_series",
+              "instant": false,
+              "intervalFactor": 5,
+              "legendFormat": "{{app_kubernetes_io_instance}}",
+              "refId": "A"
+            }
+          ],
+          "thresholds": [],
+          "timeRegions": [],
+          "title": "CPU Load",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "mode": "time",
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "short",
+              "label": "",
+              "logBase": 1,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": "",
+              "logBase": 1,
+              "show": false
+            }
+          ],
+          "yaxis": {
+            "align": false
+          }
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "description": "JVM Memory usage",
+          "fill": 2,
+          "fillGradient": 0,
+          "gridPos": {
+            "h": 7,
+            "w": 13,
+            "x": 10,
+            "y": 22
+          },
+          "hiddenSeries": false,
+          "id": 8,
+          "legend": {
+            "alignAsTable": true,
+            "avg": false,
+            "current": true,
+            "max": true,
+            "min": false,
+            "rightSide": true,
+            "show": true,
+            "total": false,
+            "values": true
+          },
+          "lines": true,
+          "linewidth": 2,
+          "links": [],
+          "nullPointMode": "null",
+          "options": {
+            "alertThreshold": true
+          },
+          "percentage": false,
+          "pluginVersion": "9.2.1",
+          "pointradius": 2,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "expr": "vm_memory_total_used{kubernetes_namespace=~\"$namespace\", app_kubernetes_io_instance=~\"$instance\"}",
+              "format": "time_series",
+              "intervalFactor": 2,
+              "legendFormat": "{{app_kubernetes_io_instance}}",
+              "refId": "A"
+            }
+          ],
+          "thresholds": [],
+          "timeRegions": [],
+          "title": "Memory",
+          "tooltip": {
+            "shared": true,
+            "sort": 1,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "mode": "time",
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "short",
+              "logBase": 1,
+              "show": true
+            },
+            {
+              "format": "short",
+              "logBase": 1,
+              "show": true
+            }
+          ],
+          "yaxis": {
+            "align": false
+          }
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "description": "Lists memory usage of the Pod vs. Kubernetes Requests",
+          "fill": 1,
+          "fillGradient": 0,
+          "gridPos": {
+            "h": 8,
+            "w": 10,
+            "x": 0,
+            "y": 29
+          },
+          "hiddenSeries": false,
+          "id": 54,
+          "legend": {
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": false
+          },
+          "lines": true,
+          "linewidth": 1,
+          "links": [],
+          "nullPointMode": "connected",
+          "options": {
+            "alertThreshold": true
+          },
+          "percentage": false,
+          "pluginVersion": "9.2.1",
+          "pointradius": 2,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "expr": "sum (label_join(container_memory_usage_bytes{\n    container_name=\"jenkins\",\n    namespace=~\"$namespace\"\n  }, \n  \"pod\", \n  \",\", \n  \"pod_name\"\n)) by (pod) / \nsum (kube_pod_container_resource_requests_memory_bytes { \n        container=\"jenkins\",\n        namespace=~\"$namespace\"\n    }\n) by (pod)",
+              "format": "time_series",
+              "intervalFactor": 1,
+              "legendFormat": "{{pod}}",
+              "refId": "A"
+            }
+          ],
+          "thresholds": [],
+          "timeRegions": [],
+          "title": "Memory Usage vs. Request",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "mode": "time",
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "short",
+              "logBase": 1,
+              "show": true
+            },
+            {
+              "format": "short",
+              "logBase": 1,
+              "show": true
+            }
+          ],
+          "yaxis": {
+            "align": false
+          }
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "description": "The ratio of open file descriptors\nSee: https://support.cloudbees.com/hc/en-us/articles/204246140-Too-many-open-files",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "mappings": [],
+              "max": 1,
+              "min": 0,
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "blue",
+                    "index": 0,
+                    "value": null
+                  },
+                  {
+                    "color": "orange",
+                    "index": 1,
+                    "value": 60
+                  },
+                  {
+                    "color": "red",
+                    "index": 2,
+                    "value": 80
+                  }
+                ]
+              },
+              "unit": "percentunit"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 5,
+            "x": 10,
+            "y": 29
+          },
+          "id": 28,
+          "links": [],
+          "options": {
+            "displayMode": "basic",
+            "minVizHeight": 10,
+            "minVizWidth": 0,
+            "orientation": "horizontal",
+            "reduceOptions": {
+              "calcs": [
+                "last"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showUnfilled": true
+          },
+          "pluginVersion": "9.2.1",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "expr": "vm_file_descriptor_ratio{kubernetes_namespace=~\"$namespace\", app_kubernetes_io_instance=~\"$instance\"}",
+              "format": "time_series",
+              "instant": true,
+              "intervalFactor": 1,
+              "legendFormat": "{{app_kubernetes_io_instance}}",
+              "refId": "A"
+            }
+          ],
+          "title": "File Descriptor Ratio",
+          "type": "bargauge"
+        }
+      ],
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "refId": "A"
+        }
+      ],
+      "title": "JVM Metrics",
+      "type": "row"
+    }
+  ],
+  "refresh": "5s",
+  "schemaVersion": 37,
+  "style": "dark",
+  "tags": [
+    "Jenkins",
+    "Prometheus"
+  ],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "selected": false,
+          "text": "Prometheus",
+          "value": "Prometheus"
+        },
+        "hide": 0,
+        "includeAll": false,
+        "multi": false,
+        "name": "cluster",
+        "options": [],
+        "query": "prometheus",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "type": "datasource"
+      },
+      {
+        "current": {
+          "selected": true,
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "prometheus"
+        },
+        "definition": "label_values(jenkins_health_check_duration, app_kubernetes_io_instance)",
+        "hide": 0,
+        "includeAll": true,
+        "label": "Master",
+        "multi": true,
+        "name": "instance",
+        "options": [],
+        "query": {
+          "query": "label_values(jenkins_health_check_duration, app_kubernetes_io_instance)",
+          "refId": "Prometheus-instance-Variable-Query"
+        },
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 1,
+        "tagValuesQuery": "",
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "current": {
+          "selected": true,
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "prometheus"
+        },
+        "definition": "label_values(jenkins_health_check_duration, kubernetes_namespace)",
+        "hide": 0,
+        "includeAll": true,
+        "label": "Namespace",
+        "multi": true,
+        "name": "namespace",
+        "options": [],
+        "query": {
+          "query": "label_values(jenkins_health_check_duration, kubernetes_namespace)",
+          "refId": "Prometheus-namespace-Variable-Query"
+        },
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 1,
+        "tagValuesQuery": "",
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "current": {
+          "selected": true,
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "prometheus"
+        },
+        "definition": "label_values(kube_node_info{component=\"kube-state-metrics\"}, node)",
+        "hide": 0,
+        "includeAll": true,
+        "label": "K8S Node",
+        "multi": true,
+        "name": "node",
+        "options": [],
+        "query": {
+          "query": "label_values(kube_node_info{component=\"kube-state-metrics\"}, node)",
+          "refId": "Prometheus-node-Variable-Query"
+        },
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 5,
+        "tagValuesQuery": "",
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "current": {
+          "isNone": true,
+          "selected": false,
+          "text": "None",
+          "value": ""
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "prometheus"
+        },
+        "definition": "label_values(jenkins_health_check_duration, kubernetes_namespace)",
+        "hide": 0,
+        "includeAll": false,
+        "multi": false,
+        "name": "Test",
+        "options": [],
+        "query": {
+          "query": "label_values(jenkins_health_check_duration, kubernetes_namespace)",
+          "refId": "Prometheus-Test-Variable-Query"
+        },
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 1,
+        "tagValuesQuery": "",
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      }
+    ]
+  },
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "timepicker": {
+    "refresh_intervals": [
+      "5s",
+      "10s",
+      "30s",
+      "1m",
+      "5m",
+      "15m",
+      "30m",
+      "1h",
+      "2h",
+      "1d"
+    ],
+    "time_options": [
+      "5m",
+      "15m",
+      "1h",
+      "6h",
+      "12h",
+      "24h",
+      "2d",
+      "7d",
+      "30d"
+    ]
+  },
+  "timezone": "",
+  "title": "Jenkins Masters",
+  "uid": "8Z9-POHWz",
+  "version": 1,
+  "weekStart": ""
+}
