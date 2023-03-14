@@ -227,5 +227,5 @@ grafana:
         token: ''
     grafana-dashboards-cloudbees:
       cb-controllers:
-        url: https://raw.githubusercontent.com/dotdc/grafana-dashboards-kubernetes/master/dashboards/k8s-views-pods.json
+        url: https://raw.githubusercontent.com/carlosrodlop/K8s-lib/main/helm/charts/kube-prometheus-stack-local/dashboards/cloudbees-controllers.json
         token: ''
