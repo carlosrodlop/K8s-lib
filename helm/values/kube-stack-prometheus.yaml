@@ -33,8 +33,8 @@ prometheus:
         metrics_path: "/prometheus/"
         static_configs:
           - targets:
-              ["cjoc.cbci.svc.cluster.local:80"]                                                                                             
-    #https://observability.thomasriley.co.uk/prometheus/configuring-prometheus/using-service-monitors/          
+              ["cjoc.cbci.svc.cluster.local:80"]
+    #https://observability.thomasriley.co.uk/prometheus/configuring-prometheus/using-service-monitors/
     serviceMonitorSelector:
         matchLabels:
           app.kubernetes.io/instance: kube-prometheus-stack
@@ -189,16 +189,39 @@ thanosRuler:
       kubernetes.io/os: linux
       kubernetes.io/arch: amd64
 grafana:
-  ingress:
-    enabled : true
-    annotations:
-      kubernetes.io/ingress.class : alb
-      alb.ingress.kubernetes.io/scheme : internet-facing
-      alb.ingress.kubernetes.io/target-type : ip
-      alb.ingress.kubernetes.io/listen-ports : '[{"HTTP": 80}, {"HTTPS":443}]'
-      alb.ingress.kubernetes.io/certificate-arn : ${cert_arn}
-      alb.ingress.kubernetes.io/actions.ssl-redirect : '{"Type": "redirect", "RedirectConfig": { "Protocol": "HTTPS", "Port": "443", "StatusCode": "HTTP_301"}}'
-      external-dns.alpha.kubernetes.io/hostname : ${hostname}
-    hosts: 
-    - ${hostname}
-
+  # https://0xdc.me/blog/a-set-of-modern-grafana-dashboards-for-kubernetes/
+  # https://github.com/dotdc/grafana-dashboards-kubernetes/tree/master#install-with-helm-values
+  dashboardProviders:
+    dashboardproviders.yaml:
+      apiVersion: 1
+      providers:
+      - name: 'grafana-dashboards-kubernetes'
+        orgId: 1
+        folder: 'Kubernetes'
+        type: file
+        disableDeletion: true
+        editable: true
+        options:
+          path: /var/lib/grafana/dashboards/grafana-dashboards-kubernetes
+      - name: 'grafana-dashboards-cloudbees'
+        orgId: 1
+        folder: 'CloudBees'
+        type: file
+        disableDeletion: false
+        editable: true
+        options:
+          path: /var/lib/grafana/dashboards/grafana-dashboards-cloudbees
+  dashboards:
+    grafana-dashboards-kubernetes:
+      k8s-views-global:
+        url: https://raw.githubusercontent.com/dotdc/grafana-dashboards-kubernetes/master/dashboards/k8s-views-global.json
+        token: ''
+      k8s-views-namespaces:
+        url: https://raw.githubusercontent.com/dotdc/grafana-dashboards-kubernetes/master/dashboards/k8s-views-namespaces.json
+        token: ''
+      k8s-views-nodes:
+        url: https://raw.githubusercontent.com/dotdc/grafana-dashboards-kubernetes/master/dashboards/k8s-views-nodes.json
+        token: ''
+      k8s-views-pods:
+        url: https://raw.githubusercontent.com/dotdc/grafana-dashboards-kubernetes/master/dashboards/k8s-views-pods.json
+        token: ''

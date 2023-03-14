@@ -9,7 +9,6 @@ OperationCenter:
   Ingress:
     Class: alb
   Casc:
-    OperationCenterBundle: "modern"
     ControllerBundleStorageSCM: "https://github.com/carlosrodlop/cb-casc-controllers.git"
   Credentials:
     Github:
@@ -17,7 +16,5 @@ OperationCenter:
       User: "gh_ExampleUser"
 LoadControllers:
   ControllersNumber: 5
-  JobsPerController: 2
-  JobFrequency: 30
 Agents:
   Namespace: "cbci-agents"

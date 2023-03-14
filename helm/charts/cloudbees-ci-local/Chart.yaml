@@ -1,5 +1,5 @@
 apiVersion: v2
-name: cb-ci-casc
+name: cloudbees-ci-local
 description: A Helm chart for Kubernetes
 type: application
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
