@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    grafana_dashboard: "1"
+  name: grafana-cb-controllers
+  annotations:
+    k8s-sidecar-target-directory: /var/lib/grafana/dashboards/grafana-dashboards-cloudbees
+data:
+  grafana-cb-controllers.json: |-
