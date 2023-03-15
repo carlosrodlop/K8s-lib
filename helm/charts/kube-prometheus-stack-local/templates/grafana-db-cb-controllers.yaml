@@ -1,4 +1,4 @@
-{{- if (default $configmap true) }}
+{{- if (default .Values.grafana.dashboard.cbci-controllers-configmap true) }}
 apiVersion: v1
 kind: ConfigMap
 metadata:

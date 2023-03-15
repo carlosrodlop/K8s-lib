@@ -3,21 +3,28 @@
 # Declare variables to be passed into your templates.
 
 operationCenter:
-  # -- Whether to expose the ingress controller to the public world
+  # -- http or https
   protocol: "https"
-  # -- Whether to expose the ingress controller to the public world
+  # -- DNS zone (Eg: Route 53 in Hosted Zone in AWS)
   hostname: "example.com"
-  # -- Whether to expose the ingress controller to the public world
+  # -- Subdomain prefix used for all CloudBees CI applications (Operation Center and Controllers)
   subdomain: "ci"
   ingress:
+    # -- alb or nlb
     class: alb
   casc:
+    # -- Location of CloudBees Bundle Storage for Controller
     controllerBundleStorageSCM: "https://github.com/carlosrodlop/cb-casc-controllers.git"
   credentials:
+    # -- Github Secret pair
     github:
+      # -- Github Secret for token
       token: "ghp_xxxxxxxxxxxxxxxxxxxxExampleToken"
+      # -- Github Secret for user
       user: "gh_ExampleUser"
-loadControllers:
-  controllersNumber: 5
+controllers:
+  # -- Number of Load Controllers for Performance Testing
+  loadControllersNumber: 5
 agents:
+  # -- Number of Load Controllers for Performance Testing
   namespace: "cbci-agents"
