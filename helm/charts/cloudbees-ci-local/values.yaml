@@ -3,11 +3,11 @@
 # Declare variables to be passed into your templates.
 
 operationCenter:
-  # https or http
+  # -- Whether to expose the ingress controller to the public world
   protocol: "https"
-  # test
+  # -- Whether to expose the ingress controller to the public world
   hostname: "example.com"
-  # ci subdomain
+  # -- Whether to expose the ingress controller to the public world
   subdomain: "ci"
   ingress:
     class: alb
