@@ -1,5 +1,5 @@
 apiVersion: v2
-name: cloudbees-ci-local
+name: cb-ci-local
 description: Local helm chart for additional configuration beyond remote cloudbees-ci helm chart
 type: application
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
