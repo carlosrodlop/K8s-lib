@@ -2,19 +2,22 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-OperationCenter:
-  Protocol: "https"
-  Hostname: "example.com"
-  Subdomain: "ci"
-  Ingress:
-    Class: alb
-  Casc:
-    ControllerBundleStorageSCM: "https://github.com/carlosrodlop/cb-casc-controllers.git"
-  Credentials:
-    Github:
-      Token: "ghp_xxxxxxxxxxxxxxxxxxxxExampleToken"
-      User: "gh_ExampleUser"
-LoadControllers:
-  ControllersNumber: 5
-Agents:
-  Namespace: "cbci-agents"
+operationCenter:
+  # https or http
+  protocol: "https"
+  # test
+  hostname: "example.com"
+  # ci subdomain
+  subdomain: "ci"
+  ingress:
+    class: alb
+  casc:
+    controllerBundleStorageSCM: "https://github.com/carlosrodlop/cb-casc-controllers.git"
+  credentials:
+    github:
+      token: "ghp_xxxxxxxxxxxxxxxxxxxxExampleToken"
+      user: "gh_ExampleUser"
+loadControllers:
+  controllersNumber: 5
+agents:
+  namespace: "cbci-agents"
