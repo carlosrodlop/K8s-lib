@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+    name: applications-quota
+spec:
+    hard:
+        limits.cpu: "4"
+        limits.memory: "16Gi"

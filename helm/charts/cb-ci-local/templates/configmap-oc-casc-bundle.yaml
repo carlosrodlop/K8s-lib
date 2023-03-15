@@ -12,10 +12,10 @@ data:
   location.yaml: |-
     unclassified:
       location:
-{{- if eq .Values.OperationCenter.Ingress.Class "alb" }}
-          url: {{ .Values.OperationCenter.Protocol }}://cjoc.{{ .Values.OperationCenter.Hostname }}
+{{- if eq .Values.operationCenter.ingress.class "alb" }}
+          url: {{ printf "%s://cjoc.%s" .Values.operationCenter.protocol .Values.operationCenter.hostname }}
 {{- else }}
-          url: {{ .Values.OperationCenter.Protocol }}://{{ .Values.OperationCenter.Subdomain }}.{{ .Values.OperationCenter.Hostname }}/cjoc/
+          url: {{ printf "%s://%s.%s/cjoc/" .Values.operationCenter.protocol .Values.operationCenter.subdomain .Values.operationCenter.hostname }}
 {{- end }}
   controllerBundleStorageSCM.yaml: |-
     unclassified:
@@ -30,7 +30,7 @@ data:
               scmSource:
                 git:
                   credentialsId: "GH-token"
-                  remote: {{ .Values.OperationCenter.Casc.ControllerBundleStorageSCM }}
+                  remote: {{ .Values.operationCenter.casc.controllerBundleStorageSCM }}
                   traits:
                     - "gitBranchDiscovery"
   credentials.yaml: |-
@@ -47,9 +47,9 @@ data:
     removeStrategy:
       items: NONE
       rbac: SYNC
-{{- if gt (int .Values.LoadControllers.ControllersNumber) 0 }}
+{{- if gt (int .Values.controllers.loadControllersNumber) 0 }}
     items:
-{{- range (untilStep 0 (int .Values.LoadControllers.ControllersNumber) 1) }}
+{{- range (untilStep 0 (int .Values.controllers.loadControllersNumber) 1) }}
     - kind: managedController
       name: load-boy{{ . }}
       properties:
@@ -58,8 +58,8 @@ data:
       configuration:
         kubernetes:
           domain: load-boy{{ . }}
-          memory: 1500
-          cpus: 1.0
+          memory: 3500
+          cpus: 2.0
           disk: 30
 {{- end }}
 {{- else }}

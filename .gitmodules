@@ -1,6 +1,6 @@
-[submodule "helm/charts/cb-ci-casc/casc/oc"]
-	path = helm/charts/cb-ci-casc/casc/oc
-	url = git@github.com:carlosrodlop/cb-casc-oc.git
-[submodule "helm/charts/cb-ci-casc/casc/controllers"]
-	path = helm/charts/cb-ci-casc/casc/controllers
+[submodule "helm/charts/cb-ci-local/casc/controllers"]
+	path = helm/charts/cb-ci-local/casc/controllers
 	url = git@github.com:carlosrodlop/cb-casc-controllers.git
+[submodule "helm/charts/cb-ci-local/casc/oc"]
+	path = helm/charts/cb-ci-local/casc/oc
+	url = git@github.com:carlosrodlop/cb-casc-oc.git
