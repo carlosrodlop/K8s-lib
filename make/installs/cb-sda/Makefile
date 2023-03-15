@@ -7,7 +7,7 @@ DIR_HELM_VALUES := $(MKFILE)/../../../helm/values
 
 include $(PARENT_MKFILE)
 
-#Update also 
+#Update also
 CB_LB_CONFIG	?= cb-ci.eks.alb.yaml
 
 #https://kubernetes.io/docs/concepts/configuration/organize-cluster-access-kubeconfig/#the-kubeconfig-environment-variable
@@ -49,11 +49,9 @@ cbci-helm-update: check_kubeconfig check_envfile guard-CB_LB_CONFIG
 			s/\$${ingressClass}/$$ING_CLASS/g; \
 			s/\$${secretGHToken}/$$SECRET_GH_TOKEN/g; \
 			s/\$${secretGHUser}/$$SECRET_GH_USER/g; \
-			s/\$${LoadControllers}/$$N_LOAD_CONTROLLERS/g; \
-			s/\$${JobsPerController}/$$N_JOBS_CONTROLLERS/g; \
-			s/\$${JobFrequency}/$$JOB_FREQUENCY/g; \
-			s/\$${agentNamespace}/$$AGENT_NA/g;" < $(DIR_HELM_VALUES)/cb-ci-casc.yaml > $(MKFILE)/values.cb-ci-casc.yaml && \
-		helm upgrade --install cbci-casc $(DIR_CHARTS)/cb-ci-casc --create-namespace --namespace "$$CBCI_NS" -f "$(MKFILE)/values.cb-ci-casc.yaml"
+			s/\$${loadControllers}/$$N_LOAD_CONTROLLERS/g; \
+			s/\$${agentNamespace}/$$AGENT_NA/g;" < $(DIR_HELM_VALUES)/cb-ci-local.yaml > $(MKFILE)/values.cb-ci-local.yaml && \
+		helm upgrade --install cbci-local $(DIR_CHARTS)/cb-ci-local --create-namespace --namespace "$$CBCI_NS" -f "$(MKFILE)/values.cb-ci-local.yaml"
 	$(call print_subtitle,Update CloudBees values.yaml using $(CB_LB_CONFIG))
 	sed "/#Common_Configuration/e cat $(DIR_HELM_VALUES)/$(CB_LB_CONFIG)" < $(DIR_HELM_VALUES)/cb-ci.common.yaml > /tmp/values.tmp.cb-ci.yaml
 	source .env && \
@@ -75,7 +73,7 @@ check_availability: ## Check availability of the OC Example: make check_availabi
 check_availability: guard-OC_URL
 	source .env && \
 		until kubectl get ing -n $$CBCI_NS cjoc; do sleep 2 && echo "Waiting for Ingress to get ready"; done
-	@echo "Ingress Ready"	
+	@echo "Ingress Ready"
 	@until curl -u admin:$(shell cat $(MKFILE)/secret.jenkinsPass) -s $(OC_URL)  > /dev/null; do sleep 10 && echo "Waiting for Operation Center at $(OC_URL)"; done
 	@echo "Operation Center Ready at $(OC_URL)"
 
