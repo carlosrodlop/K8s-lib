@@ -7,5 +7,10 @@
 
 ## References
 
-- [Helm dashboard | komodorio](https://github.com/komodorio/helm-dashboard)
+- [Kubernetes Documentation](https://kubernetes.io/docs/home/)
+- [Helm | Docs](https://helm.sh/docs/)
 - [Artifact Hub](https://artifacthub.io/)
+- [Cloud Native Landscape](https://landscape.cncf.io/)
+- [A visual guide on troubleshooting Kubernetes deployments](https://learnk8s.io/troubleshooting-deployments)
+- [Learn Cloud Native – Sysdig](https://sysdig.com/learn-cloud-native/)
+- [Learn Kubernetes with Lessons & Tutorials | Kube by Example](https://kubebyexample.com/)
