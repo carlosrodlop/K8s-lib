@@ -1,3 +1,4 @@
+#
 #Common_Configuration
   CasC:
     Enabled: true
@@ -11,7 +12,7 @@
         secretName: oc-secrets
     # - name: mc-load-casc-bundle
     #   configMap:
-    #     name: mc-load-casc-bundle  
+    #     name: mc-load-casc-bundle
   ExtraVolumeMounts:
     - name: oc-secrets
       mountPath: /var/run/secrets/cjoc
@@ -30,4 +31,3 @@ Agents:
   SeparateNamespace:
     Enabled: true
     Name: cbci-agents
-
