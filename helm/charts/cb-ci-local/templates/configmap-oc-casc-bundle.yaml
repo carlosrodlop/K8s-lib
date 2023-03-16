@@ -30,7 +30,7 @@ data:
               scmSource:
                 git:
                   credentialsId: "GH-token"
-                  remote: {{ quote .Values.operationCenter.casc.controllerBundleStorageSCM }}
+                  remote: {{ .Values.operationCenter.casc.controllerBundleStorageSCM | quote }}
                   traits:
                     - "gitBranchDiscovery"
   credentials.yaml: |-
