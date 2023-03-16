@@ -1,7 +1,7 @@
 MKFILE   		:= $(abspath $(dir $(lastword $(MAKEFILE_LIST))))
 PARENT_MKFILE   := $(HOME)/.Makefile # docker
 #PARENT_MKFILE   := $(MKFILE)/../../../carlosrodlop/Makefile # local
-DIR_TF_ROOT		:= $(MKFILE)/../../../../clouds/aws/root/eks-bp-v4
+DIR_TF_ROOT		:= $(MKFILE)/../../../../../clouds/aws/root/eks-bp-v4
 DIR_CHARTS 		:= $(MKFILE)/../../../helm/charts
 DIR_HELM_VALUES := $(MKFILE)/../../../helm/values
 
@@ -39,7 +39,7 @@ define getTFValue
 endef
 
 .PHONY: cbci-helm-update
-cbci-helm-update: ## Install and Update CloudBees Core via Helm.
+cbci-helm-update: ## Install and Update CloudBees Core Modern via Helm.
 cbci-helm-update: check_kubeconfig check_envfile guard-CB_LB_CONFIG
 	$(call print_subtitle,Update Casc values.yaml)
 	source .env && \
@@ -78,7 +78,7 @@ check_availability: guard-OC_URL
 	@echo "Operation Center Ready at $(OC_URL)"
 
 .PHONY: cbci-helm-delete
-cbci-helm-delete: ## Delete CloudBees Core via Helm. Ref: https://docs.cloudbees.com/docs/cloudbees-ci/latest/kubernetes-install-guide/kubernetes-uninstall
+cbci-helm-delete: ## Delete CloudBees Core Modern via Helm. Ref: https://docs.cloudbees.com/docs/cloudbees-ci/latest/kubernetes-install-guide/kubernetes-uninstall
 cbci-helm-delete: check_kubeconfig check_envfile
 	$(call print_title,Uninstall CloudBees Core via Helm)
 	source .env && \
