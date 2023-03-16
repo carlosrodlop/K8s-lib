@@ -1,8 +1,13 @@
 apiVersion: v1
 kind: ResourceQuota
 metadata:
-    name: applications-quota
+    name: "r.quota-cb.apps"
 spec:
     hard:
-        limits.cpu: "4"
-        limits.memory: "16Gi"
+        # 3 reserved apps: 1 cjoc + 2 spare controllers
+        {{- $num_ci_apps := add .Values.controllers.loadControllersNumber 3 -}}
+        pods: {{ $num_ci_apps }}
+        #Max 4units per Controller
+        limits.cpu: {{ mul $num_ci_apps 4 }}
+        #Max 16GB per Controller
+        limits.memory: "{{ mul $num_ci_apps 16 }}Gi"
