@@ -1,6 +1,6 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: {{ .Values.agents.namespace }}
+  name: {{ .Values.agents.namespace | quote }}
   labels:
-    name: {{ .Values.agents.namespace }}
+    name: {{ .Values.agents.namespace | quote }}

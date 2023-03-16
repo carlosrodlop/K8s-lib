@@ -2,7 +2,7 @@ apiVersion: v1
 kind: "PersistentVolumeClaim"
 metadata:
   name: "maven-cache"
-  namespace: {{ .Values.agents.namespace }}
+  namespace: {{ .Values.agents.namespace | quote }}
 spec:
   accessModes:
     - ReadWriteOnce
