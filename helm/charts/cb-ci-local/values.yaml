@@ -26,5 +26,5 @@ controllers:
   # -- Number of Load Controllers for Performance Testing
   loadControllersNumber: 5
 agents:
-  # -- Number of Load Controllers for Performance Testing
+  # -- Agents Namespace
   namespace: "cbci-agents"
