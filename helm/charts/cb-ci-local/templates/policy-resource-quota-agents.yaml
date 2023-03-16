@@ -11,4 +11,4 @@ spec:
         {{- $num_ci_agents := mul $num_ci_apps 25 -}}
         pods: {{ $num_ci_agents }}
         # Max 2Gi per Agents, not all agents requires de same memory
-        limits.memory: "{{ mul $num_ci_agents 2 }}Gi"
+        memory: {{ mul $num_ci_agents 2 }}Gi
