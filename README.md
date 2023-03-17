@@ -5,7 +5,7 @@
 - It contains charts and roots deployments for different Applications and Kubernetes add-ons-
 - It uses the [Docker Labs](https://github.com/carlosrodlop/docker-labs) repository to run its content and make this content portable.
 
-## References
+## My ![Awesome](https://cdn.rawgit.com/sindresorhus/awesome/d7305f38d29fed78fa85652e3a63e154dd8e8829/media/badge.svg) references
 
 - [Awesome Kubernetes Repos](https://github.com/stars/carlosrodlop/lists/kubernetes)
 - [Kubernetes Documentation](https://kubernetes.io/docs/home/)
@@ -17,3 +17,9 @@
 - [Learn Kubernetes with Lessons & Tutorials | Kube by Example](https://kubebyexample.com/)
 - [Network Policy Editor for Kubernetes](https://editor.cilium.io/?id=Duo0R0Wc7egzNHrM)
 - [Kubernetes Monitoring Guide](https://www.reddit.com/r/kubernetes/comments/10q9dn1/a_guide_to_kubernetes_monitoring_in_this_5_part/)
+- [Kubernetes - Awesome Software Architecture](https://awesome-architecture.com/devops/kubernetes/kubernetes/)
+
+### YouTube channels
+
+- [DevOps Toolkit - YouTube](https://www.youtube.com/c/DevOpsToolkit)
+- [That DevOps Guy - YouTube](https://www.youtube.com/c/MarcelDempers)
