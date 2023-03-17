@@ -7,6 +7,7 @@
 
 ## References
 
+- [Awesome Kubernetes Repos](https://github.com/stars/carlosrodlop/lists/kubernetes)
 - [Kubernetes Documentation](https://kubernetes.io/docs/home/)
 - [Helm | Docs](https://helm.sh/docs/)
 - [Artifact Hub](https://artifacthub.io/)
@@ -14,3 +15,5 @@
 - [A visual guide on troubleshooting Kubernetes deployments](https://learnk8s.io/troubleshooting-deployments)
 - [Learn Cloud Native – Sysdig](https://sysdig.com/learn-cloud-native/)
 - [Learn Kubernetes with Lessons & Tutorials | Kube by Example](https://kubebyexample.com/)
+- [Network Policy Editor for Kubernetes](https://editor.cilium.io/?id=Duo0R0Wc7egzNHrM)
+- [Kubernetes Monitoring Guide](https://www.reddit.com/r/kubernetes/comments/10q9dn1/a_guide_to_kubernetes_monitoring_in_this_5_part/)
