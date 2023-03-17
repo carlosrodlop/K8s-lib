@@ -18,6 +18,7 @@
 - [Network Policy Editor for Kubernetes](https://editor.cilium.io/?id=Duo0R0Wc7egzNHrM)
 - [Kubernetes Monitoring Guide](https://www.reddit.com/r/kubernetes/comments/10q9dn1/a_guide_to_kubernetes_monitoring_in_this_5_part/)
 - [Kubernetes - Awesome Software Architecture](https://awesome-architecture.com/devops/kubernetes/kubernetes/)
+- [Cloud Native - Awesome Software Architecture](https://awesome-architecture.com/cloud-native/)
 
 ### YouTube channels
 
