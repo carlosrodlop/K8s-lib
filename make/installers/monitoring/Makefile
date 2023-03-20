@@ -1,6 +1,5 @@
 MKFILE   		:= $(abspath $(dir $(lastword $(MAKEFILE_LIST))))
-PARENT_MKFILE   := $(HOME)/.Makefile # docker
-#PARENT_MKFILE   := $(MKFILE)/../../../carlosrodlop/Makefile # local
+PARENT_MKFILE   := $(HOME)/.Makefile
 DIR_HELM_VALUES := $(MKFILE)/../../../helm/values
 
 include $(PARENT_MKFILE)
@@ -44,4 +43,19 @@ komodor_delete: ## Delete Komodor Agent
 komodor_delete: check_kubeconfig
 	source .env && \
 		helm uninstall k8s-watcher --namespace "$$MONITORING_NS" || echo "Relese k8s-watcher does not exist" && \
-		helm repo remove komodorio || echo "Repository ckomodorio does not exist"
+		helm repo remove komodorio || echo "Repository komodorio does not exist"
+
+.PHONY: helm-dashboard_update
+helm-dashboard_update: ## Install Helm Dashboard passing STORAGE_CLASS
+helm-dashboard_update: check_kubeconfig
+	source .env && \
+		sed "s/\$${storageClass}/$$STORAGE_CLASS/g; " < $(DIR_HELM_VALUES)/komodor-helm-dashboard.yaml > $(MKFILE)/values.komodor-helm-dashboard.yaml && \
+		helm repo add komodorio https://helm-charts.komodor.io && helm repo update
+		helm upgrade --install helm-dashboard komodorio/helm-dashboard --create-namespace --namespace "$$MONITORING_NS" -f "$(MKFILE)/values.komodor-helm-dashboard.yaml" --wait --timeout=90s
+
+.PHONY: helm-dashboard_delete
+helm-dashboard_delete: ## Delete Helm Dashboard
+helm-dashboard_delete: check_kubeconfig
+	source .env && \
+		helm uninstall helm-dashboard --namespace "$$MONITORING_NS" || echo "Relese helm-dashboard does not exist" && \
+		helm repo remove komodorio || echo "Repository komodorio does not exist"
