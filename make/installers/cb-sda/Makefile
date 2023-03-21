@@ -2,12 +2,13 @@ MKFILE   		:= $(abspath $(dir $(lastword $(MAKEFILE_LIST))))
 PARENT_MKFILE   := $(HOME)/.Makefile # docker
 DIR_TF_ROOT		:= $(MKFILE)/../../../../../clouds/aws/root/eks-bp-v4
 DIR_CHARTS 		:= $(MKFILE)/../../../helm/charts
-DIR_HELM_VALUES := $(MKFILE)/../../../helm/values
+DIR_HELM_VALUES := $(MKFILE)/../../../helm/values/cloudbees
 
 include $(PARENT_MKFILE)
 
 #Update also
 CB_LB_CONFIG	?= cb-ci.eks.alb.yaml
+OC_URL 	        ?= https://cjoc.crl.core.pscbdemos.com
 
 #https://kubernetes.io/docs/concepts/configuration/organize-cluster-access-kubeconfig/#the-kubeconfig-environment-variable
 .PHONY: check_kubeconfig
@@ -48,7 +49,6 @@ cbci-helm-update: check_kubeconfig check_envfile guard-CB_LB_CONFIG
 			s/\$${ingressClass}/$$ING_CLASS/g; \
 			s/\$${secretGHToken}/$$SECRET_GH_TOKEN/g; \
 			s/\$${secretGHUser}/$$SECRET_GH_USER/g; \
-			s/\$${loadControllers}/$$N_LOAD_CONTROLLERS/g; \
 			s/\$${agentNamespace}/$$AGENT_NA/g;" < $(DIR_HELM_VALUES)/cb-ci-local.yaml > $(MKFILE)/values.cb-ci-local.yaml && \
 		helm upgrade --install cbci-local $(DIR_CHARTS)/cb-ci-local --create-namespace --namespace "$$CBCI_NS" -f "$(MKFILE)/values.cb-ci-local.yaml"
 	$(call print_subtitle,Update CloudBees values.yaml using $(CB_LB_CONFIG))
@@ -67,6 +67,7 @@ cbci-helm-update: check_kubeconfig check_envfile guard-CB_LB_CONFIG
 	kubectl rollout status sts cjoc --namespace cbci && wait
 	@kubectl get secret oc-secrets -n cbci -o jsonpath='{.data.jenkinsPass}' | base64 --decode > $(MKFILE)/secret.jenkinsPass
 
+
 .PHONY: check_availability
 check_availability: ## Check availability of the OC Example: make check_availability OC_URL=https://cjoc.ci.crl.core.pscbdemos.com/
 check_availability: guard-OC_URL
@@ -75,6 +76,13 @@ check_availability: guard-OC_URL
 	@echo "Ingress Ready"
 	@until curl -u admin:$(shell cat $(MKFILE)/secret.jenkinsPass) -s $(OC_URL)  > /dev/null; do sleep 10 && echo "Waiting for Operation Center at $(OC_URL)"; done
 	@echo "Operation Center Ready at $(OC_URL)"
+
+.PHONY: restart_cb-ci_all
+restart_cb-ci_all: ## Restart cb-ci apps. Required to apply changes in Casc
+restart_cb-ci_all:
+	if [ \! -f /tmp/jenkins-cli.jar ]; then curl -o /tmp/jenkins-cli.jar "$(OC_URL)/jnlpJars/jenkins-cli.jar"; fi
+	java -jar /tmp/jenkins-cli.jar -s $(OC_URL) -auth admin:$(shell cat $(MKFILE)/secret.jenkinsPass) -webSocket build admin/restart-all-controllers
+	java -jar /tmp/jenkins-cli.jar -s $(OC_URL) -auth admin:$(shell cat $(MKFILE)/secret.jenkinsPass) -webSocket restart
 
 .PHONY: cbci-helm-delete
 cbci-helm-delete: ## Delete CloudBees Core Modern via Helm. Ref: https://docs.cloudbees.com/docs/cloudbees-ci/latest/kubernetes-install-guide/kubernetes-uninstall

@@ -23,8 +23,14 @@ operationCenter:
       # -- Github Secret for user
       user: "gh_ExampleUser"
 controllers:
-  # -- Number of Load Controllers for Performance Testing
-  loadControllersNumber: 5
+  stress:
+    # -- Number of Load Controllers for Performance Testing
+    loadControllersNumber: 3
+    # -- Deployment of stress pods in the applications namespace
+    kubeStresscheckPod: true
 agents:
   # -- Agents Namespace
   namespace: "cbci-agents"
+  stress:
+    # -- Deployment of stress pods in the agent namespace
+    kubeStresscheckPod: true
