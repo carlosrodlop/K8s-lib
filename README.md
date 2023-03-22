@@ -7,7 +7,7 @@ Welcome to the Kubernetes Library, a storage place for reusable assets related t
 - It contains charts and roots deployments for different Applications and Kubernetes add-ons
 - It uses the [Docker Library](https://github.com/carlosrodlop/docker-lib) to make its content portable.
 
-## My ![Awesome](https://cdn.rawgit.com/sindresorhus/awesome/d7305f38d29fed78fa85652e3a63e154dd8e8829/media/badge.svg) references
+## References ![Awesome](https://cdn.rawgit.com/sindresorhus/awesome/d7305f38d29fed78fa85652e3a63e154dd8e8829/media/badge.svg)
 
 - [Awesome Kubernetes Repos](https://github.com/stars/carlosrodlop/lists/kubernetes)
 - [Kubernetes Documentation](https://kubernetes.io/docs/home/)
