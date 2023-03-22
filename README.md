@@ -1,5 +1,6 @@
 # Kubernetes Library
 
+![GitHub Latest Release)](https://img.shields.io/github/v/release/carlosrodlop/K8s-lib?logo=github)
 [![gitleaks badge](https://img.shields.io/badge/protected%20by-gitleaks-blue)](https://github.com/zricethezav/gitleaks#pre-commit) [![gitsecrets](https://img.shields.io/badge/protected%20by-gitsecrets-blue)](https://github.com/awslabs/git-secrets) [![helm docs](https://img.shields.io/badge/docs%20by-helmdocs-blue)](https://github.com/norwoodj/helm-docs)
 
 Welcome to the Kubernetes Library, a storage place for reusable assets related to Kubernetes.
