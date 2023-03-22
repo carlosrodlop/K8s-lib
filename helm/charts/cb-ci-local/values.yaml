@@ -19,18 +19,30 @@ operationCenter:
     # -- Github Secret pair
     github:
       # -- Github Secret for token
-      token: "ghp_xxxxxxxxxxxxxxxxxxxxExampleToken"
+      token: "ghp_xxxxExampleToken"
       # -- Github Secret for user
       user: "gh_ExampleUser"
 controllers:
-  stress:
+  # -- Enable Limit Range and Resource Quoatas
+  policies: true
+  loadTest:
     # -- Number of Load Controllers for Performance Testing
-    loadControllersNumber: 3
-    # -- Deployment of stress pods in the applications namespace
-    kubeStresscheckPod: true
+    controllers: 3
+    # -- Deployment of stress pods in the agent namespace using kubeStresscheckPod
+    namespace:
+      # -- Activation flag
+      enable: false
+      # -- Number of replicas
+      replicas: 2
 agents:
-  # -- Agents Namespace
+  # -- Agents Namespace name
   namespace: "cbci-agents"
-  stress:
-    # -- Deployment of stress pods in the agent namespace
-    kubeStresscheckPod: true
+  # -- Enable Limit Range and Resource Quoatas
+  policies: true
+  loadTest:
+    # -- Deployment of stress pods in the agent namespace using kubeStresscheckPod
+    namespace:
+      # -- Activation flag
+      enable: false
+      # -- Number of replicas
+      replicas: 2

@@ -34,7 +34,7 @@ define JenkinsCLI
 endef
 
 define getTFValue
-	@terraform -chdir=$(DIR_TF_ROOT) output --raw $(1)
+	$(shell terraform -chdir=$(DIR_TF_ROOT) output --raw $(1))
 endef
 
 .PHONY: check_envfile

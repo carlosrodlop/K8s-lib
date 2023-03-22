@@ -1,3 +1,4 @@
+{{- if (default .Values.controllers.policies true) }}
 apiVersion: "v1"
 kind: "LimitRange"
 metadata:
@@ -10,6 +11,22 @@ spec:
       max:
         cpu: "4"
         memory: "16Gi"
+---
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+    name: "r.quota-cb.apps"
+spec:
+    hard:
+        # 3 reserved apps: 1 cjoc + 2 spare controllers
+        {{- $num_ci_apps := add .Values.controllers.loadTest.controllers .Values.controllers.loadTest.namespace.replicas 3 }}
+        pods: {{ $num_ci_apps }}
+        #Max 4units per Controller
+        cpu: {{ mul $num_ci_apps 4 }}
+        #Max 16GB per Controller
+        memory: {{ mul $num_ci_apps 16 }}Gi
+{{- end }}
+{{- if (default .Values.agents.policies true) }}
 ---
 apiVersion: "v1"
 kind: "LimitRange"
@@ -26,26 +43,15 @@ spec:
 apiVersion: v1
 kind: ResourceQuota
 metadata:
-    name: "r.quota-cb.apps"
-spec:
-    hard:
-        # 5 reserved apps: 1 cjoc + 2 spare controllers + 2 kube-stresscheck
-        {{- $num_ci_apps := add .Values.controllers.stress.loadControllersNumber 5 }}
-        pods: {{ $num_ci_apps }}
-        #Max 4units per Controller
-        cpu: {{ mul $num_ci_apps 4 }}
-        #Max 16GB per Controller
-        memory: {{ mul $num_ci_apps 16 }}Gi
----
-apiVersion: v1
-kind: ResourceQuota
-metadata:
     name: "r.quota-cb.agents"
     namespace: {{ .Values.agents.namespace | quote }}
 spec:
     hard:
+        # 3 reserved apps: 1 cjoc + 2 spare controllers. Excluding kube-stresscheck-psp as they don't run agents
+        {{- $num_ci_apps := add .Values.controllers.loadTest.controllers 3 }}
         # Every controller should not have attached more than 25 pods running simultaneously
         {{- $num_ci_agents := mul $num_ci_apps 25 }}
         pods: "{{ $num_ci_agents }}"
         # Max 2Gi per Agents, not all agents requires de same memory
         memory: {{ mul $num_ci_agents 2 }}Gi
+{{- end }}

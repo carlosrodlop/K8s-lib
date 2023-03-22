@@ -1,5 +1,5 @@
 #https://github.com/giantswarm/kube-stresscheck
-{{- if or (default .Values.controllers.stress.kubeStresscheckPod true) (default .Values.agents.stress.kubeStresscheckPod true) }}
+{{- if or (default .Values.controllers.loadTest.namespace.enable true) (default .Values.agents.loadTest.namespace.enable true) }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
@@ -45,7 +45,7 @@ spec:
   volumes:
   - 'secret'
 {{- end }}
-{{- if (default .Values.controllers.stress.kubeStresscheckPod true) }}
+{{- if (default .Values.controllers.loadTest.namespace.enable true) }}
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -59,7 +59,7 @@ metadata:
   labels:
     app: kube-stresscheck
 spec:
-  replicas: 2
+  replicas: {{ .Values.controllers.loadTest.namespace.replicas | int }}
   selector:
     matchLabels:
       app: kube-stresscheck
@@ -79,7 +79,7 @@ spec:
         - name: kube-stresscheck
           image: quay.io/giantswarm/kube-stresscheck:latest
 {{- end }}
-{{- if (default .Values.agents.stress.kubeStresscheckPod true) }}
+{{- if (default .Values.agents.loadTest.namespace.enable true) }}
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -95,7 +95,7 @@ metadata:
   labels:
     app: kube-stresscheck
 spec:
-  replicas: 2
+  replicas: {{ .Values.agents.loadTest.namespace.replicas | int }}
   selector:
     matchLabels:
       app: kube-stresscheck

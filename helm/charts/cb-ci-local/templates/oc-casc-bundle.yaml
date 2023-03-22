@@ -47,9 +47,9 @@ data:
     removeStrategy:
       items: NONE
       rbac: SYNC
-{{- if gt (int .Values.controllers.stress.loadControllersNumber) 0 }}
+{{- if gt (int .Values.controllers.loadTest.controllers) 0 }}
     items:
-{{- range (untilStep 0 (int .Values.controllers.stress.loadControllersNumber) 1) }}
+{{- range (untilStep 0 (int .Values.controllers.loadTest.controllers) 1) }}
     - kind: managedController
       name: load-boy{{ . }}
       properties:
