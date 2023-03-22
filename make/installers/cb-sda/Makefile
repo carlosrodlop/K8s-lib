@@ -77,9 +77,9 @@ check_availability: guard-OC_URL
 	@until curl -u admin:$(shell cat $(MKFILE)/secret.jenkinsPass) -s $(OC_URL)  > /dev/null; do sleep 10 && echo "Waiting for Operation Center at $(OC_URL)"; done
 	@echo "Operation Center Ready at $(OC_URL)"
 
-.PHONY: restart_cb-ci_all
-restart_cb-ci_all: ## Restart cb-ci apps. Required to apply changes in Casc
-restart_cb-ci_all:
+.PHONY: update_casc
+update_casc: ## Update Configuration as Code
+update_casc: cbci-helm-update
 	if [ \! -f /tmp/jenkins-cli.jar ]; then curl -o /tmp/jenkins-cli.jar "$(OC_URL)/jnlpJars/jenkins-cli.jar"; fi
 	java -jar /tmp/jenkins-cli.jar -s $(OC_URL) -auth admin:$(shell cat $(MKFILE)/secret.jenkinsPass) -webSocket build admin/restart-all-controllers
 	java -jar /tmp/jenkins-cli.jar -s $(OC_URL) -auth admin:$(shell cat $(MKFILE)/secret.jenkinsPass) -webSocket restart

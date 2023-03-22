@@ -10,7 +10,5 @@ operationCenter:
     github:
       token: ${secretGHToken}
       user: ${secretGHUser}
-controllers:
-  loadControllersNumber: ${loadControllers}
 agents:
   namespace: ${agentNamespace}

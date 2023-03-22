@@ -31,7 +31,7 @@ spec:
     hard:
         # 5 reserved apps: 1 cjoc + 2 spare controllers + 2 kube-stresscheck
         {{- $num_ci_apps := add .Values.controllers.stress.loadControllersNumber 5 }}
-        #pods: {{ $num_ci_apps }}
+        pods: {{ $num_ci_apps }}
         #Max 4units per Controller
         cpu: {{ mul $num_ci_apps 4 }}
         #Max 16GB per Controller
