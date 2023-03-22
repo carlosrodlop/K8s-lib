@@ -1,6 +1,6 @@
 MKFILE   		:= $(abspath $(dir $(lastword $(MAKEFILE_LIST))))
 PARENT_MKFILE   := $(HOME)/.Makefile
-DIR_HELM_VALUES := $(MKFILE)/../../../helm/values
+DIR_HELM_VALUES := $(MKFILE)/../../helm/values/monitoring
 
 include $(PARENT_MKFILE)
 
@@ -17,7 +17,6 @@ endif
 .PHONY: k8s_db-eks_update
 k8s_db-eks_update: ## Install K8s Dashboard in EKS
 k8s_db-eks_update: check_kubeconfig
-
 	kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.5.0/aio/deploy/recommended.yaml
 	kubectl apply -f K8s-manifest/eks-admin
 	kubectl -n kube-system describe secret $(shell kubectl -n kube-system get secret | grep eks-admin | awk '{print $1}')
@@ -25,37 +24,39 @@ k8s_db-eks_update: check_kubeconfig
 .PHONY: k8s_db-eks_delete
 k8s_db-eks_delete: ## Remove K8s Dashboard in EKS
 k8s_db-eks_delete: check_kubeconfig
-
 	kubectl delete -f K8s-manifest/eks-admin
 	kubectl delete -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.5.0/aio/deploy/recommended.yaml
 
 .PHONY: komodor_update
-komodor_update: ## Install Komodor Agent passing KOMODOR_API_KEY and CLUSTER_NAME (enabing Helm Dashboard)
+komodor_update: ## Install Komodor Agent and Helm Dashboard
 komodor_update: check_kubeconfig
+	helm repo add komodorio https://helm-charts.komodor.io && helm repo update
 	source .env && \
 		sed "s/\$${apiKey}/$$KOMODOR_API_KEY/g; \
 			s/\$${clusterName}/$$CLUSTER_NAME/g;" < $(DIR_HELM_VALUES)/komodor-watcher.yaml > $(MKFILE)/values.komodor-watcher.yaml && \
-		helm repo add komodorio https://helm-charts.komodor.io && helm repo update
-		helm upgrade --install k8s-watcher komodorio/k8s-watcher --create-namespace --namespace "$$MONITORING_NS" -f "$(MKFILE)/values.komodor-watcher.yaml" --wait --timeout=90s
+		sed "s/\$${storageClass}/$$STORAGE_CLASS/g; " < $(DIR_HELM_VALUES)/komodor-helm-dashboard.yaml > $(MKFILE)/values.komodor-helm-dashboard.yaml && \
+		helm upgrade --install k8s-watcher komodorio/k8s-watcher --create-namespace --namespace "$$MONITORING_NS" -f "$(MKFILE)/values.komodor-watcher.yaml" && \
+		helm upgrade --install helm-dashboard komodorio/helm-dashboard --create-namespace --namespace "$$MONITORING_NS" -f "$(MKFILE)/values.komodor-helm-dashboard.yaml"
 
 .PHONY: komodor_delete
-komodor_delete: ## Delete Komodor Agent
+komodor_delete: ## Delete Komodor Agent and Helm Dashboard
 komodor_delete: check_kubeconfig
 	source .env && \
+		helm uninstall helm-dashboard --namespace "$$MONITORING_NS" || echo "Relese helm-dashboard does not exist" && \
 		helm uninstall k8s-watcher --namespace "$$MONITORING_NS" || echo "Relese k8s-watcher does not exist" && \
 		helm repo remove komodorio || echo "Repository komodorio does not exist"
 
-.PHONY: helm-dashboard_update
-helm-dashboard_update: ## Install Helm Dashboard passing STORAGE_CLASS
-helm-dashboard_update: check_kubeconfig
+.PHONY: robusta_update
+robusta_update: ## Install Robusta Agent
+robusta_update: check_kubeconfig
+	helm repo add robusta https://robusta-charts.storage.googleapis.com && helm repo update
 	source .env && \
-		sed "s/\$${storageClass}/$$STORAGE_CLASS/g; " < $(DIR_HELM_VALUES)/komodor-helm-dashboard.yaml > $(MKFILE)/values.komodor-helm-dashboard.yaml && \
-		helm repo add komodorio https://helm-charts.komodor.io && helm repo update
-		helm upgrade --install helm-dashboard komodorio/helm-dashboard --create-namespace --namespace "$$MONITORING_NS" -f "$(MKFILE)/values.komodor-helm-dashboard.yaml" --wait --timeout=90s
+		sed "s/\$${clusterName}/$$CLUSTER_NAME/g;" < $(DIR_HELM_VALUES)/robusta.secret.yaml > $(MKFILE)/values.robusta.secret.yaml && \
+		helm upgrade --install robusta robusta/robusta --values "$(MKFILE)/values.robusta.secret.yaml" --namespace "$$MONITORING_NS" --create-namespace --wait --timeout=90s
 
-.PHONY: helm-dashboard_delete
-helm-dashboard_delete: ## Delete Helm Dashboard
-helm-dashboard_delete: check_kubeconfig
+.PHONY: robusta_delete
+robusta_delete: ## Delete Robusta Agent
+robusta_delete: check_kubeconfig
 	source .env && \
-		helm uninstall helm-dashboard --namespace "$$MONITORING_NS" || echo "Relese helm-dashboard does not exist" && \
-		helm repo remove komodorio || echo "Repository komodorio does not exist"
+		helm uninstall robusta --namespace "$$MONITORING_NS" || echo "Relese robusta does not exist" && \
+		helm repo remove robusta || echo "Repository komodorio does not exist"

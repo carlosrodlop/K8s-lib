@@ -1,8 +1,8 @@
 MKFILE   		:= $(abspath $(dir $(lastword $(MAKEFILE_LIST))))
 PARENT_MKFILE   := $(HOME)/.Makefile # docker
-DIR_TF_ROOT		:= $(MKFILE)/../../../../../clouds/aws/root/eks-bp-v4
-DIR_CHARTS 		:= $(MKFILE)/../../../helm/charts
-DIR_HELM_VALUES := $(MKFILE)/../../../helm/values/cloudbees
+DIR_TF_ROOT		:= $(MKFILE)/../../../../clouds/aws/root/eks-bp-v4
+DIR_CHARTS 		:= $(MKFILE)/../../helm/charts
+DIR_HELM_VALUES := $(MKFILE)/../../helm/values/cloudbees
 
 include $(PARENT_MKFILE)
 
