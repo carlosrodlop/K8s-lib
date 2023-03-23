@@ -1,20 +1,21 @@
 # Kubernetes Library
 
-![GitHub Latest Release)](https://img.shields.io/github/v/release/carlosrodlop/K8s-lib?logo=github)
-[![gitleaks badge](https://img.shields.io/badge/protected%20by-gitleaks-blue)](https://github.com/zricethezav/gitleaks#pre-commit) [![gitsecrets](https://img.shields.io/badge/protected%20by-gitsecrets-blue)](https://github.com/awslabs/git-secrets) [![helm docs](https://img.shields.io/badge/docs%20by-helmdocs-blue)](https://github.com/norwoodj/helm-docs)
+<p align="center">
+  <img alt="kubernetes-logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/Kubernetes_logo_without_workmark.svg/617px-Kubernetes_logo_without_workmark.svg.png?20190926210707" height="160" />
+  <p align="center">Welcome to my Kubernetes Library, a storage place for my assets related to my journey around Kubernetes' Land</p>
+</p>
 
-Welcome to the Kubernetes Library, a storage place for reusable assets related to Kubernetes.
+---
+
+![GitHub Latest Release)](https://img.shields.io/github/v/release/carlosrodlop/K8s-lib?logo=github)
+[![gitleaks badge](https://img.shields.io/badge/protected%20by-gitleaks-blue)](https://github.com/zricethezav/gitleaks#pre-commit) [![gitsecrets](https://img.shields.io/badge/protected%20by-gitsecrets-blue)](https://github.com/awslabs/git-secrets) [![helm docs](https://img.shields.io/badge/docs%20by-helmdocs-blue)](https://github.com/norwoodj/helm-docs) [![Awesome](https://cdn.rawgit.com/sindresorhus/awesome/d7305f38d29fed78fa85652e3a63e154dd8e8829/media/badge.svg)](#awesome)
 
 - It contains charts and roots deployments for different Applications and Kubernetes add-ons
 - It uses the [Docker Library](https://github.com/carlosrodlop/docker-lib) to make its content portable.
 
-## Releases
+## Awesome
 
-Releases follow the [semantic versioning](https://semver.org/). They do not follow a defined train release cadence but the time I need to refer to the code thus the reference does not get lost as the repository evolves.
-
-## References ![Awesome](https://cdn.rawgit.com/sindresorhus/awesome/d7305f38d29fed78fa85652e3a63e154dd8e8829/media/badge.svg)
-
-- [Awesome Kubernetes Repos](https://github.com/stars/carlosrodlop/lists/kubernetes)
+- [My Kubernetes Stars](https://github.com/stars/carlosrodlop/lists/kubernetes)
 - [Kubernetes Documentation](https://kubernetes.io/docs/home/)
 - [Helm | Docs](https://helm.sh/docs/)
 - [Artifact Hub](https://artifacthub.io/)
