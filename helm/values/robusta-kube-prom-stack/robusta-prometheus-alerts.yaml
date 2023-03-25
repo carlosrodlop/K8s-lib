@@ -1,0 +1,226 @@
+#https://artifacthub.io/packages/helm/prometheus-community/kube-prometheus-stack
+#https://awesome-prometheus-alerts.grep.to/rules
+kube-prometheus-stack:
+  additionalPrometheusRulesMap:
+    rule-name:
+      groups:
+        - name: Containers
+          rules:
+          - alert: ContainerCpuUsage
+            expr: (sum(rate(container_cpu_usage_seconds_total{name!=""}[3m])) BY (instance, name) * 100) > 80
+            for: 2m
+            labels:
+              severity: warning
+            annotations:
+              summary: Container CPU usage (instance {{ $labels.instance }})
+              description: "Container CPU usage is above 80%\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+            # See https://medium.com/faun/how-much-is-too-much-the-linux-oomkiller-and-used-memory-d32186f29c9d
+          - alert: ContainerMemoryUsage
+            expr: (sum(container_memory_working_set_bytes{name!=""}) BY (instance, name) / sum(container_spec_memory_limit_bytes > 0) BY (instance, name) * 100) > 80
+            for: 2m
+            labels:
+              severity: warning
+            annotations:
+                summary: Container Memory usage (instance {{ $labels.instance }})
+                description: "Container Memory usage is above 80%\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+          - alert: ContainerHighThrottleRate
+            expr: rate(container_cpu_cfs_throttled_seconds_total[3m]) > 1
+            for: 2m
+            labels:
+              severity: warning
+            annotations:
+              summary: Container high throttle rate (instance {{ $labels.instance }})
+              description: "Container is being throttled\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+          - alert: ContainerVolumeUsage
+            expr: (1 - (sum(container_fs_inodes_free{name!=""}) BY (instance) / sum(container_fs_inodes_total) BY (instance))) * 100 > 80
+            for: 2m
+            labels:
+              severity: warning
+            annotations:
+              summary: Container Volume usage (instance {{ $labels.instance }})
+              description: "Container Volume usage is above 80%\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+        - name: Host
+          rules:
+          - alert: HostOutOfMemory
+            expr: node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes * 100 < 10
+            for: 2m
+            labels:
+              severity: warning
+            annotations:
+              summary: Host out of memory (instance {{ $labels.instance }})
+              description: "Node memory is filling up (< 10% left)\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+          - alert: HostMemoryUnderMemoryPressure
+            expr: rate(node_vmstat_pgmajfault[1m]) > 1000
+            for: 2m
+            labels:
+              severity: warning
+            annotations:
+              summary: Host memory under memory pressure (instance {{ $labels.instance }})
+              description: "The node is under heavy memory pressure. High rate of major page faults\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+          - alert: HostHighCpuLoad
+            expr: sum by (instance) (avg by (mode, instance) (rate(node_cpu_seconds_total{mode!="idle"}[2m]))) > 0.8
+            for: 0m
+            labels:
+              severity: warning
+            annotations:
+              summary: Host high CPU load (instance {{ $labels.instance }})
+              description: "CPU load is > 80%\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+          - alert: HostOutOfInodes
+            expr: node_filesystem_files_free / node_filesystem_files * 100 < 20 and ON (instance, device, mountpoint) node_filesystem_readonly == 0
+            for: 2m
+            labels:
+              severity: warning
+            annotations:
+              summary: Host out of inodes (instance {{ $labels.instance }})
+              description: "Disk is almost running out of available inodes (< 20% left)\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+          - alert: HostUnusualDiskReadLatency
+            expr: rate(node_disk_read_time_seconds_total[1m]) / rate(node_disk_reads_completed_total[1m]) > 0.1 and rate(node_disk_reads_completed_total[1m]) > 0
+            for: 2m
+            labels:
+              severity: warning
+            annotations:
+              summary: Host unusual disk read latency (instance {{ $labels.instance }})
+              description: "Disk latency is growing (read operations > 100ms)\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+          - alert: HostUnusualDiskWriteLatency
+            expr: rate(node_disk_write_time_seconds_total[1m]) / rate(node_disk_writes_completed_total[1m]) > 0.1 and rate(node_disk_writes_completed_total[1m]) > 0
+            for: 2m
+            labels:
+              severity: warning
+            annotations:
+              summary: Host unusual disk write latency (instance {{ $labels.instance }})
+              description: "Disk latency is growing (write operations > 100ms)\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+          - alert: HostOutOfDiskSpace
+            expr: (node_filesystem_avail_bytes * 100) / node_filesystem_size_bytes < 10 and ON (instance, device, mountpoint) node_filesystem_readonly == 0
+            for: 2m
+            labels:
+              severity: warning
+            annotations:
+              summary: Host out of disk space (instance {{ $labels.instance }})
+              description: "Disk is almost full (< 10% left)\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+        - name: Jenkins Jobs
+          rules:
+          - alert: JenkinsTooManyJobsQueued
+            expr: sum(jenkins_queue_size_value) > 5
+            for: 1m
+            labels:
+              severity: notify
+            annotations:
+              summary: " {{ $labels.app_kubernetes_io_instance }} too many jobs queued"
+              description: "{{ $labels.app_kubernetes_io_instance }} has {{ $value }} jobs stuck in the queue"
+          - alert: JenkinsTooManyJobsStuckInQueue
+            expr: sum(jenkins_queue_stuck_value) by (app_kubernetes_io_instance) > 5
+            for: 1m
+            labels:
+              severity: notify
+            annotations:
+              summary: " {{ $labels.app_kubernetes_io_instance }} too many jobs queued"
+              description: " {{ $labels.app_kubernetes_io_instance }} has {{ $value }} jobs in queue"
+          - alert: JenkinsWaitingTooMuchOnJobStart
+            expr: sum (jenkins_job_waiting_duration) by (app_kubernetes_io_instance) > 0.05
+            for: 1m
+            labels:
+              severity: notify
+            annotations:
+              summary: "{{ $labels.app_kubernetes_io_instance }} waits too long for jobs"
+              description: "{{ $labels.app_kubernetes_io_instance }} is waiting on average {{ $value }} seconds to start a job"
+          - alert: JenkinsTooLowJobSuccessRate
+            expr: sum(jenkins_runs_success_total) by (app_kubernetes_io_instance) / sum(jenkins_runs_total_total) by (app_kubernetes_io_instance) < 0.60
+            for: 1m
+            labels:
+              severity: notify
+            annotations:
+              summary: " {{ $labels.app_kubernetes_io_instance }} has a too low job success rate"
+              description: " {{ $labels.app_kubernetes_io_instance }} instance has {{ $value }}% of jobs being successful"
+        - name: Jenkins Uptime
+          rules:
+          - alert: JenkinsNewOrRestarted
+            expr: sum(vm_uptime_milliseconds) by (app_kubernetes_io_instance) / 3600000 < 2
+            for: 3m
+            labels:
+              severity: notify
+            annotations:
+              summary: " {{ $labels.app_kubernetes_io_instance }} has low uptime"
+              description: " {{ $labels.app_kubernetes_io_instance }} has low uptime and was either restarted or is a new instance (uptime: {{ $value }} hours)"
+        - name: Jenkins Plugins
+          rules:
+          - alert: JenkinsTooManyPluginsNeedUpate
+            expr: sum(jenkins_plugins_withUpdate) by (app_kubernetes_io_instance) > 3
+            for: 1m
+            labels:
+              severity: notify
+            annotations:
+              summary: " {{ $labels.app_kubernetes_io_instance }} too many plugins updates"
+              description: " {{ $labels.app_kubernetes_io_instance }} has {{ $value }} plugins that require an update"
+        - name: Jenkins jvm
+          rules:
+          - alert: JenkinsToManyOpenFiles
+            expr: sum(vm_file_descriptor_ratio) by (app_kubernetes_io_instance) > 0.040
+            for: 5m
+            labels:
+              severity: notify
+            annotations:
+              summary: " {{ $labels.app_kubernetes_io_instance }} has a to many open files"
+              description: " {{ $labels.app_kubernetes_io_instance }} instance has used {{ $value }} of available open files"
+          - alert: JenkinsVMMemoryRationTooHigh
+            expr: sum(vm_memory_heap_usage) by (app_kubernetes_io_instance) > 0.70
+            for: 3m
+            labels:
+                severity: notify
+            annotations:
+              summary: "{{$labels.app_kubernetes_io_instance}} too high memory ration"
+              description: "{{$labels.app_kubernetes_io_instance}} has a too high VM memory ration"
+          - alert: JenkinsVMGCToolow
+            expr: 1 - sum(vm_gc_G1_Young_Generation_time)by (app_kubernetes_io_instance)  /  sum (vm_uptime_milliseconds) by (app_kubernetes_io_instance) < 0.99
+            for: 30m
+            labels:
+              severity: notify
+            annotations:
+              summary: "{{ $labels.instance }} too low GC throughput"
+              description: "{{ $labels.instance }} has too low Garbage Collection throughput"
+        - name: web
+          rules:
+          - alert: JenkinsTooSlow
+            expr: sum(http_requests{quantile="0.99"} ) by (app_kubernetes_io_instance) > 1
+            for: 3m
+            labels:
+              severity: notify
+            annotations:
+              summary: "{{ $labels.app_kubernetes_io_instance }} is too slow"
+              description: "{{ $labels.app_kubernetes_io_instance }}  More then 1% of requests are slower than 1s (request time: {{ $value }})"
+          - alert: AppTooSlow
+            expr: sum(rate(nginx_ingress_controller_request_duration_seconds_bucket{le="0.25"}[5m])) by (ingress) / sum(rate(nginx_ingress_controller_request_duration_seconds_count[5m])) by (ingress) < 0.95
+            for: 5m
+            labels:
+              severity: notify
+            annotations:
+              summary: "Application - {{ $labels.ingress }} - is too slow"
+              description: " {{ $labels.ingress }} - More then 5% of requests are slower than 0.25s"
+        - name: Jenkins healthcheck
+          rules:
+          - alert: JenkinsHealthScoreToLow
+            expr: sum(jenkins_health_check_score) by (app_kubernetes_io_instance) < 1
+            for: 5m
+            labels:
+              severity: notify
+            annotations:
+              summary: " {{ $labels.app_kubernetes_io_instance }} has a to low health score"
+              description: " {{ $labels.app_kubernetes_io_instance }} a health score lower than 100%"
+          - alert: JenkinsTooSlowHealthCheck
+            expr: sum(jenkins_health_check_duration{quantile="0.999"})
+              by (app_kubernetes_io_instance) > 0.001
+            for: 1m
+            labels:
+              severity: notify
+            annotations:
+              summary: " {{ $labels.app_kubernetes_io_instance }} responds too slow to health check"
+              description: " {{ $labels.app_kubernetes_io_instance }} is responding too slow to the regular health check"
+        - name: Jenkins Nodes
+          rules:
+          - alert: JenkinsTooManyOfflineNodes
+            expr: sum(jenkins_node_offline_value) by (app_kubernetes_io_instance) > 3
+            for: 1m
+            labels:
+              severity: notify
+            annotations:
+              summary: "{{ $labels.app_kubernetes_io_instance }} has a too many offline nodes"
+              description: "{{ $labels.app_kubernetes_io_instance }} has {{ $value }} nodes that are offline for some time (5 minutes)"
