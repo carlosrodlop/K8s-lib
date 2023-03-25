@@ -19,7 +19,7 @@ metadata:
 spec:
     hard:
         # 3 reserved apps: 1 cjoc + 2 spare controllers
-        {{- $num_ci_apps := add .Values.controllers.loadTest.controllers .Values.controllers.loadTest.namespace.replicas 3 }}
+        {{- $num_ci_apps := add .Values.controllers.loadTest.controllers 3 }}
         pods: {{ $num_ci_apps }}
         #Max 4units per Controller
         cpu: {{ mul $num_ci_apps 4 }}

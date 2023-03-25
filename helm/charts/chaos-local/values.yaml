@@ -1,0 +1,9 @@
+kubeStresscheck:
+  # -- Activation flag
+  enable: true
+  # -- Number of replicas
+  replicas: 10
+  # -- Deployment of stress pods in the agent namespace using kubeStresscheckPod
+  namespaces:
+  - cbci
+  - cbci-agents

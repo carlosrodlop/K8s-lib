@@ -1,5 +1,5 @@
 #https://github.com/giantswarm/kube-stresscheck
-{{- if or (default .Values.controllers.loadTest.namespace.enable true) (default .Values.agents.loadTest.namespace.enable true) }}
+{{ if (default .Values.kubeStresscheck.enable true) }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
@@ -44,13 +44,14 @@ spec:
     rule: RunAsAny
   volumes:
   - 'secret'
-{{- end }}
-{{- if (default .Values.controllers.loadTest.namespace.enable true) }}
+{{ $replicas := .Values.kubeStresscheck.replicas }}
+{{ range $namespace := .Values.kubeStresscheck.namespaces }}
 ---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: kube-stresscheck
+  namespace: {{ $namespace }}
 ---
 kind: Deployment
 apiVersion: apps/v1
@@ -58,8 +59,9 @@ metadata:
   name: kube-stresscheck
   labels:
     app: kube-stresscheck
+  namespace: {{ $namespace }}
 spec:
-  replicas: {{ .Values.controllers.loadTest.namespace.replicas | int }}
+  replicas: {{ $replicas }}
   selector:
     matchLabels:
       app: kube-stresscheck
@@ -78,40 +80,5 @@ spec:
       containers:
         - name: kube-stresscheck
           image: quay.io/giantswarm/kube-stresscheck:latest
-{{- end }}
-{{- if (default .Values.agents.loadTest.namespace.enable true) }}
----
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: kube-stresscheck
-  namespace: {{ .Values.agents.namespace | quote }}
----
-kind: Deployment
-apiVersion: apps/v1
-metadata:
-  name: kube-stresscheck
-  namespace: {{ .Values.agents.namespace | quote }}
-  labels:
-    app: kube-stresscheck
-spec:
-  replicas: {{ .Values.agents.loadTest.namespace.replicas | int }}
-  selector:
-    matchLabels:
-      app: kube-stresscheck
-  template:
-    metadata:
-      labels:
-        app: kube-stresscheck
-    spec:
-      tolerations:
-        # Allow the pod to run on the master.
-        - key: node-role.kubernetes.io/master
-          effect: NoSchedule
-      serviceAccount: kube-stresscheck
-      securityContext:
-        runAsUser: 0
-      containers:
-        - name: kube-stresscheck
-          image: quay.io/giantswarm/kube-stresscheck:latest
-{{- end }}
+{{ end }}
+{{ end }}

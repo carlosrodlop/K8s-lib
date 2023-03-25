@@ -1,7 +1,3 @@
-# Default values for cb-ci-casc.
-# This is a YAML-formatted file.
-# Declare variables to be passed into your templates.
-
 operationCenter:
   # -- http or https
   protocol: "https"
@@ -24,25 +20,12 @@ operationCenter:
       user: "gh_ExampleUser"
 controllers:
   # -- Enable Limit Range and Resource Quoatas
-  policies: true
+  policies: false
   loadTest:
     # -- Number of Load Controllers for Performance Testing
-    controllers: 3
-    # -- Deployment of stress pods in the agent namespace using kubeStresscheckPod
-    namespace:
-      # -- Activation flag
-      enable: false
-      # -- Number of replicas
-      replicas: 2
+    controllers: 6
 agents:
   # -- Agents Namespace name
   namespace: "cbci-agents"
   # -- Enable Limit Range and Resource Quoatas
-  policies: true
-  loadTest:
-    # -- Deployment of stress pods in the agent namespace using kubeStresscheckPod
-    namespace:
-      # -- Activation flag
-      enable: false
-      # -- Number of replicas
-      replicas: 2
+  policies: false
