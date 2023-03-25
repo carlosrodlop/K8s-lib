@@ -6,14 +6,18 @@ alertmanager:
       kubernetes.io/arch: amd64
   config:
     receivers:
-    - name: 'email'
-      email_configs:
-      - to:  ${alertmanager_to_mail}
-        from: ${alertmanager_from_mail}
-        smarthost: ${alertmanager_from_mail_smarthost}
-        auth_username: ${alertmanager_from_mail}
-        auth_identity: ${alertmanager_from_mail}
-        auth_password: ${alertmanager_from_mail_password}
+    #https://docs.robusta.dev/master/user-guide/alert-manager.html
+    - name: 'robusta'
+      webhook_configs:
+        - url: 'http://robusta-runner.robusta.svc.cluster.local/api/alerts'
+          send_resolved: true
+    route:
+      routes:
+        - receiver: 'robusta'
+          matchers:
+            - severity =~ "info|warn|error|critical"
+          repeat_interval: 4h
+          continue: true
 prometheusOperator:
   admissionWebhooks:
     patch:
