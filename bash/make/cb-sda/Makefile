@@ -31,7 +31,9 @@ cbci-helm-update: check_kubeconfig check_envfile guard-CB_LB_CONFIG
 			s/\$${secretGHUser}/$$SECRET_GH_USER/g; \
 			s/\$${agentNamespace}/$$AGENT_NA/g;" < $(DIR_HELM_VALUES)/cb-ci-local.yaml > $(MKFILE)/values.cb-ci-local.yaml
 	source .env && \
-		helm upgrade --install cbci-local $(DIR_CHARTS)/cb-ci-local --create-namespace --namespace "$$CBCI_NS" -f "$(MKFILE)/values.cb-ci-local.yaml"
+		helm upgrade --install cbci-local $(DIR_CHARTS)/cb-ci-local --create-namespace --namespace "$$CBCI_NS" \
+		--set controllers.loadTest.controllers=1 \
+		-f "$(MKFILE)/values.cb-ci-local.yaml"
 	$(call print_subtitle,Update CloudBees values.yaml using $(CB_LB_CONFIG))
 	sed "/#Common_Configuration/e cat $(DIR_HELM_VALUES)/$(CB_LB_CONFIG)" < $(DIR_HELM_VALUES)/cb-ci.common.yaml > /tmp/values.tmp.cb-ci.yaml
 	@source .env && \

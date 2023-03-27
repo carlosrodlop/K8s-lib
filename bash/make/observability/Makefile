@@ -57,7 +57,7 @@ robusta_update: check_kubeconfig check_envfile
 		--values "$(MKFILE)/values.robusta-prometheus-grafana-alb.yaml" \
 		--values "$(DIR_HELM_VALUES)/robusta-kube-prom-stack/robusta.custom-playbooks.yaml" \
 		--set kube-prometheus-stack.grafana.adminPassword=$$GRAFANA_PASS
-	@#kubectl get secret robusta-grafana -o jsonpath="{.data.admin-password}" -n robusta | base64 --decode ; echo > $(MKFILE)/secret.robusta-grafana
+	@kubectl get secret robusta-grafana -o jsonpath="{.data.admin-password}" -n robusta | base64 --decode ; echo > $(MKFILE)/secret.robusta-grafana
 	helm upgrade --install kube-prometheus-stack-local $(DIR_CHARTS)/kube-prometheus-stack-local --create-namespace --namespace robusta
 
 .PHONY: robusta_delete
@@ -71,7 +71,9 @@ robusta_delete: check_kubeconfig
 .PHONY: chaos_enable
 chaos_enable: ## Install Chaos in namespace passed in the values.yaml
 chaos_enable: check_kubeconfig
-	helm upgrade --install chaos-local $(DIR_CHARTS)/chaos-local --namespace chaos --create-namespace
+	helm upgrade --install chaos-local $(DIR_CHARTS)/chaos-local --namespace chaos --create-namespace \
+		--set kubeStresscheck.replicas=10
+		--set kubeStresscheck.namespace={cbci,cbci-agents}
 
 .PHONY: chaos_disable
 chaos_disable: ## Remove Chaos
