@@ -1,5 +1,5 @@
 #https://github.com/giantswarm/kube-stresscheck
-{{ if (default .Values.kubeStresscheck.enable true) }}
+{{- if or (.Values.kubeStresscheck.enable) (eq (.Values.kubeStresscheck.enable | toString) "<nil>") }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:

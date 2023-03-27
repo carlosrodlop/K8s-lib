@@ -1,4 +1,4 @@
-{{- if (default .Values.grafana.dashboard.cbci-controllers-configmap true) }}
+{{- if or (.Values.grafana.dashboard.cbciControllersConfigmap) (eq (.Values.grafana.dashboard.cbciControllersConfigmap | toString) "<nil>") }}
 apiVersion: v1
 kind: ConfigMap
 metadata:

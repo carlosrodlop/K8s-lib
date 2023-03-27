@@ -1,4 +1,4 @@
-{{- if (default .Values.controllers.policies true) }}
+{{- if or (.Values.controllers.policies) (eq (.Values.controllers.policies | toString) "<nil>") }}
 apiVersion: "v1"
 kind: "LimitRange"
 metadata:
@@ -26,7 +26,7 @@ spec:
         #Max 16GB per Controller
         memory: {{ mul $num_ci_apps 16 }}Gi
 {{- end }}
-{{- if (default .Values.agents.policies true) }}
+{{- if or (.Values.agents.policies ) (eq (.Values.agents.policies | toString) "<nil>") }}
 ---
 apiVersion: "v1"
 kind: "LimitRange"
