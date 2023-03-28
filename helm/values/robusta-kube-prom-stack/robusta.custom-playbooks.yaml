@@ -32,14 +32,14 @@ customPlaybooks:
         namespace_prefix: cbci
   actions:
     - create_finding:
-      aggregation_key: New cbci Controller added
-      severity: DEBUG
-      title: Statefulset $name on namespace $namespace added
+        aggregation_key: New cbci Controller added
+        severity: DEBUG
+        title: Statefulset $name on namespace $namespace added
 - triggers:
     - on_statefulset_delete:
         namespace_prefix: cbci
   actions:
     - create_finding:
-      aggregation_key: Existing cbci Controller deleted
-      severity: DEBUG
-      title: Statefulset $name on namespace $namespace added
+        aggregation_key: Existing cbci Controller deleted
+        severity: DEBUG
+        title: Statefulset $name on namespace $namespace added
