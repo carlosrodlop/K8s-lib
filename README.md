@@ -12,6 +12,7 @@
 
 - It contains charts and roots deployments for different Applications and Kubernetes add-ons
 - It uses the [Docker Library](https://github.com/carlosrodlop/docker-lib) to make its content portable.
+- [Pre-commits](.pre-commit-config.yaml) for Validations and Documentation
 
 ## Awesome
 
