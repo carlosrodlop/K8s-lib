@@ -1,5 +1,11 @@
-#
-#Common_Configuration
+  #Common_Configuration
+  Annotations:
+    # vault.hashicorp.com/agent-inject: 'true'
+    # vault.hashicorp.com/role: 'jenkins'
+    # vault.hashicorp.com/template-static-secret-render-interval: "1m"
+    # vault.hashicorp.com/agent-inject-secret-casc-config.txt: 'jenkins/data/casc/config'
+    # vault.hashicorp.com/agent-inject-default-template: 'json'
+    # vault.hashicorp.com/agent-limits-ephemeral: '1Gi'
   CasC:
     Enabled: true
   ConfigMapName: oc-casc-bundle
