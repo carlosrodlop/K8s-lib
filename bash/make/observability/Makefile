@@ -63,19 +63,8 @@ robusta_update: check_kubeconfig check_envfile
 .PHONY: robusta_delete
 robusta_delete: ## Remove Robusta and Kube Prometheus Stack
 robusta_delete: check_kubeconfig
+	helm uninstall kube-prometheus-stack-local --namespace robusta || echo "Relese robusta does not exist"
 	helm uninstall robusta --namespace robusta || echo "Relese robusta does not exist"
 	helm repo remove robusta || echo "Repository robusta does not exist"
 	kubectl delete pvc --all --namespace robusta
 	kubectl delete ns robusta || echo "There is NOT existing namespace robusta"
-
-.PHONY: chaos_enable
-chaos_enable: ## Install Chaos in namespace passed in the values.yaml
-chaos_enable: check_kubeconfig
-	helm upgrade --install chaos-local $(DIR_CHARTS)/chaos-local --namespace chaos --create-namespace \
-		--set kubeStresscheck.replicas=10
-		--set kubeStresscheck.namespace={cbci,cbci-agents}
-
-.PHONY: chaos_disable
-chaos_disable: ## Remove Chaos
-chaos_disable: check_kubeconfig
-	helm uninstall chaos-local --namespace chaos || echo "Relese chaos does not exist"
