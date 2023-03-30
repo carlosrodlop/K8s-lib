@@ -1,4 +1,4 @@
 grafana:
   dashboard:
     # -- Configmap for defining CloudBees CI Controllers
-    cbci-controllers-configmap: false
+    cbciControllersConfigmap: false
