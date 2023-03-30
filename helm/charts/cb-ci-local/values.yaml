@@ -23,9 +23,14 @@ controllers:
   policies: false
   loadTest:
     # -- Number of Load Controllers for Performance Testing
-    controllers: 6
+    controllers: 0
 agents:
   # -- Agents Namespace name
   namespace: "cbci-agents"
   # -- Enable Limit Range and Resource Quoatas
   policies: false
+  cache:
+    # -- Cache for builds artifacts
+    enable: true
+    # -- Storage Class Name for PVC. Empty string will take the default one
+    storageClassName: ""

@@ -6,7 +6,7 @@ metadata:
   labels:
     name: {{ .Values.agents.namespace | quote }}
 ---
-{{- if or (.Values.agents.cache.enable) (eq (.Values.agents.cache.enable | toString) "<nil>") -}}
+{{- if or (.Values.agents.cache.enable) (eq (.Values.agents.cache.enable | toString) "<nil>") }}
 apiVersion: v1
 kind: "PersistentVolumeClaim"
 metadata:
@@ -19,4 +19,4 @@ spec:
   resources:
     requests:
       storage: 15Gi
-{{- end -}}
+{{- end }}

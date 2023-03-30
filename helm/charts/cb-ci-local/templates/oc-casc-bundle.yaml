@@ -39,10 +39,10 @@ data:
 {{ .Files.Get "casc/oc/modern/security.yaml" | indent 4 }}
   plugins.yaml: |-
 {{ .Files.Get "casc/oc/modern/plugins.yaml" | indent 4 }}
-  items-clusters_ops.yaml: |-
-{{ .Files.Get "casc/oc/modern/items-clusters_ops.yaml" | indent 4 }}
-  items-controllers.yaml: |-
-{{ .Files.Get "casc/oc/modern/items-controllers.yaml" | indent 4 }}
+  items-folder-admin.yaml: |-
+{{ .Files.Get "casc/oc/modern/items-folder-admin.yaml" | indent 4 }}
+  items-root.yaml: |-
+{{ .Files.Get "casc/oc/modern/items-root.yaml" | indent 4 }}
   items-load-controllers.yaml: |-
     removeStrategy:
       items: NONE
