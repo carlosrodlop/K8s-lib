@@ -13,6 +13,7 @@ CB_LB_CONFIG	?= cb-ci.eks.alb.yaml
 OC_URL 	        ?= https://cjoc.crl.core.pscbdemos.com
 
 define JenkinsCLI
+	@#revision=$(shell helm ls -n cbci | grep cbci-local | awk '{ print $3 }')
 	@if [ \! -f /tmp/jenkins-cli.jar ]; then curl -o /tmp/jenkins-cli.jar "$(OC_URL)/jnlpJars/jenkins-cli.jar"; fi
 	@echo "Jenkins CLI: $(1)"
 	@java -jar /tmp/jenkins-cli.jar -s $(OC_URL) -auth admin:$(shell cat $(MKFILE)/secret.jenkinsPass) -webSocket $(1)
@@ -29,10 +30,11 @@ cbci-helm-update: check_kubeconfig check_envfile guard-CB_LB_CONFIG
 			s/\$${ingressClass}/$$ING_CLASS/g; \
 			s/\$${secretGHToken}/$$SECRET_GH_TOKEN/g; \
 			s/\$${secretGHUser}/$$SECRET_GH_USER/g; \
+			s/\$${secretJenkins}/$$SECRET_JENKINS_PASS/g; \
 			s/\$${agentNamespace}/$$AGENT_NA/g;" < $(DIR_HELM_VALUES)/cb-ci-local.yaml > $(MKFILE)/values.cb-ci-local.yaml
 	source .env && \
 		helm upgrade --install cbci-local $(DIR_CHARTS)/cb-ci-local --create-namespace --namespace "$$CBCI_NS" \
-		--set controllers.loadTest.controllers=6 \
+		--set controllers.loadTest.controllers=2 \
 		--set controllers.policies=false \
 		--set agents.policies=false \
 		--set agents.cache.storageClassName="gp3" \
@@ -67,7 +69,7 @@ check_availability: guard-OC_URL
 update_casc: ## Update Configuration as Code
 update_casc: guard-OC_URL cbci-helm-update
 	$(call JenkinsCLI,casc-check-out-bundles)
-	$(call JenkinsCLI,build admin/restart-all-controllers)
+	$(call JenkinsCLI,build admin/restart-all-controllers -s)
 	$(call JenkinsCLI,restart)
 
 .PHONY: cbci-helm-delete
@@ -77,7 +79,6 @@ cbci-helm-delete: check_kubeconfig check_envfile
 	source .env && \
 		kubectl delete --all pods --grace-period=0 --force --namespace "$$CBCI_NS" && \
 		kubectl delete --all pods --grace-period=0 --force --namespace "$$AGENT_NA" && \
-		helm uninstall cbci-casc --namespace "$$CBCI_NS" || echo "Relese cbci-casc does not exist" && \
 		helm uninstall cbci --namespace "$$CBCI_NS" || echo "Relese cbci does not exist" && \
 		helm repo remove cloudbees || echo "Repository cloudbees does not exist" && \
 		kubectl delete pvc --all --namespace "$$CBCI_NS" && \
