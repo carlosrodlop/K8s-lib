@@ -4,7 +4,6 @@ metadata:
   name: service-monitor-controllers-cbci
   labels:
     app: service-monitor-controllers-cbci
-    app.kubernetes.io/instance: kube-prometheus-stack
 spec:
   namespaceSelector:
     matchNames:
