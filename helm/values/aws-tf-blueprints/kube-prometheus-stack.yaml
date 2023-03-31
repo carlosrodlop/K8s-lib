@@ -4,20 +4,20 @@ alertmanager:
     nodeSelector:
       kubernetes.io/os: linux
       kubernetes.io/arch: amd64
-  config:
-    receivers:
-    #https://docs.robusta.dev/master/user-guide/alert-manager.html
-    - name: 'robusta'
-      webhook_configs:
-        - url: 'http://robusta-runner.robusta.svc.cluster.local/api/alerts'
-          send_resolved: true
-    route:
-      routes:
-        - receiver: 'robusta'
-          matchers:
-            - severity =~ "info|warn|error|critical"
-          repeat_interval: 4h
-          continue: true
+  # config:
+  #   receivers:
+  #   #https://docs.robusta.dev/master/user-guide/alert-manager.html
+  #   - name: 'robusta'
+  #     webhook_configs:
+  #       - url: 'http://robusta-runner.robusta.svc.cluster.local/api/alerts'
+  #         send_resolved: true
+  #   route:
+  #     routes:
+  #       - receiver: 'robusta'
+  #         matchers:
+  #           - severity =~ "info|warn|error|critical"
+  #         repeat_interval: 4h
+  #         continue: true
 prometheusOperator:
   admissionWebhooks:
     patch:
@@ -41,7 +41,7 @@ prometheus:
     #https://observability.thomasriley.co.uk/prometheus/configuring-prometheus/using-service-monitors/
     serviceMonitorSelector:
         matchLabels:
-          app.kubernetes.io/instance: kube-prometheus-stack
+          app: service-monitor-controllers-cbci
 additionalPrometheusRulesMap:
   rule-name:
     groups:
