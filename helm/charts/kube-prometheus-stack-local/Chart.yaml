@@ -3,4 +3,4 @@ name: kube-prometheus-stack-local
 description: Local helm chart for additional configuration beyond remote kube-prometheus-stack helm chart
 type: application
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 0.1.4
+version: 0.2.0

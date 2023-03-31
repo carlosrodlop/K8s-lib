@@ -3,4 +3,4 @@ name: cb-ci-local
 description: Local helm chart for additional configuration beyond remote cloudbees-ci helm chart
 type: application
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 0.1.0
+version: 0.2.0
