@@ -10,5 +10,7 @@ operationCenter:
     github:
       token: ${secretGHToken}
       user: ${secretGHUser}
+    jenkins:
+      pass: ${secretJenkins}
 agents:
   namespace: ${agentNamespace}
