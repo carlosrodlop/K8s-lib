@@ -18,6 +18,9 @@ operationCenter:
       token: "ghp_xxxxExampleToken"
       # -- Github Secret for user
       user: "gh_ExampleUser"
+    jenkins:
+      # -- Jenkins password
+      pass: "thisIsSecret"
 controllers:
   # -- Enable Limit Range and Resource Quoatas
   policies: false
