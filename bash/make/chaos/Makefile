@@ -11,7 +11,7 @@ include $(PARENT_MKFILE)
 chaos_enable: ## Install Chaos in namespace passed in the values.yaml
 chaos_enable: check_kubeconfig
 	helm upgrade --install chaos-local $(DIR_CHARTS)/chaos-local --namespace chaos --create-namespace \
-		--set kubeStresscheck.replicas=6
+		--set kubeStresscheck.replicas=3
 
 .PHONY: chaos_disable
 chaos_disable: ## Remove Chaos

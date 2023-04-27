@@ -15,7 +15,7 @@ k8s_db-eks_update: check_kubeconfig check_envfile
 	kubectl apply -f $(DIR_MANIFEST)/k8s-dh-eks-admin
 	kubectl -n kube-system describe secret $(shell kubectl -n kube-system get secret | grep eks-admin | awk '{print $1}')
 
-.PHONY: k8s_db-eks_delete check_envfile
+.PHONY: k8s_db-eks_delete
 k8s_db-eks_delete: ## Remove K8s Dashboard in EKS
 k8s_db-eks_delete: check_kubeconfig check_envfile
 	kubectl delete -f $(DIR_MANIFEST)/k8s-dh-eks-admin
