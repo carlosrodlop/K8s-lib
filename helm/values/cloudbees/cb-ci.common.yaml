@@ -26,6 +26,13 @@
     # - name: mc-load-casc-bundle
     #   mountPath: /var/jenkins_home/cb-casc-bundles-store/modern.load-boy.items
     #   readOnly: true
+  NodeSelector:
+    ci_type: cb-apps
+  Tolerations:
+    - key: dedicated
+      operator: Equal
+      value: cb-apps
+      effect: NoSchedule
   License:
     Evaluation:
       Enabled: true
@@ -33,6 +40,8 @@
       LastName: ${LicLastName}
       Email: ${LicEmail}
       Company: ${LicCompany}
+Hibernation:
+  Enabled: true
 Agents:
   SeparateNamespace:
     Enabled: true
