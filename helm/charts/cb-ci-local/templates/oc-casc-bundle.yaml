@@ -6,9 +6,9 @@ metadata:
     docs: "https://docs.cloudbees.com/docs/cloudbees-ci/latest/casc-oc/configure-oc-modern"
 data:
   bundle.yaml: |-
-{{ .Files.Get "casc/oc/modern/bundle.yaml" | indent 4 }}
+{{ .Files.Get "casc/oc/modern.oc.ldap/bundle.yaml" | indent 4 }}
   main.yaml: |-
-{{ .Files.Get "casc/oc/modern/main.yaml" | indent 4 }}
+{{ .Files.Get "casc/oc/modern.oc.ldap/main.yaml" | indent 4 }}
   location.yaml: |-
     unclassified:
       location:
@@ -34,15 +34,15 @@ data:
                   traits:
                     - "gitBranchDiscovery"
   credentials.yaml: |-
-{{ .Files.Get "casc/oc/modern/credentials.yaml" | indent 4 }}
+{{ .Files.Get "casc/oc/modern.oc.ldap/credentials.yaml" | indent 4 }}
   security.yaml: |-
-{{ .Files.Get "casc/oc/modern/security.yaml" | indent 4 }}
+{{ .Files.Get "casc/oc/modern.oc.ldap/security.yaml" | indent 4 }}
   plugins.yaml: |-
-{{ .Files.Get "casc/oc/modern/plugins.yaml" | indent 4 }}
+{{ .Files.Get "casc/oc/modern.oc.ldap/plugins.yaml" | indent 4 }}
   items-folder-admin.yaml: |-
-{{ .Files.Get "casc/oc/modern/items-folder-admin.yaml" | indent 4 }}
+{{ .Files.Get "casc/oc/modern.oc.ldap/items-folder-admin.yaml" | indent 4 }}
   items-root.yaml: |-
-{{ .Files.Get "casc/oc/modern/items-root.yaml" | indent 4 }}
+{{ .Files.Get "casc/oc/modern.oc.ldap/items-root.yaml" | indent 4 }}
   items-load-controllers.yaml: |-
     removeStrategy:
       items: NONE
@@ -66,4 +66,4 @@ data:
     items: []
 {{- end }}
   rbac.yaml: |-
-{{ .Files.Get "casc/oc/modern/rbac.yaml" | indent 4 }}
+{{ .Files.Get "casc/oc/modern.oc.ldap/rbac.yaml" | indent 4 }}
