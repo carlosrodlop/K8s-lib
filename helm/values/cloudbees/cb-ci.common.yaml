@@ -1,3 +1,4 @@
+OperationsCenter:
   #Common_Configuration
   Annotations:
     # vault.hashicorp.com/agent-inject: 'true'

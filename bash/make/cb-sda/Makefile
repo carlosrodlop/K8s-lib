@@ -37,7 +37,8 @@ cbci-helm-update: check_kubeconfig check_envfile guard-CB_LB_CONFIG
 		--set controllers.loadTest.controllers=1 \
 		-f "$(MKFILE)/values.cb-ci-local.yaml"
 	$(call print_subtitle,Update CloudBees values.yaml using $(CB_LB_CONFIG))
-	sed "/#Common_Configuration/e cat $(DIR_HELM_VALUES)/$(CB_LB_CONFIG)" < $(DIR_HELM_VALUES)/cb-ci.common.yaml > /tmp/values.tmp.cb-ci.yaml
+	sed "/OperationsCenter:/d" < $(DIR_HELM_VALUES)/cb-ci.common.yaml > /tmp/values.tmp.cb-ci.yaml
+	sed -i "/#Common_Configuration/e cat $(DIR_HELM_VALUES)/$(CB_LB_CONFIG)" /tmp/values.tmp.cb-ci.yaml
 	@source .env && \
 		sed "s/\$${hostname}/$$HOSTNAME/g; \
 			s/\$${protocol}/$$PROTOCOL/g; \
