@@ -2,7 +2,8 @@
 !.env.example
 *secret*
 *secret*.*
-!*oc-secrets.yaml
+!oc-secrets.yaml
+!agents-secrets-registry.yaml
 !*secrets.yaml.example
 !*secrets.yaml.example.enc
 kubeconfig-*.yaml

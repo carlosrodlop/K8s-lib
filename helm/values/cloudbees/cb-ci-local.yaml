@@ -12,5 +12,13 @@ operationCenter:
       user: ${secretGHUser}
     jenkins:
       pass: ${secretJenkins}
+controllers:
+  loadTest:
+    controllers: ${NLoadControllers}
 agents:
   namespace: ${agentNamespace}
+  imageCredentials:
+    registry: ${agentRegistryURL}
+    username: ${agentRegistryUserName}
+    password: ${agentRegistryUserPass}
+    email: ${agentRegistryUserMail}
