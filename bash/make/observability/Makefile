@@ -1,5 +1,5 @@
 MKFILE   		:= $(abspath $(dir $(lastword $(MAKEFILE_LIST))))
-PARENT_MKFILE   := $(HOME)/.Makefile # docker
+PARENT_MKFILE   := $(HOME)/.Makefile
 DIR_HELM_VALUES := $(MKFILE)/../../../helm/values
 DIR_MANIFEST 	:= $(MKFILE)/../../../manifest
 DIR_TF_ROOT		:= $(MKFILE)/../../../../../clouds/aws/root/eks-bp-v4
