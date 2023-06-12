@@ -7,7 +7,7 @@
 
 ---
 
-![GitHub Latest Release](https://img.shields.io/github/v/release/carlosrodlop/K8s-lib?logo=github) ![GitHub Issues](https://img.shields.io/github/issues/carlosrodlop/K8s-lib?logo=github) [![gitleaks badge](https://img.shields.io/badge/protected%20by-gitleaks-blue)](https://github.com/zricethezav/gitleaks#pre-commit) [![gitsecrets](https://img.shields.io/badge/protected%20by-gitsecrets-blue)](https://github.com/awslabs/git-secrets) [![helm docs](https://img.shields.io/badge/docs%20by-helmdocs-blue)](https://github.com/norwoodj/helm-docs) [![mdLinkChecker](https://github.com/carlosrodlop/terraform-lib/actions/workflows/mdLinkChecker.yml/badge.svg)](https://github.com/carlosrodlop/terraform-lib/actions/workflows/mdLinkChecker.yml)
+![GitHub Latest Release](https://img.shields.io/github/v/release/carlosrodlop/K8s-lib?logo=github) ![GitHub Issues](https://img.shields.io/github/issues/carlosrodlop/K8s-lib?logo=github) [![gitleaks badge](https://img.shields.io/badge/protected%20by-gitleaks-blue)](https://github.com/zricethezav/gitleaks#pre-commit) [![gitsecrets](https://img.shields.io/badge/protected%20by-gitsecrets-blue)](https://github.com/awslabs/git-secrets) [![helm docs](https://img.shields.io/badge/docs%20by-helmdocs-blue)](https://github.com/norwoodj/helm-docs) [![mdLinkChecker](https://github.com/carlosrodlop/K8s-lib/actions/workflows/mdLinkChecker.yml/badge.svg)](https://github.com/carlosrodlop/K8s-lib/actions/workflows/mdLinkChecker.yml)
 
 - Documentation: [Kubernetes Certification 2021](https://github.com/carlosrodlop/carlosrodlop-docs/tree/main/kubernetes)
 - It contains charts and roots deployments for different Applications and Kubernetes add-ons
