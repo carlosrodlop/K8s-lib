@@ -9,6 +9,7 @@
 
 ![GitHub Latest Release](https://img.shields.io/github/v/release/carlosrodlop/K8s-lib?logo=github) ![GitHub Issues](https://img.shields.io/github/issues/carlosrodlop/K8s-lib?logo=github) [![gitleaks badge](https://img.shields.io/badge/protected%20by-gitleaks-blue)](https://github.com/zricethezav/gitleaks#pre-commit) [![gitsecrets](https://img.shields.io/badge/protected%20by-gitsecrets-blue)](https://github.com/awslabs/git-secrets) [![helm docs](https://img.shields.io/badge/docs%20by-helmdocs-blue)](https://github.com/norwoodj/helm-docs)
 
+- Documentation: [Kubernetes Certification 2021](https://github.com/carlosrodlop/carlosrodlop-docs/tree/main/kubernetes)
 - It contains charts and roots deployments for different Applications and Kubernetes add-ons
-- It uses the [Docker Library](https://github.com/carlosrodlop/docker-lib) to make its content portable.
-- [Pre-commits](.pre-commit-config.yaml) for Validations and Documentation
+- Command and Processes are orchestrated via `Makefile`. It is tested to be used with asdf images from [Docker Library](https://github.com/carlosrodlop/docker-lib) making its content portable.
+- It uses [Pre-commits](.pre-commit-config.yaml) for Validations and Documentation

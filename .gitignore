@@ -11,3 +11,5 @@ kubeconfig-*.yaml
 root/cloudbees/values.yaml
 nohup.out
 values.*.yaml
+backend.tf
+.terraform.lock.hcl
