@@ -17,5 +17,5 @@
 
 <footer style="padding: 1px; padding-left: 1.5em; padding-right: 1.5em;">
   <p style="float: left"><a href="https://github.com/carlosrodlop/carlosrodlop-docs/tree/main/kubernetes">Documentation</a></p>
-  <p style="float: right"><a href="https://github.com/carlosrodlop/carlosrodlop-docs#kubernetes">Reference</a></p>
+  <p style="float: right"><a href="https://github.com/carlosrodlop/carlosrodlop-docs#kubernetes">References</a></p>
 </footer>
