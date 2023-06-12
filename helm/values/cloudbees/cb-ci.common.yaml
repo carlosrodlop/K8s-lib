@@ -7,6 +7,9 @@ OperationsCenter:
     # vault.hashicorp.com/agent-inject-secret-casc-config.txt: 'jenkins/data/casc/config'
     # vault.hashicorp.com/agent-inject-default-template: 'json'
     # vault.hashicorp.com/agent-limits-ephemeral: '1Gi'
+  JavaOpts: >-
+      -XX:InitialRAMPercentage=50.0
+      -XX:MaxRAMPercentage=50.0
   CasC:
     Enabled: true
   ConfigMapName: oc-casc-bundle
