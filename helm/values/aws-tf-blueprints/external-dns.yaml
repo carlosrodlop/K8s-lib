@@ -4,7 +4,7 @@ zoneIdFilters:
   - ${zoneIdFilter}
 policy: "sync"
 aws:
-  zoneType: "public"
+  zoneType: ${zoneType}
   zonesCacheDuration: "1m"
 logLevel: "debug"
 nodeSelector:

@@ -21,8 +21,8 @@ repos:
     rev: v8.15.1
     hooks:
       - id: gitleaks
-  - repo: https://github.com/norwoodj/helm-docs
-    rev: v1.11.0
-    hooks:
-      - id: helm-docs
-        files: ^helm/charts/
+  # - repo: https://github.com/norwoodj/helm-docs
+  #   rev: v1.11.0
+  #   hooks:
+  #     - id: helm-docs
+  #       files: ^helm/charts/

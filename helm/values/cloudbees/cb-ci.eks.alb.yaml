@@ -1,11 +1,11 @@
 #EKS+ALB
-Subdomain: true
+Subdomain: false
 OperationsCenter:
-  HostName: ${hostname}
+  HostName: ci.${hostname}
   Protocol: ${protocol}
   Platform: eks
   Ingress:
     Class: alb
     Annotations:
-      alb.ingress.kubernetes.io/scheme               : internet-facing
-      alb.ingress.kubernetes.io/certificate-arn      : ${cert_arn}
+      alb.ingress.kubernetes.io/scheme: internet-facing
+      alb.ingress.kubernetes.io/certificate-arn: ${cert_arn}

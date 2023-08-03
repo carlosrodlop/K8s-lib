@@ -1,6 +1,6 @@
 MKFILE   		:= $(abspath $(dir $(lastword $(MAKEFILE_LIST))))
 PARENT_MKFILE   := $(HOME)/.Makefile
-DIR_TF_ROOT		:= $(MKFILE)/../../../../../clouds/aws/root/eks-bp-v4-31
+DIR_TF_ROOT		:= $(MKFILE)/../../../../../clouds/aws/root/tmp
 DIR_CHARTS 		:= $(MKFILE)/../../../helm/charts
 DIR_HELM_VALUES := $(MKFILE)/../../../helm/values/cloudbees
 

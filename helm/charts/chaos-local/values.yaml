@@ -5,5 +5,5 @@ kubeStresscheck:
   replicas: 10
   # -- Deployment of stress pods in the agent namespace using kubeStresscheckPod
   namespaces:
-  - cbci
-  - cbci-agents
+    - cbci
+    - cbci-agents
