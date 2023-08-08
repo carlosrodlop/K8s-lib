@@ -76,7 +76,7 @@ cbci-helm-update-advance: check_kubeconfig check_envfile guard-CB_LB_CONFIG
 			s/\$${LicLastName}/$$LIC_LASTNAME/g; \
 			s/\$${LicEmail}/$$LIC_MAIL/g; \
 			s/\$${LicCompany}/$$LIC_COMPANY/g; \
-			s|\$${cert_arn}|$(call getTFValue,$(DIR_TF_ROOT),acm_certificate_arn)|g ; \
+			s|\$${cert_arn}|$$CERTIFICATE_ID|g ; \
 			s/\$${agentNamespace}/$$AGENT_NA/g;" < /tmp/values.tmp.cb-ci.yaml > $(MKFILE)/values.cb-ci.yaml
 	helm repo add cloudbees https://public-charts.artifacts.cloudbees.com/repository/public/ && helm repo update
 	source .env && \
