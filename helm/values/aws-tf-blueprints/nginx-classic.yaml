@@ -12,5 +12,5 @@ controller:
       nodeSelector:
         kubernetes.io/os: linux
 defaultBackend:
-    nodeSelector:
-      kubernetes.io/os: linux
+  nodeSelector:
+    kubernetes.io/os: linux

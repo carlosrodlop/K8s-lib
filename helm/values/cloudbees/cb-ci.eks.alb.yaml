@@ -1,7 +1,7 @@
 #EKS+ALB
-Subdomain: false
+Subdomain: ${subdomain}
 OperationsCenter:
-  HostName: ci.${hostname}
+  HostName: ${hostname}
   Protocol: ${protocol}
   Platform: eks
   Ingress:
