@@ -85,7 +85,7 @@ cbci-helm-update-advance: check_kubeconfig check_envfile guard-CB_LB_CONFIG
 	@#kubectl get secret oc-secrets -n cbci -o jsonpath='{.data.jenkinsPass}' | base64 --decode > $(MKFILE)/secret.jenkinsPass
 
 .PHONY: check-availability
-check-availability: ## Check availability of the OC Example: make check_availability OC_URL=https://cjoc.ci.crl.core.pscbdemos.com/
+check-availability: ## Check availability of the OC Example: make check_availability OC_URL
 check-availability: guard-OC_URL
 	source .env && \
 		until kubectl get ing -n $$CBCI_NS cjoc; do sleep 2 && echo "Waiting for Ingress to get ready"; done
