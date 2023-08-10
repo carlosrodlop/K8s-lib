@@ -12,10 +12,10 @@ data:
   location.yaml: |-
     unclassified:
       location:
-{{- if eq .Values.operationCenter.ingress.class "alb" }}
-          url: {{ printf "%s://cjoc.%s" .Values.operationCenter.protocol .Values.operationCenter.hostname }}
+{{- if .Values.operationCenter.subdomain }}
+        url: {{ printf "%s://cjoc.%s" .Values.operationCenter.protocol .Values.operationCenter.hostname }}
 {{- else }}
-          url: {{ printf "%s://%s.%s/cjoc/" .Values.operationCenter.protocol .Values.operationCenter.subdomain .Values.operationCenter.hostname }}
+        url: {{ printf "%s://%s/cjoc/" .Values.operationCenter.protocol .Values.operationCenter.hostname }}
 {{- end }}
   controllerBundleStorageSCM.yaml: |-
     unclassified:
