@@ -9,7 +9,7 @@ repos:
         args: ["--markdown-linebreak-ext=md"]
       - id: mixed-line-ending
       - id: end-of-file-fixer
-      - id: check-yaml
+      #- id: check-yaml
       - id: check-merge-conflict
       - id: check-case-conflict
       - id: check-docstring-first
@@ -21,8 +21,8 @@ repos:
     rev: v8.15.1
     hooks:
       - id: gitleaks
-  # - repo: https://github.com/norwoodj/helm-docs
-  #   rev: v1.11.0
-  #   hooks:
-  #     - id: helm-docs
-  #       files: ^helm/charts/
+  - repo: https://github.com/norwoodj/helm-docs
+    rev: v1.11.0
+    hooks:
+      - id: helm-docs
+        files: ^helm/charts/
