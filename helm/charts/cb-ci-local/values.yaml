@@ -3,8 +3,8 @@ operationCenter:
   protocol: "https"
   # -- DNS zone (Eg: Route 53 in Hosted Zone in AWS)
   hostname: "example.com"
-  # -- Subdomain prefix used for all CloudBees CI applications (Operation Center and Controllers)
-  subdomain: "ci"
+  # -- Subdomain for Operation Center (true or false)
+  subdomain: false
   ingress:
     # -- alb or nlb
     class: alb
