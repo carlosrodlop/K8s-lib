@@ -6,9 +6,9 @@ metadata:
     docs: "https://docs.cloudbees.com/docs/cloudbees-ci/latest/casc-oc/configure-oc-modern"
 data:
   bundle.yaml: |-
-{{ .Files.Get "casc/oc/modern.oc.ldap/bundle.yaml" | indent 4 }}
+{{ .Files.Get "casc/oc/modern.oc.advance/bundle.yaml" | indent 4 }}
   main.yaml: |-
-{{ .Files.Get "casc/oc/modern.oc.ldap/main.yaml" | indent 4 }}
+{{ .Files.Get "casc/oc/modern.oc.advance/main.yaml" | indent 4 }}
   location.yaml: |-
     unclassified:
       location:
@@ -27,6 +27,7 @@ data:
           name: "casc-store"
           retriever:
             SCM:
+              defaultVersion: "main"
               scmSource:
                 git:
                   credentialsId: "GH-token"
@@ -34,15 +35,15 @@ data:
                   traits:
                     - "gitBranchDiscovery"
   credentials.yaml: |-
-{{ .Files.Get "casc/oc/modern.oc.ldap/credentials.yaml" | indent 4 }}
+{{ .Files.Get "casc/oc/modern.oc.advance/credentials.yaml" | indent 4 }}
   security.yaml: |-
-{{ .Files.Get "casc/oc/modern.oc.ldap/security.yaml" | indent 4 }}
+{{ .Files.Get "casc/oc/modern.oc.advance/security.yaml" | indent 4 }}
   plugins.yaml: |-
-{{ .Files.Get "casc/oc/modern.oc.ldap/plugins.yaml" | indent 4 }}
+{{ .Files.Get "casc/oc/modern.oc.advance/plugins.yaml" | indent 4 }}
   items-folder-admin.yaml: |-
-{{ .Files.Get "casc/oc/modern.oc.ldap/items-folder-admin.yaml" | indent 4 }}
+{{ .Files.Get "casc/oc/modern.oc.advance/items-folder-admin.yaml" | indent 4 }}
   items-root.yaml: |-
-{{ .Files.Get "casc/oc/modern.oc.ldap/items-root.yaml" | indent 4 }}
+{{ .Files.Get "casc/oc/modern.oc.advance/items-root.yaml" | indent 4 }}
   items-load-controllers.yaml: |-
     removeStrategy:
       items: NONE
@@ -54,7 +55,7 @@ data:
       name: load-boy{{ . }}
       properties:
       - configurationAsCode:
-          bundle: "modern.load-boy"
+          bundle: "main/modern.load-boy"
       configuration:
         kubernetes:
           domain: load-boy{{ . }}
@@ -66,4 +67,6 @@ data:
     items: []
 {{- end }}
   rbac.yaml: |-
-{{ .Files.Get "casc/oc/modern.oc.ldap/rbac.yaml" | indent 4 }}
+{{ .Files.Get "casc/oc/modern.oc.advance/rbac.yaml" | indent 4 }}
+  variables.yaml: |-
+{{ .Files.Get "casc/oc/modern.oc.advance/variables.yaml" | indent 4 }}

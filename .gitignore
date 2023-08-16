@@ -13,3 +13,5 @@ nohup.out
 values.*.yaml
 backend.tf
 .terraform.lock.hcl
+helm/charts/cb-ci-local/casc/tmp-plugin-calculations/*
+!helm/charts/cb-ci-local/casc/tmp-plugin-calculations/.tmp-plugin-calculations

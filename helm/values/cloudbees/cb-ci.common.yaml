@@ -1,15 +1,14 @@
 OperationsCenter:
-  #Common_Configuration
-  Annotations:
-    # vault.hashicorp.com/agent-inject: 'true'
-    # vault.hashicorp.com/role: 'jenkins'
-    # vault.hashicorp.com/template-static-secret-render-interval: "1m"
-    # vault.hashicorp.com/agent-inject-secret-casc-config.txt: 'jenkins/data/casc/config'
-    # vault.hashicorp.com/agent-inject-default-template: 'json'
-    # vault.hashicorp.com/agent-limits-ephemeral: '1Gi'
   JavaOpts: >-
     -XX:InitialRAMPercentage=50.0
     -XX:MaxRAMPercentage=50.0
+  Resources:
+    Limits:
+      Memory: "4G"
+      Cpu: 2
+    Requests:
+      Memory: "4G"
+      Cpu: 2
   CasC:
     Enabled: true
   ConfigMapName: oc-casc-bundle
@@ -20,16 +19,10 @@ OperationsCenter:
     - name: oc-secrets
       secret:
         secretName: oc-secrets
-    # - name: mc-load-casc-bundle
-    #   configMap:
-    #     name: mc-load-casc-bundle
   ExtraVolumeMounts:
     - name: oc-secrets
       mountPath: /var/run/secrets/cjoc
       readOnly: true
-    # - name: mc-load-casc-bundle
-    #   mountPath: /var/jenkins_home/cb-casc-bundles-store/modern.load-boy.items
-    #   readOnly: true
   NodeSelector:
     ci_type: cb-apps
   Tolerations:
