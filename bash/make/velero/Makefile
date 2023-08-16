@@ -28,7 +28,7 @@ endef
 velero_create_schedule:
 velero_create_schedule: ## Remove Backup Schedule for velero
 	$(deleteBackupSchedule)
-	velero create schedule $(BACKUP_SQUED_NAME) --schedule='@every $(BACKUP_FREQ)' --ttl $(BACKUP_TTL) --include-namespaces $(CI_NAMESPACE) --exclude-resources $(BACKUP_EXCLUDE)
+	velero create schedule $BACKUP_SQUED_NAME --schedule='@every $BACKUP_FREQ' --ttl $BACKUP_TTL --include-namespaces $CI_NAMESPACE --exclude-resources $BACKUP_EXCLUDE
 
 .PHONY: velero_remove_schedule
 velero_remove_schedule: ## Remove exiting schedule for velero
@@ -40,7 +40,7 @@ velero_remove_schedule:
 velero_trigger_backup: ## Create a puntual Backup from Schedule
 velero_trigger_backup:
 
-	velero backup create --from-schedule $(BACKUP_SQUED_NAME) --wait
+	velero backup create --from-schedule $BACKUP_SQUED_NAME --wait
 
 .PHONY: velero_restore_backup
 velero_restore_backup: ## Restore Backup Schedule for velero

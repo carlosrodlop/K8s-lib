@@ -11,16 +11,6 @@ operationCenter:
   casc:
     # -- Location of CloudBees Bundle Storage for Controller
     controllerBundleStorageSCM: "https://github.com/carlosrodlop/cb-casc-controllers.git"
-  credentials:
-    # -- Github Secret pair
-    github:
-      # -- Github Secret for token
-      token: "ghp_xxxxExampleToken"
-      # -- Github Secret for user
-      user: "gh_ExampleUser"
-    jenkins:
-      # -- Jenkins password
-      pass: "thisIsSecret"
 controllers:
   # -- Enable Limit Range and Resource Quoatas
   policies: false
@@ -43,3 +33,12 @@ agents:
     username: "someone"
     password: "sillyness"
     email: "someone@host.com"
+secrets:
+    # -- Github Secret pair
+    github:
+      # -- Github Secret for token
+      token: "ghp_xxxxExampleToken"
+      # -- Github Secret for user
+      user: "gh_ExampleUser"
+    # -- Jenkins password
+    advisorMail: "cbci.admin@example.org.com"

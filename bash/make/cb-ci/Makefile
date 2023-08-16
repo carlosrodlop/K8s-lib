@@ -25,7 +25,7 @@ define JenkinsCLI
 	@if [ \! -f /tmp/jenkins-cli.jar ]; then curl -o /tmp/jenkins-cli.jar "$(OC_URL)/jnlpJars/jenkins-cli.jar"; fi
 	@echo "Jenkins CLI: $(1)"
 	@source .env && \
-		java -jar /tmp/jenkins-cli.jar -s $(OC_URL) -auth $$ADMIN_JENKINS_USER:$$SECRET_JENKINS_PASS -webSocket $(1)
+		java -jar /tmp/jenkins-cli.jar -s $(OC_URL) -auth $$ADMIN_JENKINS_USER:$$ADMIN_JENKINS_PASS -webSocket $(1)
 endef
 
 define restartOCIfExist
@@ -82,7 +82,7 @@ update-advance: check_kubeconfig check_envfile guard-CB_LB_CONFIG
 			s/\$${ingressClass}/$$ING_CLASS/g; \
 			s/\$${secretGHToken}/$$SECRET_GH_TOKEN/g; \
 			s/\$${secretGHUser}/$$SECRET_GH_USER/g; \
-			s/\$${secretJenkins}/$$SECRET_JENKINS_PASS/g; \
+			s/\$${secretAdvisorMail}/$$SECRET_ADVISOR_MAIL/g; \
 			s/\$${agentNamespace}/$$AGENT_NA/g; \
 			s|\$${agentRegistryURL}|$$REGISTRY_URL|g; \
 			s/\$${agentRegistryUserName}/$$REGISTRY_USER_NAME/g; \
@@ -105,15 +105,15 @@ check-availability: guard-OC_URL
 		until kubectl get ing -n $$CBCI_NS cjoc; do sleep 2 && echo "Waiting for Ingress to get ready"; done
 	@echo "Ingress Ready"
 	source .env && \
-		until curl -u $$ADMIN_JENKINS_USER:$$SECRET_JENKINS_PASS -s $(OC_URL)  > /dev/null; do sleep 10 && echo "Waiting for Operation Center at $(OC_URL)"; done
+		until curl -u $$ADMIN_JENKINS_USER:$$ADMIN_JENKINS_PASS -s $(OC_URL)  > /dev/null; do sleep 10 && echo "Waiting for Operation Center at $(OC_URL)"; done
 	@echo "Operation Center Ready at $(OC_URL)"
 
 .PHONY: validate-casc-bundle
 validate-casc-bundle: ## Validate 1 bundle.
 validate-casc-bundle: guard-OC_URL
 	source .env && \
-		cd $(DIR_CHARTS)/$$PATH_BUNDLE_VAL && zip -r /tmp/oc-bundle.zip $$BUNDLE_VAL
-	$(call JenkinsCLI,casc-pre-validate-bundle) < /tmp/oc-bundle.zip | yq -o=json
+		cd $(DIR_CHARTS)/$$PATH_BUNDLE_VAL && zip -r /tmp/bundle-to-validate.zip $$BUNDLE_VAL
+	$(call JenkinsCLI,casc-pre-validate-bundle) < /tmp/bundle-to-validate.zip | yq -o=json
 
 .PHONY: update-casc-cm
 update-casc-cm: ## Update Configuration as Code Controllers in Operation Center, Validate and Apply (if it requires)

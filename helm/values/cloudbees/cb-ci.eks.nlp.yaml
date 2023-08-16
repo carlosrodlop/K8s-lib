@@ -1,3 +1,4 @@
+#https://artifacthub.io/packages/helm/cloudbees/cloudbees-core
 #EKS+NLP+No Nginx Controller
 #https://docs.aws.amazon.com/eks/latest/userguide/network-load-balancing.html
 #Trying to create NLP without NGINX as explained in https://www.eksworkshop.com/docs/fundamentals/exposing/loadbalancer/adding-lb fails with

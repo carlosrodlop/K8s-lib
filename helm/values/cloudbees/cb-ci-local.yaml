@@ -6,12 +6,6 @@ operationCenter:
     class: ${ingressClass}
   casc:
     controllerBundleStorageSCM: ${c_casc_repo}
-  credentials:
-    github:
-      token: ${secretGHToken}
-      user: ${secretGHUser}
-    jenkins:
-      pass: ${secretJenkins}
 controllers:
   loadTest:
     controllers: ${NLoadControllers}
@@ -22,3 +16,8 @@ agents:
     username: ${agentRegistryUserName}
     password: ${agentRegistryUserPass}
     email: ${agentRegistryUserMail}
+secrets:
+    github:
+      token: ${secretGHToken}
+      user: ${secretGHUser}
+    advisorMail: ${secretAdvisorMail}

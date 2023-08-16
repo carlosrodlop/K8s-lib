@@ -1,3 +1,4 @@
+#https://artifacthub.io/packages/helm/cloudbees/cloudbees-core
 OperationsCenter:
   JavaOpts: >-
     -XX:InitialRAMPercentage=50.0
@@ -30,6 +31,7 @@ OperationsCenter:
       operator: Equal
       value: cb-apps
       effect: NoSchedule
+  #NOTE: Comment License for air-gapped installation
   License:
     Evaluation:
       Enabled: true
