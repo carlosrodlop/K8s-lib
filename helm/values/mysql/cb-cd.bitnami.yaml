@@ -1,0 +1,22 @@
+#https://artifacthub.io/packages/helm/bitnami/mysql
+auth:
+  username: flow
+  password: flow
+  root_password: flow
+  database: flow
+primary:
+  nodeSelector:
+      ci_type: cb-apps
+  tolerations:
+    - key: dedicated
+      operator: Equal
+      value: cb-apps
+      effect: NoSchedule
+secondary:
+  nodeSelector:
+      ci_type: cb-apps
+  tolerations:
+    - key: dedicated
+      operator: Equal
+      value: cb-apps
+      effect: NoSchedule

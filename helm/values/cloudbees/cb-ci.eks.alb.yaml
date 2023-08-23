@@ -1,5 +1,6 @@
 #https://artifacthub.io/packages/helm/cloudbees/cloudbees-core
 #EKS+ALB
+#Best Practice: use a subdomain to avoid reach ALB Hard Limit of 100 rules https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-limits.html
 Subdomain: ${subdomain}
 OperationsCenter:
   HostName: ${hostname}
