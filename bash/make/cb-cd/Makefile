@@ -68,7 +68,7 @@ deleteDb: check_kubeconfig check_envfile
 		kubectl delete --all pvc --grace-period=0 --force --namespace $$DB_NS && \
 		kubectl delete ns $$DB_NS || echo "There is NOT existing namespace $$DB_NS"
 
-.PHONY: delete
+.PHONY: deleteCd
 deleteCd: ## Delete CloudBees CD. Ref: https://docs.cloudbees.com/docs/cloudbees-ci/latest/kubernetes-install-guide/kubernetes-uninstall
 deleteCd: check_kubeconfig check_envfile
 	$(call print_title,Uninstall CloudBees Core via Helm)
