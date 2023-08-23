@@ -8,7 +8,7 @@ include $(PARENT_MKFILE)
 
 #Helm chart version for CloudBees CI: https://artifacthub.io/packages/helm/cloudbees/cloudbees-core
 CBCI_VERSION     := 3.13430.0+1e383c33d1a3
-#Application Version
+#Application Version. Release Notes: https://docs.cloudbees.com/docs/release-notes/latest/cloudbees-ci/
 CBCI_VERSION_APP := 2.401.3.3
 
 CB_LB_CONFIG	:= $(shell echo $(call getEnvProperty,CB_LB_CONFIG))
