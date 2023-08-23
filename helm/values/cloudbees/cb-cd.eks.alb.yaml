@@ -1,11 +1,53 @@
 #https://docs.cloudbees.com/docs/cloudbees-cd/latest/install-k8s/k8s-platform-specific-configurations#_configuring_values_yaml_for_alb_support
-ingress:
-  enabled: true
-  host: cd.crl.core.pscbdemos.com
-  class: alb
-  annotations:
-      alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-1:324005994172:certificate/277a45f8-03b5-4150-a2de-45f1f642c647
+
+##---------------------------------------------
+## Plataform
+##---------------------------------------------
+
 platform: eks
 
+##---------------------------------------------
+## Ingress Controller
+##---------------------------------------------
+
+ingress:
+  enabled: true
+  host: ${hostname}
+  class: alb
+  annotations:
+      alb.ingress.kubernetes.io/certificate-arn: ${cert_arn}
 nginx-ingress:
   enabled: false
+
+##---------------------------------------------
+## Flow storage configuration section
+##---------------------------------------------
+
+storage:
+  volumes:
+    serverPlugins:
+      name: flow-server-shared
+      accessMode: ReadWriteMany
+      storageClass: efs
+    repositoryStorage:
+      storage: 10Gi
+      storageClass: efs
+    doisStorage:
+      storageClass: efs
+    boundAgentStorage:
+      storageClass: efs
+
+#---------------------------------------------
+# Volume configuration section
+#---------------------------------------------
+# Fixes mounting issues with the flow-server-init-job
+
+# Fixes mounting issues with repository and devops insights
+volumePermissions:
+  enabled: false
+
+# Fixes mounting issues with the flow-server-init-job
+# No Longer needed because it is fixed by the global one one below
+server:
+  volumesPermissionsInitContainer:
+    enabled: false

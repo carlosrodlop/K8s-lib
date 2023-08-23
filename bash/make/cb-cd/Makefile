@@ -7,7 +7,7 @@ DIR_HELM_VALUES := $(MKFILE)/../../../helm/values
 include $(PARENT_MKFILE)
 #Release Notes: https://docs.cloudbees.com/docs/cloudbees-cd-release-notes/latest/
 #Helm chart CloudBees CD Server: https://artifacthub.io/packages/helm/cloudbees/cloudbees-flow
-MYSQL_DB_VERSION     := 9.12.0
+MYSQL_DB_VERSION        := 9.12.0
 #Helm chart CloudBees CD Server: https://artifacthub.io/packages/helm/cloudbees/cloudbees-flow
 CBCD_SERVER_VERSION     := 2.26.0
 #Helm chart CloudBees CD Agent: https://artifacthub.io/packages/helm/cloudbees/cloudbees-flow-agent
@@ -30,9 +30,11 @@ updateDb: check_kubeconfig check_envfile
 updateCdServer: ## Update CD Server
 updateCdServer: check_kubeconfig check_envfile guard-CB_LB_CONFIG
 	source .env && \
+		sed "s/\$${hostname}/$$HOSTNAME/g; \
+			s|\$${cert_arn}|$$CERTIFICATE_ID|g ;" < $(DIR_HELM_VALUES)/cloudbees/$(CB_LB_CONFIG).yaml > $(MKFILE)/values.$(CB_LB_CONFIG).yaml && \
 		helm repo add cloudbees https://public-charts.artifacts.cloudbees.com/repository/public/ && helm repo update && \
 		helm upgrade --install cbcd-server cloudbees/cloudbees-flow \
-			-f $(DIR_HELM_VALUES)/cloudbees/$(CB_LB_CONFIG).yaml \
+			-f $(MKFILE)/values.$(CB_LB_CONFIG).yaml \
 			-f $(DIR_HELM_VALUES)/cloudbees/cb-cd.server.yaml \
 			--namespace $$CBCD_NS --create-namespace \
 			--timeout 10000s
