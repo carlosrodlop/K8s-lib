@@ -8,9 +8,9 @@ database:
   dbPassword: "flow"
   dbType: "mysql"
   dbPort: 3306
-  clusterEndpoint: "mysql.db"
+  clusterEndpoint: "mysql.db.svc.cluster.local"
   mysqlConnector:
-    enabled: false
+    enabled: true
 
 #---------------------------------------------
 # Flow server license configuration optional section

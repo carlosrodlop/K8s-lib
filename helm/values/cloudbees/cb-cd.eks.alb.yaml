@@ -48,6 +48,6 @@ volumePermissions:
 
 # Fixes mounting issues with the flow-server-init-job
 # No Longer needed because it is fixed by the global one one below
-server:
-  volumesPermissionsInitContainer:
-    enabled: false
+# server:
+#   volumesPermissionsInitContainer:
+#     enabled: false
