@@ -1,6 +1,5 @@
 MKFILE   		:= $(abspath $(dir $(lastword $(MAKEFILE_LIST))))
 PARENT_MKFILE   := $(HOME)/.Makefile
-DIR_TF_ROOT		:= $(MKFILE)/../../../../../clouds/aws/root/tmp
 DIR_CHARTS 		:= $(MKFILE)/../../../helm/charts
 DIR_HELM_VALUES := $(MKFILE)/../../../helm/values/cloudbees
 
@@ -62,6 +61,7 @@ endef
 .PHONY: update-simple
 update-simple: ## Install/Update CloudBees Core Modern via Helm. Adding OC Simple Casc Bundle.
 update-simple: check_kubeconfig check_envfile guard-CB_LB_CONFIG
+	@echo -n "Are up to date .env file? [yes/No] " && read ans && [ $${ans:-No} = yes ]
 	$(call print_title, Load Simple OC Casc Bundle)
 	source .env && \
 		kubectl create ns "$$CBCI_NS" || echo "$$CBCI_NS exist" && \
@@ -74,6 +74,7 @@ update-simple: check_kubeconfig check_envfile guard-CB_LB_CONFIG
 .PHONY: update-advance
 update-advance: ## Install/Update CloudBees Core Modern via Helm. Adding OC Advanced Casc Bundle and Local Helm Chart.
 update-advance: check_kubeconfig check_envfile guard-CB_LB_CONFIG
+	@echo -n "Are up to date .env file and $(DIR_CHARTS)/cb-ci-local/casc/oc/modern.oc.advance/variables.yaml? [yes/No] " && read ans && [ $${ans:-No} = yes ]
 	$(call print_title,Updating Local CloudBees Helm Chart)
 	source .env && \
 		sed "s/\$${hostname}/$$HOSTNAME/g; \
