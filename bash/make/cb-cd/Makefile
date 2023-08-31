@@ -23,8 +23,8 @@ updateDb: check_kubeconfig check_envfile
 		helm repo add bitnami https://charts.bitnami.com/bitnami && helm repo update && \
 		helm upgrade --install mysql bitnami/mysql --version $(MYSQL_DB_VERSION)  \
 			-f $(DIR_HELM_VALUES)/mysql/cb-cd.bitnami.yaml \
-			--namespace $$DB_NS --create-namespace && \
-		kubectl rollout status sts mysql --namespace $$DB_NS && wait
+			--namespace db --create-namespace && \
+		kubectl rollout status sts mysql --namespace db && wait
 
 .PHONY: updateCdServer
 updateCdServer: ## Update CD Server
