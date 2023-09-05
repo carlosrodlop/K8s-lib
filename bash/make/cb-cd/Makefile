@@ -23,8 +23,8 @@ updateDb: check_kubeconfig check_envfile
 		helm repo add bitnami https://charts.bitnami.com/bitnami && helm repo update && \
 		helm upgrade --install mysql bitnami/mysql --version $(MYSQL_DB_VERSION)  \
 			-f $(DIR_HELM_VALUES)/mysql/cb-cd.bitnami.yaml \
-			--namespace db --create-namespace && \
-		kubectl rollout status sts mysql --namespace db && wait
+			--namespace $$DB_NS --create-namespace && \
+		kubectl rollout status sts mysql --namespace $$DB_NS && wait
 
 .PHONY: updateCdServer
 updateCdServer: ## Update CD Server
@@ -39,8 +39,12 @@ updateCdServer: check_kubeconfig check_envfile guard-CB_LB_CONFIG
 			--namespace $$CBCD_NS --create-namespace \
 			--timeout 10000s
 
+.PHONY: updateAll
+updateAll: ## Update Database + CD Server
+updateAll: updateDb updateCdServer
+
 .PHONY: updateCdAgent
-updateCdAgent: ## Update CD Server
+updateCdAgent: ## Update CD Agent
 updateCdAgent: check_kubeconfig check_envfile guard-CB_LB_CONFIG
 	source .env && \
 		kubectl create $$CBCD_NS_AGENT
@@ -54,13 +58,13 @@ updateCdAgent: check_kubeconfig check_envfile guard-CB_LB_CONFIG
 			--timeout 10000s
 
 .PHONY: getValues
-getValues: ## Install/Update CloudBees CD via Helm.
+getValues: ## Get Helm Chart value for an specific version.
 getValues:
 	helm repo add cloudbees https://public-charts.artifacts.cloudbees.com/repository/public/ && helm repo update
 	helm inspect values --version $(CBCD_SERVER_VERSION) cloudbees/cloudbees-flow > $(MKFILE)/values.all.$(CBCD_SERVER_VERSION).cb-cd-server.yaml
 
 .PHONY: deleteDb
-deleteDb: ## Delete Database. Ref: https://docs.cloudbees.com/docs/cloudbees-ci/latest/kubernetes-install-guide/kubernetes-uninstall
+deleteDb: ## Delete Database.
 deleteDb: check_kubeconfig check_envfile
 	$(call print_title,Uninstall CloudBees Core via Helm)
 	source .env && \
@@ -71,7 +75,7 @@ deleteDb: check_kubeconfig check_envfile
 		kubectl delete ns $$DB_NS || echo "There is NOT existing namespace $$DB_NS"
 
 .PHONY: deleteCd
-deleteCd: ## Delete CloudBees CD. Ref: https://docs.cloudbees.com/docs/cloudbees-ci/latest/kubernetes-install-guide/kubernetes-uninstall
+deleteCd: ## Delete CloudBees CD.
 deleteCd: check_kubeconfig check_envfile
 	$(call print_title,Uninstall CloudBees Core via Helm)
 	source .env && \
@@ -80,3 +84,7 @@ deleteCd: check_kubeconfig check_envfile
 		helm repo remove cloudbees || echo "Repository cloudbees does not exist" && \
 		kubectl delete --all pvc --grace-period=0 --force --namespace $$CBCD_NS && \
 		kubectl delete ns $$CBCD_NS || echo "There is NOT existing namespace $$CBCD_NS"
+
+.PHONY: deleteAll
+deleteAll: ## Delete CloudBees CD + Database
+deleteAll: deleteCd deleteDb
