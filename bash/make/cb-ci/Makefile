@@ -125,26 +125,27 @@ update-casc-cm: guard-OC_URL
 	$(call JenkinsCLI,build admin/restart-all-controllers -s)
 
 .PHONY: plugin-calc-bundle
-plugin-calculator: ## Update Configuration as Code Controllers in Operation Center, Validate and Apply (if it requires)
+plugin-calculator: ## Provide plugin.yaml and plugin-catalog.yaml for a bundle. IMPORTANT: Require to be run from Bash5 (eg. docker-libs > bash5.alpine)
 plugin-calculator:
 	source .env && \
 		current_full_bundle_path=$$(echo $$CBCI_CASC_BUNDLE_PATH/$$CBCI_CASC_BUNDLE_NAME) && \
 		actual_plugins_folder=$$(echo $(DIR_CHARTS)/cb-ci-local/casc/tmp-plugin-calculations) && \
-		rm -rf $$actual_plugins_folder/plugin*.* && \
-		echo "$$CBCI_CASC_BUNDLE_NAME: $$CBCI_APP_TYPE-$(CBCI_VERSION_APP)" > $$actual_plugins_folder/plugins-$$CBCI_APP_TYPE-$(CBCI_VERSION_APP) && \
+		rm -rf $$actual_plugins_folder/*.* && \
+		echo "$$CBCI_CASC_BUNDLE_NAME: $$CBCI_CASC_BUNDLE_TYPE-$(CBCI_VERSION_APP)" > $$actual_plugins_folder/summary.txt && \
+		mkdir -p $$actual_plugins_folder/plugins && mkdir -p $$actual_plugins_folder/catalog && \
 		$$RUN_CMD \
 			-v $(CBCI_VERSION_APP) \
-			-t $$CBCI_APP_TYPE \
-			-f "$$current_full_bundle_path/plugins.yaml" \
-			-F "$$actual_plugins_folder/plugins.yaml" \
-			-c "$$actual_plugins_folder/plugin-catalog.yaml" \
-			-C "$$actual_plugins_folder/plugin-catalog-offline.yaml" \
-			-s \
-			-g "$$actual_plugins_folder/plugins-minimal-for-generation-only.yaml" \
-			-G "$$actual_plugins_folder/plugins-minimal.yaml"
+			-t $$CBCI_CASC_BUNDLE_TYPE \
+			-f "$$current_full_bundle_path/$$CBCI_CASC_BUNDLE_PLUGINS" \
+			-F "$$actual_plugins_folder/plugins/$(CBCI_VERSION_APP).yaml" \
+			-g "$$actual_plugins_folder/plugins/$(CBCI_VERSION_APP).minimal-for-generation-only.yaml" \
+			-G "$$actual_plugins_folder/plugins/$(CBCI_VERSION_APP).minimal.yaml" \
+			-c "$$actual_plugins_folder/catalog/$(CBCI_VERSION_APP).yaml" \
+			-C "$$actual_plugins_folder/catalog/$(CBCI_VERSION_APP).offline.yaml" \
+			-s
 
 .PHONY: delete
-delete: ## Delete all CloudBees Core Modern . Ref: https://docs.cloudbees.com/docs/cloudbees-ci/latest/kubernetes-install-guide/kubernetes-uninstall
+delete: ## Delete all things into CloudBees Core Modern Namespaces and Storage. Ref: https://docs.cloudbees.com/docs/cloudbees-ci/latest/kubernetes-install-guide/kubernetes-uninstall
 delete: check_kubeconfig check_envfile
 	$(call print_title,Uninstall CloudBees Core via Helm)
 	source .env && \
