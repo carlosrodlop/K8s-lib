@@ -1,0 +1,15 @@
+#https://artifacthub.io/packages/helm/cloudbees/cloudbees-core
+#EKS+ALB
+#Best Practice: use a subdomain to avoid reach ALB Hard Limit of 100 rules https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-limits.html
+#Last time tested
+Subdomain: ${subdomain}
+OperationsCenter:
+  HostName: ${hostname}
+  Protocol: ${protocol}
+  Platform: eks
+  Ingress:
+    Class: alb
+    Annotations:
+      alb.ingress.kubernetes.io/scheme: internet-facing
+      alb.ingress.kubernetes.io/certificate-arn: ${cert_arn}
+      alb.ingress.kubernetes.io/target-group-attributes: stickiness.enabled=true
