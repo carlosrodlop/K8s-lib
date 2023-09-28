@@ -7,9 +7,9 @@ metadata:
 data:
   bundle.yaml: |-
 {{ .Files.Get "casc/oc/modern.oc.advance/bundle.yaml" | indent 4 }}
-  main.yaml: |-
-{{ .Files.Get "casc/oc/modern.oc.advance/main.yaml" | indent 4 }}
-  location.yaml: |-
+  jcasc-main.yaml: |-
+{{ .Files.Get "casc/oc/modern.oc.advance/jcasc-main.yaml" | indent 4 }}
+  jcasc-location.yaml: |-
     unclassified:
       location:
 {{- if .Values.operationCenter.subdomain }}
@@ -17,7 +17,7 @@ data:
 {{- else }}
         url: {{ printf "%s://%s/cjoc/" .Values.operationCenter.protocol .Values.operationCenter.hostname }}
 {{- end }}
-  controllerBundleStorageSCM.yaml: |-
+  jcasc-controllerBundleStorageSCM.yaml: |-
     unclassified:
       # Best-Practice: Use SCM for Managed Master Casc Bundles
       # https://docs.cloudbees.com/docs/cloudbees-ci/2.332.3.4/casc-controller/add-bundle#_adding_casc_bundles_from_an_scm_tool
@@ -34,10 +34,10 @@ data:
                   remote: {{ .Values.operationCenter.casc.controllerBundleStorageSCM | quote }}
                   traits:
                     - "gitBranchDiscovery"
-  credentials.yaml: |-
-{{ .Files.Get "casc/oc/modern.oc.advance/credentials.yaml" | indent 4 }}
-  security.yaml: |-
-{{ .Files.Get "casc/oc/modern.oc.advance/security.yaml" | indent 4 }}
+  jcasc-credentials.yaml: |-
+{{ .Files.Get "casc/oc/modern.oc.advance/jcasc-credentials.yaml" | indent 4 }}
+  jcasc-security.yaml: |-
+{{ .Files.Get "casc/oc/modern.oc.advance/jcasc-security.yaml" | indent 4 }}
   plugins.yaml: |-
 {{ .Files.Get "casc/oc/modern.oc.advance/plugins.yaml" | indent 4 }}
   items-folder-admin.yaml: |-

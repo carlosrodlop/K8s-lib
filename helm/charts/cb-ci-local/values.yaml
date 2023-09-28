@@ -34,11 +34,11 @@ agents:
     password: "sillyness"
     email: "someone@host.com"
 secrets:
-    # -- Github Secret pair
-    github:
-      # -- Github Secret for token
-      token: "ghp_xxxxExampleToken"
-      # -- Github Secret for user
-      user: "gh_ExampleUser"
-    # -- Jenkins password
-    advisorMail: "cbci.admin@example.org.com"
+  # -- Github Secret pair
+  github:
+    # -- Github Secret for token
+    token: "ghp_xxxxExampleToken"
+    # -- Github Secret for user
+    user: "gh_ExampleUser"
+  # -- Jenkins password
+  advisorMail: "cbci.admin@example.org.com"

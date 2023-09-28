@@ -1,9 +1,9 @@
 MKFILE   		:= $(abspath $(dir $(lastword $(MAKEFILE_LIST))))
 PARENT_MKFILE   := $(HOME)/.Makefile
-DIR_HELM_VALUES := $(MKFILE)/../../../helm/values
-DIR_MANIFEST 	:= $(MKFILE)/../../../manifest
-DIR_TF_ROOT		:= $(MKFILE)/../../../../../clouds/aws/root/eks-bp-v4
-DIR_CHARTS 		:= $(MKFILE)/../../../helm/charts
+DIR_HELM_VALUES := $(MKFILE)/../../helm/values
+DIR_MANIFEST 	:= $(MKFILE)/../../manifest
+DIR_TF_ROOT		:= $(MKFILE)/../../../../clouds/aws/root/eks-bp-v4
+DIR_CHARTS 		:= $(MKFILE)/../../helm/charts
 
 include $(PARENT_MKFILE)
 

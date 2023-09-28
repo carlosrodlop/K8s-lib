@@ -15,14 +15,14 @@ OperationsCenter:
   ConfigMapName: oc-casc-bundle
   ContainerEnv:
     - name: SECRETS
-      value: /var/run/secrets/cjoc
+      value: /var/run/secrets/cbci
   ExtraVolumes:
-    - name: oc-secrets
+    - name: cbci-secrets
       secret:
-        secretName: oc-secrets
+        secretName: cbci-secrets
   ExtraVolumeMounts:
-    - name: oc-secrets
-      mountPath: /var/run/secrets/cjoc
+    - name: cbci-secrets
+      mountPath: /var/run/secrets/cbci
       readOnly: true
   NodeSelector:
     ci_type: cb-apps

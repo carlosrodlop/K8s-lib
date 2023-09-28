@@ -1,6 +1,6 @@
 MKFILE   		:= $(abspath $(dir $(lastword $(MAKEFILE_LIST))))
 PARENT_MKFILE   := $(HOME)/.Makefile
-DIR_MANIFEST 	:= $(MKFILE)/../../../manifest
+DIR_MANIFEST 	:= $(MKFILE)/../../manifest
 
 include $(PARENT_MKFILE)
 

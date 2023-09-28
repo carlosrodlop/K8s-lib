@@ -2,7 +2,7 @@
 !.env.example
 *secret*
 *secret*.*
-!oc-secrets.yaml
+!cbci-secrets.yaml
 !agents-secrets-registry.yaml
 !*secrets.yaml.example
 !*secrets.yaml.example.enc
