@@ -52,13 +52,13 @@ data:
     items:
 {{- range (untilStep 0 (int .Values.controllers.loadTest.controllers) 1) }}
     - kind: managedController
-      name: load-boy{{ . }}
+      name: load-boy-ha-{{ . }}
       properties:
       - configurationAsCode:
           bundle: "main/modern.load-boy"
       configuration:
         kubernetes:
-          domain: load-boy{{ . }}
+          domain: load-boy-ha-{{ . }}
           replication:
             config:
               maxReplicas: 4
@@ -93,7 +93,19 @@ data:
                         secretName: cbci-secrets
 {{- end }}
 {{- else }}
-    items: []
+    items:
+    - kind: managedController
+      name: load-boy-no-ha
+      configuration:
+        kubernetes:
+          memory: 6144
+          cpus: 4.0
+          disk: 5
+          # storageClassName: my-storage-class
+          domain: load-boy-no-ha
+      properties:
+        - configurationAsCode:
+            bundle: "main/modern.load-boy"
 {{- end }}
   rbac.yaml: |-
 {{ .Files.Get "casc/oc/modern.oc.advance/rbac.yaml" | indent 4 }}
