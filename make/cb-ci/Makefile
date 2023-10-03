@@ -91,7 +91,7 @@ update-advance: check_kubeconfig check_envfile guard-CB_LB_CONFIG
 			s/\$${agentRegistryUserMail}/$$REGISTRY_USER_MAIL/g; \
 			s/\$${NLoadControllers}/$$N_LOAD_CONTROLLER_HA/g;" < $(DIR_HELM_VALUES)/cb-ci-local.yaml > $(MKFILE)/values.cb-ci-local.yaml
 	source .env && \
-		helm upgrade --install cbci-local $(DIR_CHARTS)/cb-ci-local --create-namespace --namespace "$$CBCI_NS" \
+		helm --debug upgrade --install cbci-local $(DIR_CHARTS)/cb-ci-local --create-namespace --namespace "$$CBCI_NS" \
 		-f "$(MKFILE)/values.cb-ci-local.yaml"
 	$(call print_title,Updating Remote CloudBees Helm Chart)
 	$(call updateCBCI)
@@ -151,7 +151,7 @@ delete: check_kubeconfig check_envfile
 	source .env && \
 		kubectl delete --all pods --grace-period=0 --force --namespace "$$CBCI_NS" && \
 		kubectl delete --all pods --grace-period=0 --force --namespace "$$AGENT_NA" && \
-		helm uninstall cbci --namespace "$$CBCI_NS" || echo "Relese cbci does not exist" && \
+		helm --debug uninstall cbci --namespace "$$CBCI_NS" || echo "Relese cbci does not exist" && \
 		helm repo remove cloudbees || echo "Repository cloudbees does not exist" && \
 		kubectl delete --all pvc --grace-period=0 --force --namespace "$$CBCI_NS" && \
 		kubectl delete ns "$$AGENT_NA" || echo "There is NOT existing namespace $$AGENT_NA" && \

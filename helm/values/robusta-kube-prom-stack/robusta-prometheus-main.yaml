@@ -48,8 +48,7 @@ kube-prometheus-stack:
       - job_name: "cjoc"
         metrics_path: "/prometheus/"
         static_configs:
-          - targets:
-              ["cjoc.cbci.svc.cluster.local:80"]
+          - targets: ["cjoc.cbci.svc.cluster.local:80"]
     #https://observability.thomasriley.co.uk/prometheus/configuring-prometheus/using-service-monitors/
     serviceMonitorSelector:
       matchLabels:
@@ -71,37 +70,37 @@ kube-prometheus-stack:
       dashboardproviders.yaml:
         apiVersion: 1
         providers:
-        - name: 'grafana-dashboards-kubernetes'
-          orgId: 1
-          folder: 'Kubernetes'
-          type: file
-          disableDeletion: true
-          editable: true
-          options:
-            path: /var/lib/grafana/dashboards/grafana-dashboards-kubernetes
-        - name: 'grafana-dashboards-cloudbees'
-          orgId: 1
-          folder: 'CloudBees'
-          type: file
-          disableDeletion: false
-          editable: true
-          options:
-            path: /var/lib/grafana/dashboards/grafana-dashboards-cloudbees
+          - name: "grafana-dashboards-kubernetes"
+            orgId: 1
+            folder: "Kubernetes"
+            type: file
+            disableDeletion: true
+            editable: true
+            options:
+              path: /var/lib/grafana/dashboards/grafana-dashboards-kubernetes
+          - name: "grafana-dashboards-cloudbees"
+            orgId: 1
+            folder: "CloudBees"
+            type: file
+            disableDeletion: false
+            editable: true
+            options:
+              path: /var/lib/grafana/dashboards/grafana-dashboards-cloudbees
     dashboards:
       grafana-dashboards-kubernetes:
         k8s-views-global:
           url: https://raw.githubusercontent.com/dotdc/grafana-dashboards-kubernetes/master/dashboards/k8s-views-global.json
-          token: ''
+          token: ""
         k8s-views-namespaces:
           url: https://raw.githubusercontent.com/dotdc/grafana-dashboards-kubernetes/master/dashboards/k8s-views-namespaces.json
-          token: ''
+          token: ""
         k8s-views-nodes:
           url: https://raw.githubusercontent.com/dotdc/grafana-dashboards-kubernetes/master/dashboards/k8s-views-nodes.json
-          token: ''
+          token: ""
         k8s-views-pods:
           url: https://raw.githubusercontent.com/dotdc/grafana-dashboards-kubernetes/master/dashboards/k8s-views-pods.json
-          token: ''
+          token: ""
       grafana-dashboards-cloudbees:
         cb-controllers:
           url: https://raw.githubusercontent.com/carlosrodlop/K8s-lib/main/helm/charts/kube-prometheus-stack-local/dashboards/cloudbees-controllers.json
-          token: ''
+          token: ""

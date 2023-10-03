@@ -21,7 +21,7 @@ updateDb: ## Update Database
 updateDb: check_kubeconfig check_envfile
 	source .env && \
 		helm repo add bitnami https://charts.bitnami.com/bitnami && helm repo update && \
-		helm upgrade --install mysql bitnami/mysql --version $(MYSQL_DB_VERSION)  \
+		helm --debug upgrade --install mysql bitnami/mysql --version $(MYSQL_DB_VERSION)  \
 			-f $(DIR_HELM_VALUES)/mysql/cb-cd.bitnami.yaml \
 			--namespace $$DB_NS --create-namespace && \
 		kubectl rollout status sts mysql --namespace $$DB_NS && wait
@@ -33,7 +33,7 @@ updateCdServer: check_kubeconfig check_envfile guard-CB_LB_CONFIG
 		sed "s/\$${hostname}/$$HOSTNAME/g; \
 			s|\$${cert_arn}|$$CERTIFICATE_ID|g ;" < $(DIR_HELM_VALUES)/cloudbees/$(CB_LB_CONFIG).yaml > $(MKFILE)/values.$(CB_LB_CONFIG).yaml && \
 		helm repo add cloudbees https://public-charts.artifacts.cloudbees.com/repository/public/ && helm repo update && \
-		helm upgrade --install cbcd-server cloudbees/cloudbees-flow \
+		helm --debug upgrade --install cbcd-server cloudbees/cloudbees-flow \
 			-f $(MKFILE)/values.$(CB_LB_CONFIG).yaml \
 			-f $(DIR_HELM_VALUES)/cloudbees/cb-cd.server.yaml \
 			--namespace $$CBCD_NS --create-namespace \
@@ -52,7 +52,7 @@ updateCdAgent: check_kubeconfig check_envfile guard-CB_LB_CONFIG
 			--from-literal=CBF_SERVER_USER=admin \
 			--from-literal=CBF_SERVER_PASSWORD=admin \
 			--namespace $$CBCD_NS_AGENT || echo "Secret already exists" && \
-		helm install cb-cd-agent cloudbees/cloudbees-flow-agent \
+		helm --debug install cb-cd-agent cloudbees/cloudbees-flow-agent \
 			-f values.demo.agent.yaml \
 			--namespace $$CBCD_NS_AGENT \
 			--timeout 10000s
@@ -69,7 +69,7 @@ deleteDb: check_kubeconfig check_envfile
 	$(call print_title,Uninstall CloudBees Core via Helm)
 	source .env && \
 		kubectl delete --all pods --grace-period=0 --force --namespace $$DB_NS && \
-		helm uninstall mysql --namespace $$DB_NS || echo "Relese mysql does not exist" && \
+		helm --debug uninstall mysql --namespace $$DB_NS || echo "Relese mysql does not exist" && \
 		helm repo remove bitnami || echo "Repository cloudbees does not exist" && \
 		kubectl delete --all pvc --grace-period=0 --force --namespace $$DB_NS && \
 		kubectl delete ns $$DB_NS || echo "There is NOT existing namespace $$DB_NS"
@@ -80,7 +80,7 @@ deleteCd: check_kubeconfig check_envfile
 	$(call print_title,Uninstall CloudBees Core via Helm)
 	source .env && \
 		kubectl delete --all pods --grace-period=0 --force --namespace $$CBCD_NS && \
-		helm uninstall cbcd-server --namespace $$CBCD_NS || echo "Relese cbcd-server does not exist" && \
+		helm --debug uninstall cbcd-server --namespace $$CBCD_NS || echo "Relese cbcd-server does not exist" && \
 		helm repo remove cloudbees || echo "Repository cloudbees does not exist" && \
 		kubectl delete --all pvc --grace-period=0 --force --namespace $$CBCD_NS && \
 		kubectl delete ns $$CBCD_NS || echo "There is NOT existing namespace $$CBCD_NS"
