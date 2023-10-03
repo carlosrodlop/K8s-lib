@@ -5,9 +5,21 @@ DIR_MANIFEST 	:= $(MKFILE)/../../manifest
 DIR_TF_ROOT		:= $(MKFILE)/../../../../clouds/aws/root/eks-bp-v4
 DIR_CHARTS 		:= $(MKFILE)/../../helm/charts
 
-
 include $(PARENT_MKFILE)
 
+#https://artifacthub.io/packages/helm/prometheus-community/kube-prometheus-stack#uninstall-helm-chart
+define clean_kube_prometheus_stack_crd
+	kubectl delete crd alertmanagerconfigs.monitoring.coreos.com
+	kubectl delete crd alertmanagers.monitoring.coreos.com
+	kubectl delete crd podmonitors.monitoring.coreos.com
+	kubectl delete crd probes.monitoring.coreos.com
+	kubectl delete crd prometheusagents.monitoring.coreos.com
+	kubectl delete crd prometheuses.monitoring.coreos.com
+	kubectl delete crd prometheusrules.monitoring.coreos.com
+	kubectl delete crd scrapeconfigs.monitoring.coreos.com
+	kubectl delete crd servicemonitors.monitoring.coreos.com
+	kubectl delete crd thanosrulers.monitoring.coreos.com
+endef
 
 
 #https://docs.aws.amazon.com/eks/latest/userguide/dashboard-tutorial.html#view-dashboard
@@ -60,7 +72,6 @@ robusta_update: check_kubeconfig check_envfile
 		--values "$(MKFILE)/values.robusta-prometheus-grafana-alb.yaml" \
 		--values "$(DIR_HELM_VALUES)/robusta-kube-prom-stack/robusta.custom-playbooks.yaml" \
 		--set kube-prometheus-stack.grafana.adminPassword=$$GRAFANA_PASS
-	@kubectl get secret robusta-grafana -o jsonpath="{.data.admin-password}" -n robusta | base64 --decode ; echo > $(MKFILE)/secret.robusta-grafana
 	helm --debug upgrade --install kube-prometheus-stack-local $(DIR_CHARTS)/kube-prometheus-stack-local --create-namespace --namespace robusta
 
 .PHONY: robusta_delete
@@ -71,6 +82,7 @@ robusta_delete: check_kubeconfig
 	helm repo remove robusta || echo "Repository robusta does not exist"
 	kubectl delete pvc --all --namespace robusta
 	kubectl delete ns robusta || echo "There is NOT existing namespace robusta"
+	$(call clean_kube_prometheus_stack_crd)
 
 .PHONY: kube_prometheus_stack_update
 kube_prometheus_stack_update: ## Install Kube Prometheus Stack
@@ -89,5 +101,7 @@ kube_prometheus_stack_update: check_kubeconfig
 kube_prometheus_stack_delete: ## Delete Kube Prometheus Stack
 kube_prometheus_stack_delete: check_kubeconfig
 	helm --debug uninstall kube-prometheus-stack --namespace kube-prometheus-stack || echo "Relese kube-prometheus-stack does not exist"
+	helm --debug uninstall kube-prometheus-stack-local --namespace kube-prometheus-stack || echo "Relese kube-prometheus-stack-local does not exist"
 	helm repo remove prometheus-community || echo "Repository prometheus-community does not exist"
 	kubectl delete ns kube-prometheus-stack || echo "There is NOT existing namespace kube-prometheus-stack"
+	$(call clean_kube_prometheus_stack_crd)
