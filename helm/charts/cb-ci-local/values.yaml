@@ -15,11 +15,9 @@ controllers:
   # -- Enable Limit Range and Resource Quoatas
   policies: false
   loadTest:
-    # -- Number of Load Controllers for Performance Testing
-    controllers: 0
+    # -- Number of Load Controllers for Performance Testing. Min 1.
+    controllers: 1
 agents:
-  # -- Agents Namespace name
-  namespace: "cbci-agents"
   # -- Enable Limit Range and Resource Quoatas
   policies: false
   cache:

@@ -48,4 +48,4 @@ Master:
 Agents:
   SeparateNamespace:
     Enabled: true
-    Name: ${agentNamespace}
+    Name: cbci-agents

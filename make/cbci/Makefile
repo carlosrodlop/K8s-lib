@@ -83,7 +83,6 @@ update-advance: check_kubeconfig check_envfile guard-CB_LB_CONFIG
 			s/\$${secretGHToken}/$$SECRET_GH_TOKEN/g; \
 			s/\$${secretGHUser}/$$SECRET_GH_USER/g; \
 			s/\$${secretAdvisorMail}/$$SECRET_ADVISOR_MAIL/g; \
-			s/\$${agentNamespace}/cbci-agents/g; \
 			s|\$${agentRegistryURL}|$$REGISTRY_URL|g; \
 			s/\$${agentRegistryUserName}/$$REGISTRY_USER_NAME/g; \
 			s/\$${agentRegistryUserPass}/$$REGISTRY_USER_PASS/g; \
