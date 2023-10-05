@@ -18,3 +18,4 @@
 - It uses submodules. For example, Helm chart `cb-ci-local` uses Casc Bundles from [carlosrodlop/cb-casc-controllers](https://github.com/carlosrodlop/cb-casc-controllers/tree/main) and [carlosrodlop/cb-casc-oc](https://github.com/carlosrodlop/cb-casc-oc/tree/main).
   - ⚠️ IMPORTANT - It requires `git submodule update --init --recursive`
 - It uses [Pre-commits](.pre-commit-config.yaml) for Validations and Documentation
+- Note: Services and Namespaces names are not configurable to avoid break integrations.
