@@ -9,16 +9,16 @@ include $(PARENT_MKFILE)
 
 #https://artifacthub.io/packages/helm/prometheus-community/kube-prometheus-stack#uninstall-helm-chart
 define clean_kube_prometheus_stack_crd
-	kubectl delete crd alertmanagerconfigs.monitoring.coreos.com
-	kubectl delete crd alertmanagers.monitoring.coreos.com
-	kubectl delete crd podmonitors.monitoring.coreos.com
-	kubectl delete crd probes.monitoring.coreos.com
-	kubectl delete crd prometheusagents.monitoring.coreos.com
-	kubectl delete crd prometheuses.monitoring.coreos.com
-	kubectl delete crd prometheusrules.monitoring.coreos.com
-	kubectl delete crd scrapeconfigs.monitoring.coreos.com
-	kubectl delete crd servicemonitors.monitoring.coreos.com
-	kubectl delete crd thanosrulers.monitoring.coreos.com
+	kubectl delete crd alertmanagerconfigs.monitoring.coreos.com || echo "CRD alertmanagerconfigs.monitoring.coreos.com does not exist"
+	kubectl delete crd alertmanagers.monitoring.coreos.com || echo "CRD alertmanagers.monitoring.coreos.com does not exist"
+	kubectl delete crd podmonitors.monitoring.coreos.com || echo "CRD podmonitors.monitoring.coreos.com does not exist"
+	kubectl delete crd probes.monitoring.coreos.com || echo "CRD probes.monitoring.coreos.com does not exist"
+	kubectl delete crd prometheusagents.monitoring.coreos.com || echo "CRD prometheusagents.monitoring.coreos.com does not exist"
+	kubectl delete crd prometheuses.monitoring.coreos.com || echo "CRD prometheuses.monitoring.coreos.com does not exist"
+	kubectl delete crd prometheusrules.monitoring.coreos.com || echo "CRD prometheusrules.monitoring.coreos.com does not exist"
+	kubectl delete crd scrapeconfigs.monitoring.coreos.com || echo "CRD scrapeconfigs.monitoring.coreos.com does not exist"
+	kubectl delete crd servicemonitors.monitoring.coreos.com || echo "CRD servicemonitors.monitoring.coreos.com does not exist"
+	kubectl delete crd thanosrulers.monitoring.coreos.com || echo "CRD thanosrulers.monitoring.coreos.com does not exist"
 endef
 
 
