@@ -8,12 +8,12 @@ include $(PARENT_MKFILE)
 openldap_update: ## Install OpenLDAP
 openldap_update: check_kubeconfig check_envfile
 	source .env && \
-		kubectl create ns $$AUTH_NAMESPACE || "Namespace $$AUTH_NAMESPACE already exists" && \
-		kubectl apply -f $(DIR_MANIFEST)/osixia-openldap -n $$AUTH_NAMESPACE
+		kubectl create ns auth || "Namespace auth already exists" && \
+		kubectl apply -f $(DIR_MANIFEST)/osixia-openldap -n auth
 
 .PHONY: openldap_delete
 openldap_delete: ## Remove OpenLDAP
 openldap_delete: check_kubeconfig check_envfile
 	source .env && \
-		kubectl delete -f $(DIR_MANIFEST)/osixia-openldap -n $$AUTH_NAMESPACE && \
-		kubectl delete ns $$AUTH_NAMESPACE || "Namespace $$AUTH_NAMESPACE does not exists"
+		kubectl delete -f $(DIR_MANIFEST)/osixia-openldap -n auth && \
+		kubectl delete ns auth || "Namespace auth does not exists"

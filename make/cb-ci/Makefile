@@ -47,11 +47,10 @@ define updateCBCI
 		sed "s/\$${LicFirstName}/$$LIC_FIRSTNAME/g; \
 			s/\$${LicLastName}/$$LIC_LASTNAME/g; \
 			s/\$${LicEmail}/$$LIC_MAIL/g; \
-			s/\$${LicCompany}/$$LIC_COMPANY/g; \
-			s/\$${agentNamespace}/$$AGENT_NA/g;" < $(DIR_HELM_VALUES)/cb-ci.common.yaml > $(MKFILE)/values.cb-ci.common.yaml
+			s/\$${LicCompany}/$$LIC_COMPANY/g;" < $(DIR_HELM_VALUES)/cb-ci.common.yaml > $(MKFILE)/values.cb-ci.common.yaml
 	helm repo add cloudbees https://public-charts.artifacts.cloudbees.com/repository/public/ && helm repo update
 	source .env && \
-		helm upgrade --install cbci cloudbees/cloudbees-core --create-namespace --namespace "$$CBCI_NS" --version "$(CBCI_VERSION)" \
+		helm upgrade --install cbci cloudbees/cloudbees-core --create-namespace --namespace "cbci" --version "$(CBCI_VERSION)" \
 			-f "$(MKFILE)/values.$(CB_LB_CONFIG).yaml" \
 			-f "$(MKFILE)/values.cb-ci.common.yaml"
 	$(call restartOCIfExist)
@@ -64,10 +63,10 @@ update-simple: check_kubeconfig check_envfile guard-CB_LB_CONFIG
 	@echo -n "Are up to date .env file? [yes/No] " && read ans && [ $${ans:-No} = yes ]
 	$(call print_title, Load Simple OC Casc Bundle)
 	source .env && \
-		kubectl create ns "$$CBCI_NS" || echo "$$CBCI_NS exist" && \
-		kubectl create ns "$$AGENT_NA" || echo "$$AGENT_NA" && \
-		kubectl create secret generic oc-secrets --namespace "$$CBCI_NS" --from-literal=githubToken=$$SECRET_GH_TOKEN --from-literal=githubUser=$$SECRET_GH_USER || echo "oc-secrets exist" && \
-		kubectl create configmap oc-casc-bundle --namespace "$$CBCI_NS" --from-file=$(DIR_CHARTS)/cb-ci-local/casc/oc/modern.oc.simple || echo "oc-casc-bundle exist"
+		kubectl create ns "cbci" || echo "cbci exist" && \
+		kubectl create ns "cbci-agents" || echo "cbci-agents" && \
+		kubectl create secret generic oc-secrets --namespace "cbci" --from-literal=githubToken=$$SECRET_GH_TOKEN --from-literal=githubUser=$$SECRET_GH_USER || echo "oc-secrets exist" && \
+		kubectl create configmap oc-casc-bundle --namespace "cbci" --from-file=$(DIR_CHARTS)/cb-ci-local/casc/oc/modern.oc.simple || echo "oc-casc-bundle exist"
 	$(call print_title,Updating Remote CloudBees Helm Chart)
 	$(call updateCBCI)
 
@@ -84,14 +83,14 @@ update-advance: check_kubeconfig check_envfile guard-CB_LB_CONFIG
 			s/\$${secretGHToken}/$$SECRET_GH_TOKEN/g; \
 			s/\$${secretGHUser}/$$SECRET_GH_USER/g; \
 			s/\$${secretAdvisorMail}/$$SECRET_ADVISOR_MAIL/g; \
-			s/\$${agentNamespace}/$$AGENT_NA/g; \
+			s/\$${agentNamespace}/cbci-agents/g; \
 			s|\$${agentRegistryURL}|$$REGISTRY_URL|g; \
 			s/\$${agentRegistryUserName}/$$REGISTRY_USER_NAME/g; \
 			s/\$${agentRegistryUserPass}/$$REGISTRY_USER_PASS/g; \
 			s/\$${agentRegistryUserMail}/$$REGISTRY_USER_MAIL/g; \
 			s/\$${NLoadControllers}/$$N_LOAD_CONTROLLER_HA/g;" < $(DIR_HELM_VALUES)/cb-ci-local.yaml > $(MKFILE)/values.cb-ci-local.yaml
 	source .env && \
-		helm --debug upgrade --install cbci-local $(DIR_CHARTS)/cb-ci-local --create-namespace --namespace "$$CBCI_NS" \
+		helm --debug upgrade --install cbci-local $(DIR_CHARTS)/cb-ci-local --create-namespace --namespace "cbci" \
 		-f "$(MKFILE)/values.cb-ci-local.yaml"
 	$(call print_title,Updating Remote CloudBees Helm Chart)
 	$(call updateCBCI)
@@ -100,10 +99,10 @@ update-advance: check_kubeconfig check_envfile guard-CB_LB_CONFIG
 check-availability: ## Check availability of the OC.
 check-availability: guard-OC_URL
 	source .env && \
-		until kubectl get pod -n $$CBCI_NS cjoc-0; do sleep 2 && echo "Waiting for Pod to get ready"; done
+		until kubectl get pod -n cbci cjoc-0; do sleep 2 && echo "Waiting for Pod to get ready"; done
 	@echo "OC Pod is Ready"
 	source .env && \
-		until kubectl get ing -n $$CBCI_NS cjoc; do sleep 2 && echo "Waiting for Ingress to get ready"; done
+		until kubectl get ing -n cbci cjoc; do sleep 2 && echo "Waiting for Ingress to get ready"; done
 	@echo "Ingress Ready"
 	source .env && \
 		until curl -u $$ADMIN_JENKINS_USER:$$ADMIN_JENKINS_PASS -s $(OC_URL)  > /dev/null; do sleep 10 && echo "Waiting for Operation Center at $(OC_URL)"; done
@@ -149,10 +148,10 @@ delete: ## Delete all things into CloudBees Core Modern Namespaces and Storage. 
 delete: check_kubeconfig check_envfile
 	$(call print_title,Uninstall CloudBees Core via Helm)
 	source .env && \
-		kubectl delete --all pods --grace-period=0 --force --namespace "$$CBCI_NS" && \
-		kubectl delete --all pods --grace-period=0 --force --namespace "$$AGENT_NA" && \
-		helm --debug uninstall cbci --namespace "$$CBCI_NS" || echo "Relese cbci does not exist" && \
+		kubectl delete --all pods --grace-period=0 --force --namespace "cbci" && \
+		kubectl delete --all pods --grace-period=0 --force --namespace "cbci-agents" && \
+		helm --debug uninstall cbci --namespace "cbci" || echo "Relese cbci does not exist" && \
 		helm repo remove cloudbees || echo "Repository cloudbees does not exist" && \
-		kubectl delete --all pvc --grace-period=0 --force --namespace "$$CBCI_NS" && \
-		kubectl delete ns "$$AGENT_NA" || echo "There is NOT existing namespace $$AGENT_NA" && \
-		kubectl delete ns "$$CBCI_NS" || echo "There is not existing namespace $$CBCI_NS"
+		kubectl delete --all pvc --grace-period=0 --force --namespace "cbci" && \
+		kubectl delete ns "cbci-agents" || echo "There is NOT existing namespace cbci-agents" && \
+		kubectl delete ns "cbci" || echo "There is not existing namespace cbci"
