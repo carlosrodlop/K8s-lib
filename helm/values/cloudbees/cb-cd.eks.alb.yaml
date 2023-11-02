@@ -15,8 +15,18 @@ ingress:
   host: ${hostname}
   class: alb
   annotations:
-      alb.ingress.kubernetes.io/certificate-arn: ${cert_arn}
+    alb.ingress.kubernetes.io/certificate-arn: ${cert_arn}
+    # alb.ingress.kubernetes.io/load-balancer-name: "example-001-ingress-alb"
+    # alb.ingress.kubernetes.io/backend-protocol: "HTTP"
+    # alb.ingress.kubernetes.io/ip-address-type: "ipv4"
+    # alb.ingress.kubernetes.io/scheme: "internet-facing"
+    # alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
+    # alb.ingress.kubernetes.io/ssl-redirect: '443'
+    # alb.ingress.kubernetes.io/inbound-cidrs: "34.73.99.37/32,34.73.18.111/32,73.154.18.206/32"
+    # alb.ingress.kubernetes.io/tags: Name=example-001
 nginx-ingress:
+  enabled: false
+ingress-nginx:
   enabled: false
 
 ##---------------------------------------------
@@ -45,7 +55,6 @@ storage:
 # Fixes mounting issues with repository and devops insights
 volumePermissions:
   enabled: false
-
 # Fixes mounting issues with the flow-server-init-job
 # No Longer needed because it is fixed by the global one one below
 # server:

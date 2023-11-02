@@ -1,3 +1,6 @@
+---
+#cdhost: &cdhost cdro.ps.beescloud.com
+
 #---------------------------------------------
 # Database configuration section
 #---------------------------------------------
@@ -38,13 +41,16 @@ sda: false
 ##---------------------------------------------
 
 server:
+  expose: true
+  externalService:
+    enabled: false
   resources:
     limits:
       cpu: 4
-      memory: 12Gi
+      memory: 8Gi
     requests:
       cpu: 2
-      memory: 12Gi
+      memory: 8Gi
   nodeSelector:
     ci_type: cb-apps
   tolerations:
@@ -55,7 +61,7 @@ server:
 
 jobInit:
   nodeSelector:
-      ci_type: cb-apps
+    ci_type: cb-apps
   tolerations:
     - key: dedicated
       operator: Equal
@@ -97,3 +103,18 @@ boundAgent:
       operator: Equal
       value: cb-apps
       effect: NoSchedule
+
+##---------------------------------------------
+## Agent configuration section
+##---------------------------------------------
+
+internalGatewayAgent:
+  enabled: true
+
+externalGatewayAgent:
+  enabled: true
+  externalService:
+    enabled: true
+  service:
+    # Set the host name same as ingress.host .
+    publicHostName: ${hostname}

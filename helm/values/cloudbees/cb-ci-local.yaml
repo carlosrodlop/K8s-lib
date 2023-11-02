@@ -10,14 +10,13 @@ controllers:
   loadTest:
     controllers: ${NLoadControllers}
 agents:
-  namespace: ${agentNamespace}
   imageCredentials:
     registry: ${agentRegistryURL}
     username: ${agentRegistryUserName}
     password: ${agentRegistryUserPass}
     email: ${agentRegistryUserMail}
 secrets:
-    github:
-      token: ${secretGHToken}
-      user: ${secretGHUser}
-    advisorMail: ${secretAdvisorMail}
+  github:
+    token: ${secretGHToken}
+    user: ${secretGHUser}
+  advisorMail: ${secretAdvisorMail}
