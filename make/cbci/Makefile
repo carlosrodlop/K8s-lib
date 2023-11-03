@@ -6,9 +6,9 @@ DIR_HELM_VALUES := $(MKFILE)/../../helm/values/cloudbees
 include $(PARENT_MKFILE)
 
 #Helm chart version for CloudBees CI: https://artifacthub.io/packages/helm/cloudbees/cloudbees-core
-CBCI_VERSION     := 3.14250.0+ba76d23d3618
+CBCI_VERSION     := 3.14783.0+d0af0bc462a0
 #Application Version. Release Notes: https://docs.cloudbees.com/docs/release-notes/latest/cloudbees-ci/
-CBCI_VERSION_APP := 2.414.2.2
+CBCI_VERSION_APP := 2.414.3.8
 
 CB_LB_CONFIG	:= $(shell echo $(call getEnvProperty,CB_LB_CONFIG))
 PROTOCOL		:= $(shell echo $(call getEnvProperty,PROTOCOL))
@@ -49,6 +49,10 @@ define updateCBCI
 			s/\$${LicEmail}/$$LIC_MAIL/g; \
 			s/\$${LicCompany}/$$LIC_COMPANY/g;" < $(DIR_HELM_VALUES)/cb-ci.common.yaml > $(MKFILE)/values.cb-ci.common.yaml
 	helm repo add cloudbees https://public-charts.artifacts.cloudbees.com/repository/public/ && helm repo update
+	@echo "Values to apply for $(CBCI_VERSION) - Application Version: $(CBCI_VERSION_APP)"
+	@cat $(MKFILE)/values.$(CB_LB_CONFIG).yaml
+	@cat $(MKFILE)/values.cb-ci.common.yaml
+	@echo -n "Are OK with this helm values to be applied [yes/No] " && read ans && [ $${ans:-No} = yes ]
 	source .env && \
 		helm upgrade --install cbci cloudbees/cloudbees-core --create-namespace --namespace "cbci" --version "$(CBCI_VERSION)" \
 			-f "$(MKFILE)/values.$(CB_LB_CONFIG).yaml" \
@@ -60,7 +64,6 @@ endef
 .PHONY: update-simple
 update-simple: ## Install/Update CloudBees Core Modern via Helm. Adding OC Simple Casc Bundle.
 update-simple: check_kubeconfig check_envfile guard-CB_LB_CONFIG
-	@echo -n "Are up to date .env file? [yes/No] " && read ans && [ $${ans:-No} = yes ]
 	$(call print_title, Load Simple OC Casc Bundle)
 	source .env && \
 		kubectl create ns "cbci" || echo "cbci exist" && \
