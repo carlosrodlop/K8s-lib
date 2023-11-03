@@ -1,13 +1,12 @@
 ---
+#Ref:
 #All Values
 #https://github.com/cloudbees/cloudbees-examples/blob/master/cloudbees-cd/kubernetes/values.yaml
 #Demo Values
 #https://github.com/cloudbees/cloudbees-examples/blob/master/cloudbees-cd/kubernetes/cloudbees-cd-demo-multizone.yaml
 
-#cdhost: &cdhost cdro.ps.beescloud.com
-
 #---------------------------------------------
-# HA configuration: Enabled for production
+# HA configuration: Enable this for production
 #---------------------------------------------
 
 clusteredMode: false

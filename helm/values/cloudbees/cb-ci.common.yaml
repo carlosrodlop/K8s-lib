@@ -1,4 +1,4 @@
-#https://artifacthub.io/packages/helm/cloudbees/cloudbees-core
+#Ref: https://artifacthub.io/packages/helm/cloudbees/cloudbees-core
 OperationsCenter:
   JavaOpts: >-
     -XX:InitialRAMPercentage=50.0

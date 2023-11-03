@@ -1,7 +1,8 @@
+#Ref: https://github.com/carlosrodlop/K8s-lib/blob/main/helm/values/cloudbees/cb-cd.agent.yaml
+
 #---------------------------------------------
 # Flow agent configurations section
 #---------------------------------------------
-
 
 ## Resource name to use when registering the agent as a resource on the Flow server.
 #
@@ -18,15 +19,12 @@
 ##
 resourceName: "{{ .Release.Name }}-{{ ordinalIndex }}"
 
-
 ## Number of Flow agents to create
 replicas: 1
-
 
 ##---------------------------------------------
 ## Flow server configurations section
 ##---------------------------------------------
-
 
 ## The Flow server where the agent(s) will be registered as resource(s).
 ##
@@ -37,17 +35,15 @@ replicas: 1
 ##
 serverEndpoint: flow-server
 
-
 flowCredentials:
-
- ## Flow user credentials to use in order to register the agent as a resource on the Flow server.
- ## If a user other than 'admin' user is used, ensure that the user has `modify` permissions on
- ## `resources` on the Flow server.
- ##
- ## Name of the secret containing the Flow user credentials to use.
- ## The data field must contain base64 encoded value for keys 'CBF_SERVER_USER' and 'CBF_SERVER_PASSWORD'.
- ## E.g., kubectl create secret generic your-flow-user-secret --from-literal=CBF_SERVER_USER='admin' --from-literal=CBF_SERVER_PASSWORD='rrx!*d$z75Dsb'
- ##
- ## Set the name of the secret that contains the Flow user credentials.
- serverSecretReference:
+  ## Flow user credentials to use in order to register the agent as a resource on the Flow server.
+  ## If a user other than 'admin' user is used, ensure that the user has `modify` permissions on
+  ## `resources` on the Flow server.
+  ##
+  ## Name of the secret containing the Flow user credentials to use.
+  ## The data field must contain base64 encoded value for keys 'CBF_SERVER_USER' and 'CBF_SERVER_PASSWORD'.
+  ## E.g., kubectl create secret generic your-flow-user-secret --from-literal=CBF_SERVER_USER='admin' --from-literal=CBF_SERVER_PASSWORD='rrx!*d$z75Dsb'
+  ##
+  ## Set the name of the secret that contains the Flow user credentials.
+  serverSecretReference:
     existingSecret: flow-agent-secret
