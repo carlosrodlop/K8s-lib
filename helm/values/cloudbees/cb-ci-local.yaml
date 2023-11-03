@@ -8,7 +8,7 @@ operationCenter:
     controllerBundleStorageSCM: ${c_casc_repo}
 controllers:
   loadTest:
-    controllers: ${NLoadControllers}
+    number: ${NLoadControllers}
 agents:
   imageCredentials:
     registry: ${agentRegistryURL}

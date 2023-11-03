@@ -1,5 +1,16 @@
 ---
+#All Values
+#https://github.com/cloudbees/cloudbees-examples/blob/master/cloudbees-cd/kubernetes/values.yaml
+#Demo Values
+#https://github.com/cloudbees/cloudbees-examples/blob/master/cloudbees-cd/kubernetes/cloudbees-cd-demo-multizone.yaml
+
 #cdhost: &cdhost cdro.ps.beescloud.com
+
+#---------------------------------------------
+# HA configuration: Enabled for production
+#---------------------------------------------
+
+clusteredMode: false
 
 #---------------------------------------------
 # Database configuration section
@@ -11,7 +22,10 @@ database:
   dbPassword: "flow"
   dbType: "mysql"
   dbPort: 3306
-  clusterEndpoint: "mysql.db.svc.cluster.local"
+  #For outside the cluster (e.g RDS for AWS)
+  externalEndpoint: ${externalEndpoint}
+  #For inside the cluster (e.g. MySQL running as Deployment for K8s)
+  #clusterEndpoint: "mysql.db.svc.cluster.local"
   mysqlConnector:
     enabled: true
 
@@ -27,6 +41,7 @@ database:
 ## Flow server admin credentials section
 ##---------------------------------------------
 
+# To login in Flow Web server. Default admin user is admin
 flowCredentials:
   adminPassword: "admin"
 
@@ -34,7 +49,7 @@ flowCredentials:
 # SDA
 #---------------------------------------------
 
-sda: false
+# sda: false
 
 ##---------------------------------------------
 ## Flow components/workloads configuration section
@@ -42,8 +57,8 @@ sda: false
 
 server:
   expose: true
-  externalService:
-    enabled: false
+  # externalService:
+  #   enabled: false
   resources:
     limits:
       cpu: 4
@@ -51,15 +66,6 @@ server:
     requests:
       cpu: 2
       memory: 8Gi
-  nodeSelector:
-    ci_type: cb-apps
-  tolerations:
-    - key: dedicated
-      operator: Equal
-      value: cb-apps
-      effect: NoSchedule
-
-jobInit:
   nodeSelector:
     ci_type: cb-apps
   tolerations:
@@ -95,6 +101,15 @@ dois:
       value: cb-apps
       effect: NoSchedule
 
+jobInit:
+  nodeSelector:
+    ci_type: cb-apps
+  tolerations:
+    - key: dedicated
+      operator: Equal
+      value: cb-apps
+      effect: NoSchedule
+
 boundAgent:
   nodeSelector:
     ci_type: cb-apps
@@ -106,10 +121,18 @@ boundAgent:
 
 ##---------------------------------------------
 ## Agent configuration section
+## https://github.com/cloudbees/cloudbees-examples/blob/master/cloudbees-cd/kubernetes/cloudbees-cd-agent-defaults.yaml
 ##---------------------------------------------
 
 internalGatewayAgent:
   enabled: true
+  nodeSelector:
+    ci_type: build-linux
+  tolerations:
+    - key: dedicated
+      operator: Equal
+      value: build-linux
+      effect: NoSchedule
 
 externalGatewayAgent:
   enabled: true
@@ -118,3 +141,10 @@ externalGatewayAgent:
   service:
     # Set the host name same as ingress.host .
     publicHostName: ${hostname}
+  nodeSelector:
+    ci_type: build-linux
+  tolerations:
+    - key: dedicated
+      operator: Equal
+      value: build-linux
+      effect: NoSchedule

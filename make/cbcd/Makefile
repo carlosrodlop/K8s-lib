@@ -17,7 +17,7 @@ CB_LB_CONFIG	:= $(shell echo $(call getEnvProperty,CB_LB_CONFIG))
 HOSTNAME		:= $(shell echo $(call getEnvProperty,HOSTNAME))
 
 .PHONY: updateDb
-updateDb: ## Update Database
+updateDb: ## Create and Update Database inside Kubernetes Cluster
 updateDb: check_kubeconfig check_envfile
 	source .env && \
 		helm repo add bitnami https://charts.bitnami.com/bitnami && helm repo update && \
@@ -26,18 +26,30 @@ updateDb: check_kubeconfig check_envfile
 			--namespace db --create-namespace && \
 		kubectl rollout status sts mysql --namespace db && wait
 
+.PHONY: createDBRemotely
+createDBRemotely: ## Update Database remotely for CloudBees CD
+createDBRemotely: check_envfile
+	source .env && \
+		mysql -h $$EXTERNAL_ENDPOINT_DB -u admin --password --verbose < $(MKFILE)/init.db.sql
+
 .PHONY: updateCdServer
 updateCdServer: ## Update CD Server
 updateCdServer: check_kubeconfig check_envfile guard-CB_LB_CONFIG
 	source .env && \
 		sed "s/\$${hostname}/$$HOSTNAME/g; \
 			s|\$${cert_arn}|$$CERTIFICATE_ID|g ;" < $(DIR_HELM_VALUES)/cloudbees/$(CB_LB_CONFIG).yaml > $(MKFILE)/values.$(CB_LB_CONFIG).yaml && \
-		helm repo add cloudbees https://public-charts.artifacts.cloudbees.com/repository/public/ && helm repo update && \
-		helm --debug upgrade --install cbcd-server cloudbees/cloudbees-flow \
-			-f $(MKFILE)/values.$(CB_LB_CONFIG).yaml \
-			-f $(DIR_HELM_VALUES)/cloudbees/cb-cd.server.yaml \
-			--namespace cbcd --create-namespace \
-			--timeout 10000s
+		sed "s/\$${externalEndpoint}/$$EXTERNAL_ENDPOINT_DB/g; \
+			s/\$${hostname}/$$HOSTNAME/g;" < $(DIR_HELM_VALUES)/cloudbees/cb-cd.server.yaml > $(MKFILE)/values.cb-cd.server.yaml
+	helm repo add cloudbees https://public-charts.artifacts.cloudbees.com/repository/public/ && helm repo update
+	@echo "Values to apply for $(CBCD_SERVER_VERSION)"
+	@cat $(MKFILE)/values.$(CB_LB_CONFIG).yaml
+	@cat $(MKFILE)/values.cb-cd.server.yaml
+	@echo -n "Are OK with this helm values to be applied [yes/No] " && read ans && [ $${ans:-No} = yes ]
+	helm --debug upgrade --install cbcd-server cloudbees/cloudbees-flow \
+		-f $(MKFILE)/values.$(CB_LB_CONFIG).yaml \
+		-f $(MKFILE)/values.cb-cd.server.yaml \
+		--namespace cbcd --create-namespace \
+		--timeout 10000s
 
 .PHONY: updateAll
 updateAll: ## Update Database + CD Server
