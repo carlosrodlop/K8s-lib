@@ -9,7 +9,7 @@ include $(PARENT_MKFILE)
 #Helm chart CloudBees CD Server: https://artifacthub.io/packages/helm/cloudbees/cloudbees-flow
 MYSQL_DB_VERSION        := 9.12.0
 #Helm chart CloudBees CD Server: https://artifacthub.io/packages/helm/cloudbees/cloudbees-flow
-CBCD_SERVER_VERSION     := 2.26.0
+CBCD_SERVER_VERSION     := 2.27.0
 #Helm chart CloudBees CD Agent: https://artifacthub.io/packages/helm/cloudbees/cloudbees-flow-agent
 CBCD_AGENT_VERSION      := $(CBCD_SERVER_VERSION)
 
