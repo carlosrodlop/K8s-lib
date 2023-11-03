@@ -48,9 +48,9 @@ data:
     removeStrategy:
       items: NONE
       rbac: SYNC
-{{- if gt (int .Values.controllers.loadTest.controllers) 0 }}
+{{- if gt (int .Values.controllers.loadTest.number) 0 }}
     items:
-{{- range (untilStep 0 (int .Values.controllers.loadTest.controllers) 1) }}
+  {{- range (untilStep 0 (int .Values.controllers.loadTest.number) 1) }}
     - kind: managedController
       name: load-boy-ha-{{ . }}
       properties:
@@ -63,7 +63,7 @@ data:
             config:
               maxReplicas: 4
               replicas: 2
-              targetCPUUtilizationPercentage: 80
+              targetCPUUtilizationPercentage: 50
           memory: 3500
           cpus: 2.0
           disk: 30
@@ -74,38 +74,24 @@ data:
             spec:
               template:
                 spec:
-                  containers:
-                    - name: jenkins
-                      volumeMounts:
-                        - mountPath: /var/run/secrets/cbci-secrets
-                          name: cbci-secrets
-                      env:
-                        - name: SECRETS
-                          value: /var/run/secrets/cbci-secrets
+                  # containers:
+                  #   - name: jenkins
+                  #     volumeMounts:
+                  #       - mountPath: /var/run/secrets/oc
+                  #         name: oc-secrets
+                  #     env:
+                  #       - name: SECRETS
+                  #         value: /var/run/secrets/oc
                   tolerations:
                     - key: "dedicated"
                       operator: "Equal"
                       value: "cb-apps"
                       effect: "NoSchedule"
-                  volumes:
-                    - name: cbci-secrets
-                      secret:
-                        secretName: cbci-secrets
-{{- end }}
-{{- else }}
-    items:
-    - kind: managedController
-      name: load-boy-no-ha
-      configuration:
-        kubernetes:
-          memory: 6144
-          cpus: 4.0
-          disk: 5
-          # storageClassName: my-storage-class
-          domain: load-boy-no-ha
-      properties:
-        - configurationAsCode:
-            bundle: "main/modern.load-boy"
+                  # volumes:
+                  #   - name: oc-secrets
+                  #     secret:
+                  #       secretName: oc-secrets
+  {{- end }}
 {{- end }}
   rbac.yaml: |-
 {{ .Files.Get "casc/oc/modern.oc.advance/rbac.yaml" | indent 4 }}

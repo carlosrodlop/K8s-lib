@@ -16,7 +16,11 @@ controllers:
   policies: false
   loadTest:
     # -- Number of Load Controllers for Performance Testing. Min 1.
-    controllers: 1
+    number: 1
+    # -- HA for Load Controllers
+    ha:
+      # Storage Class for HA
+      storageClassName: "efs"
 agents:
   # -- Enable Limit Range and Resource Quoatas
   policies: false
