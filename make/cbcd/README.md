@@ -1,6 +1,14 @@
 # CloudBees CD
 
-Steps to check successfull installation
+## Known issues
+
+Flow-server pod is entering into `CrashLoopBackOff` state due
+
+```bash
+Could not start amazon-efs-mount-watchdog, unrecognized init system "aws-efs-csi-dri" b'mount.nfs4: access denied by server while mounting 127.0.0.1:/
+```
+
+## Steps to check successful installation
 
 - Helm output
 

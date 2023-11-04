@@ -12,10 +12,17 @@
 | [Documentation](https://github.com/carlosrodlop/carlosrodlop-docs/tree/main/kubernetes) | [References](https://github.com/carlosrodlop/carlosrodlop-docs#kubernetes) |
 | --------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
 
-- It contains charts and roots deployments for different Applications and Kubernetes add-ons
-- Command and Processes are orchestrated via `Makefile`. It is tested to be used with asdf images from [Docker Library](https://github.com/carlosrodlop/docker-lib) making its content portable.
-- It has been developed using tools provided in [asdf.ubuntu](https://github.com/carlosrodlop/docker-lib/tree/v1.1.0/docker/asdf.ubuntu) image for testing.
+## About
+
+- It is a collection of resources to operate with Kubernetes including:
+  - Application Definition: Manifests and Templates (Helm charts)
+  - Scripts
+  - Makefiles to orchestrate commands and processes
+- Note: Services and Namespaces names are not configurable to avoid break integrations.
+
+## Development
+
+- It is Developed using Containers from the [Docker Library](https://github.com/carlosrodlop/docker-lib): `swissknife.ubuntu` and `swissknife.alpine`
 - It uses submodules. For example, Helm chart `cb-ci-local` uses Casc Bundles from [carlosrodlop/cb-casc-controllers](https://github.com/carlosrodlop/cb-casc-controllers/tree/main) and [carlosrodlop/cb-casc-oc](https://github.com/carlosrodlop/cb-casc-oc/tree/main).
   - ⚠️ IMPORTANT - It requires `git submodule update --init --recursive`
-- It uses [Pre-commits](.pre-commit-config.yaml) for Validations and Documentation
-- Note: Services and Namespaces names are not configurable to avoid break integrations.
+- It uses [Pre-commits](.pre-commit-config.yaml). See [quickstart](https://pre-commit.com/#quick-start)
