@@ -20,8 +20,9 @@
   - Makefiles to orchestrate commands and processes
 - Note: Services and Namespaces names are not configurable to avoid break integrations.
 
-## Development
+## Usage
 
+- Parametrization is done using `.env` files. Copy `.env.example` to `.env` to customize the environment variables. Some variables can be passed as arguments to target in the make command (ROOT for example).
 - It is Developed using Containers from the [Docker Library](https://github.com/carlosrodlop/docker-lib): `swissknife.ubuntu` and `swissknife.alpine`
 - It uses submodules. For example, Helm chart `cb-ci-local` uses Casc Bundles from [carlosrodlop/cb-casc-controllers](https://github.com/carlosrodlop/cb-casc-controllers/tree/main) and [carlosrodlop/cb-casc-oc](https://github.com/carlosrodlop/cb-casc-oc/tree/main).
   - ⚠️ IMPORTANT - It requires `git submodule update --init --recursive`
