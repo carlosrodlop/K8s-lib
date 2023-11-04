@@ -12,13 +12,17 @@
 | [Documentation](https://github.com/carlosrodlop/carlosrodlop-docs/tree/main/kubernetes) | [References](https://github.com/carlosrodlop/carlosrodlop-docs#kubernetes) |
 | --------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
 
+## About
+
 - It is a collection of resources to operate with Kubernetes including:
   - Application Definition: Manifests and Templates (Helm charts)
   - Scripts
   - Makefiles to orchestrate commands and processes
 - Note: Services and Namespaces names are not configurable to avoid break integrations.
+
+## Development
+
 - It is Developed using Containers from the [Docker Library](https://github.com/carlosrodlop/docker-lib): `swissknife.ubuntu` and `swissknife.alpine`
 - It uses submodules. For example, Helm chart `cb-ci-local` uses Casc Bundles from [carlosrodlop/cb-casc-controllers](https://github.com/carlosrodlop/cb-casc-controllers/tree/main) and [carlosrodlop/cb-casc-oc](https://github.com/carlosrodlop/cb-casc-oc/tree/main).
   - ⚠️ IMPORTANT - It requires `git submodule update --init --recursive`
 - It uses [Pre-commits](.pre-commit-config.yaml). See [quickstart](https://pre-commit.com/#quick-start)
--
