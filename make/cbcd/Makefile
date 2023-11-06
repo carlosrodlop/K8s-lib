@@ -32,9 +32,9 @@ createDBRemotely: check_envfile
 	source .env && \
 		mysql -h $$EXTERNAL_ENDPOINT_DB -u admin --password --verbose < $(MKFILE)/init.db.sql
 
-.PHONY: updateCdServer
-updateCdServer: ## Update CD Server
-updateCdServer: check_kubeconfig check_envfile guard-CB_LB_CONFIG
+.PHONY: updateServer
+updateServer: ## Update CD Server
+updateServer: check_kubeconfig check_envfile guard-CB_LB_CONFIG
 	source .env && \
 		sed "s/\$${hostname}/$$HOSTNAME/g; \
 			s|\$${cert_arn}|$$CERTIFICATE_ID|g ;" < $(DIR_HELM_VALUES)/cloudbees/$(CB_LB_CONFIG).yaml > $(MKFILE)/values.$(CB_LB_CONFIG).yaml && \
@@ -53,11 +53,11 @@ updateCdServer: check_kubeconfig check_envfile guard-CB_LB_CONFIG
 
 .PHONY: updateAll
 updateAll: ## Update Database + CD Server
-updateAll: updateDb updateCdServer
+updateAll: updateDb updateServer
 
-.PHONY: updateCdAgent
-updateCdAgent: ## Update CD Agent
-updateCdAgent: check_kubeconfig check_envfile guard-CB_LB_CONFIG
+.PHONY: updateAgent
+updateAgent: ## Update CD Agent
+updateAgent: check_kubeconfig check_envfile guard-CB_LB_CONFIG
 	source .env && \
 		kubectl create cbcd-agent
 		kubectl create secret generic flow-agent-secret \
@@ -86,9 +86,9 @@ deleteDb: check_kubeconfig check_envfile
 		kubectl delete --all pvc --grace-period=0 --force --namespace db && \
 		kubectl delete ns db || echo "There is NOT existing namespace db"
 
-.PHONY: deleteCd
-deleteCd: ## Delete CloudBees CD.
-deleteCd: check_kubeconfig check_envfile
+.PHONY: deleteServer
+deleteServer: ## Delete CloudBees CD Server.
+deleteServer: check_kubeconfig check_envfile
 	$(call print_title,Uninstall CloudBees Core via Helm)
 	source .env && \
 		kubectl delete --all pods --grace-period=0 --force --namespace cbcd && \
@@ -99,4 +99,4 @@ deleteCd: check_kubeconfig check_envfile
 
 .PHONY: deleteAll
 deleteAll: ## Delete CloudBees CD + Database
-deleteAll: deleteCd deleteDb
+deleteAll: deleteServer deleteDb
