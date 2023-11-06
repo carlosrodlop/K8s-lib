@@ -1,6 +1,6 @@
 # cb-ci-local
 
-![Version: 0.4.0](https://img.shields.io/badge/Version-0.4.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 0.5.0](https://img.shields.io/badge/Version-0.5.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 Local helm chart for additional configuration beyond remote cloudbees-ci helm chart
 
@@ -8,7 +8,7 @@ Local helm chart for additional configuration beyond remote cloudbees-ci helm ch
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| agents.cache.enable | bool | `true` | Cache for builds artifacts |
+| agents.cache.enable | bool | `false` | Cache for builds artifacts |
 | agents.cache.storageClassName | string | `"gp3"` | Storage Class Name for PVC. Empty string will take the default one |
 | agents.imageCredentials | object | `{"email":"someone@host.com","password":"sillyness","registry":"https://index.docker.io/v1/","username":"someone"}` | Image Credentials for Kaniko. https://helm.sh/docs/howto/charts_tips_and_tricks/#creating-image-pull-secrets |
 | agents.policies | bool | `false` | Enable Limit Range and Resource Quoatas |

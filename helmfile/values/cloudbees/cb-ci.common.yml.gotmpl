@@ -1,0 +1,51 @@
+#Ref: https://artifacthub.io/packages/helm/cloudbees/cloudbees-core
+OperationsCenter:
+  JavaOpts: >-
+    -XX:InitialRAMPercentage=50.0
+    -XX:MaxRAMPercentage=50.0
+  Resources:
+    Limits:
+      Memory: "4G"
+      Cpu: 2
+    Requests:
+      Memory: "4G"
+      Cpu: 2
+  CasC:
+    Enabled: true
+  ConfigMapName: oc-casc-bundle
+  ContainerEnv:
+    - name: SECRETS
+      value: /var/run/secrets/oc
+  ExtraVolumes:
+    - name: oc-secrets
+      secret:
+        secretName: oc-secrets
+  ExtraVolumeMounts:
+    - name: oc-secrets
+      mountPath: /var/run/secrets/oc
+      readOnly: true
+  NodeSelector:
+    ci_type: cb-apps
+  Tolerations:
+    - key: dedicated
+      operator: Equal
+      value: cb-apps
+      effect: NoSchedule
+  #NOTE: Comment License for air-gapped installation
+  License:
+    Evaluation:
+      Enabled: true
+      FirstName: {{ .Values.ci.LicFirstName }}
+      LastName: {{ .Values.ci.LicLastName }}
+      Email: {{ .Values.ci.LicEmail }}
+      Company: {{ .Values.ci.LicCompany }}
+Hibernation:
+  Enabled: true
+Master:
+  JavaOpts: >-
+    -XX:InitialRAMPercentage=50.0
+    -XX:MaxRAMPercentage=50.0
+Agents:
+  SeparateNamespace:
+    Enabled: true
+    Name: cbci-agents

@@ -1,0 +1,23 @@
+#Ref: https://github.com/carlosrodlop/K8s-lib/tree/main/helm/charts/cloudbees-ci-local
+
+operationCenter:
+  protocol: {{ .Values.ci.protocol }}
+  hostname: {{ .Values.ci.hostname }}
+  ingress:
+    class: {{ .Values.ingressClass }}
+  casc:
+    controllerBundleStorageSCM: {{ .Values.ci.controllerBundleStorageSCM }}
+controllers:
+  loadTest:
+    number: {{ .Values.ci.NLoadControllers }}
+agents:
+  imageCredentials:
+    registry: {{ .Values.ci.agentRegistryURL }}
+    username: {{ .Values.ci.agentRegistryUserName }}
+    password: {{ .Values.ci.agentRegistryUserPass }}
+    email: {{ .Values.ci.agentRegistryUserMail }}
+secrets:
+  github:
+    token: {{ .Values.ci.secretGHToken }}
+    user: {{ .Values.ci.secretGHUser }}
+  advisorMail: {{ .Values.ci.secretAdvisorMail }}

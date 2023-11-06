@@ -74,23 +74,23 @@ data:
             spec:
               template:
                 spec:
-                  # containers:
-                  #   - name: jenkins
-                  #     volumeMounts:
-                  #       - mountPath: /var/run/secrets/oc
-                  #         name: oc-secrets
-                  #     env:
-                  #       - name: SECRETS
-                  #         value: /var/run/secrets/oc
+                  containers:
+                    - name: jenkins
+                      volumeMounts:
+                        - mountPath: /var/run/secrets/cm
+                          name: cm-secrets
+                      env:
+                        - name: SECRETS
+                          value: /var/run/secrets/cm
                   tolerations:
                     - key: "dedicated"
                       operator: "Equal"
                       value: "cb-apps"
                       effect: "NoSchedule"
-                  # volumes:
-                  #   - name: oc-secrets
-                  #     secret:
-                  #       secretName: oc-secrets
+                  volumes:
+                    - name: cm-secrets
+                      secret:
+                        secretName: cm-secrets
   {{- end }}
 {{- end }}
   rbac.yaml: |-

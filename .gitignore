@@ -1,8 +1,9 @@
-*.env
-!*.env.example
+*env*
+!*env*example*
 *secret*
 *secret*.*
 !oc-secrets.yaml
+!cm-secrets.yaml
 !agents-secrets-registry.yaml
 !*secrets.yaml.example
 !*secrets.yaml.example.enc
@@ -18,3 +19,5 @@ helm/charts/cb-ci-local/casc/tmp-plugin-calculations/*
 # log files
 *.log
 *.logs
+
+.DS_Store

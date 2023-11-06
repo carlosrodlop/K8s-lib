@@ -1,0 +1,47 @@
+repositories:
+  - name: cloudbees
+    url: https://public-charts.artifacts.cloudbees.com/repository/public/
+
+helmDefaults:
+  # wait for k8s resources via --wait. (default false)
+  wait: true
+  # limit the maximum number of revisions saved per release. Use 0 for no limit. (default 10)
+  historyMax: 0
+  # when using helm 3.2+, automatically create release namespaces if they do not exist (default true)
+  createNamespace: true
+  #dedicated default key for helm flag --cleanup-on-fail
+  cleanupOnFail: true
+  # performs pods restart for the resource if applicable (default false)
+  recreatePods: true
+  # forces resource update through delete/recreate if needed (default false)
+  force: true
+environments:
+  default:
+    values:
+      - env.default.yaml
+        {{ $dynValues := exec "./tshow.aws.alpha.01_infra.sh" (list "arg1" "arg2") | fromYaml }}
+      - cert_arn: {{ $dynValues.acm_certificate_arn.value }}
+      - ingressClass: "alb"
+releases:
+  - name: ldap-local
+    namespace: auth
+    version: 0.1.0
+    chart: ../helm/charts/osixia-openldap/
+  - name: cbci-local
+    namespace: cbci
+    version: 0.4.0
+    chart: ../helm/charts/cb-ci-local/
+    condition: ci.enabled
+    values:
+      - values/cloudbees/cb-ci-local.yml.gotmpl
+  - name: cbci
+    namespace: cbci
+    version: 3.14783.0+d0af0bc462a0
+    chart: cloudbees/cloudbees-core
+    condition: ci.enabled
+    needs:
+      - auth/ldap-local
+      - cbci/cbci-local
+    values:
+      - values/cloudbees/cb-ci.common.yml.gotmpl
+      - values/cloudbees/cb-ci.eks.alb.ha.yml.gotmpl
