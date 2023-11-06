@@ -19,13 +19,13 @@ spec:
           image: carlosrodlop/ooldap.debian.v2.ub:latest
           imagePullPolicy: Always
           volumeMounts:
-          - name: ldap-data
-            mountPath: /var/lib/ldap
-          - name: ldap-config
-            mountPath: /etc/ldap/slapd.d
+            - name: ldap-data
+              mountPath: /var/lib/ldap
+            - name: ldap-config
+              mountPath: /etc/ldap/slapd.d
           ports:
-          - containerPort: 389
-            name: openldap
+            - containerPort: 389
+              name: openldap
       volumes:
         - name: ldap-data
           hostPath:
