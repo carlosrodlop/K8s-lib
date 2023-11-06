@@ -2,6 +2,8 @@ MKFILE   		:= $(abspath $(dir $(lastword $(MAKEFILE_LIST))))
 PARENT_MKFILE   := $(HOME)/.Makefile
 DIR_CHARTS 		:= $(MKFILE)/../../helm/charts
 DIR_HELM_VALUES := $(MKFILE)/../../helm/values/cloudbees
+DIR_HELMFILES 	:= $(MKFILE)/../../helmfile
+HELM_LOG_PATH 	:= $(MKFILE)/helm.log
 
 include $(PARENT_MKFILE)
 
@@ -35,19 +37,28 @@ define restartOCIfExist
 	fi
 endef
 
+define postHelmDelete
+	helm repo remove cloudbees || echo "Repository cloudbees does not exist"
+	kubectl delete --all pvc --grace-period=0 --force --namespace "cbci"
+	kubectl delete ns "cbci-agents" || echo "There is NOT existing namespace cbci-agents"
+	kubectl delete ns "cbci" || echo "There is not existing namespace cbci"
+endef
+
 define updateCBCI
 	$(call print_subtitle,Configuring Cloud Specifications)
 	source .env && \
 		sed "s/\$${hostname}/$$HOSTNAME/g; \
 			s/\$${protocol}/$$PROTOCOL/g; \
 			s/\$${subdomain}/$$SUBDOMAIN/g; \
-			s|\$${cert_arn}|$$CERTIFICATE_ID|g ;" < $(DIR_HELM_VALUES)/$(CB_LB_CONFIG).yaml > $(MKFILE)/values.$(CB_LB_CONFIG).yaml
+			s|\$${cert_arn}|$$CERTIFICATE_ID|g ;" \
+				< $(DIR_HELM_VALUES)/$(CB_LB_CONFIG).yaml > $(MKFILE)/values.$(CB_LB_CONFIG).yaml
 	$(call print_subtitle,Configuring CloudBees CI Common)
 	source .env && \
 		sed "s/\$${LicFirstName}/$$LIC_FIRSTNAME/g; \
 			s/\$${LicLastName}/$$LIC_LASTNAME/g; \
 			s/\$${LicEmail}/$$LIC_MAIL/g; \
-			s/\$${LicCompany}/$$LIC_COMPANY/g;" < $(DIR_HELM_VALUES)/cb-ci.common.yaml > $(MKFILE)/values.cb-ci.common.yaml
+			s/\$${LicCompany}/$$LIC_COMPANY/g;" \
+				< $(DIR_HELM_VALUES)/cb-ci.common.yaml > $(MKFILE)/values.cb-ci.common.yaml
 	helm repo add cloudbees https://public-charts.artifacts.cloudbees.com/repository/public/ && helm repo update
 	@echo "Values to apply for $(CBCI_VERSION) - Application Version: $(CBCI_VERSION_APP)"
 	@cat $(MKFILE)/values.$(CB_LB_CONFIG).yaml
@@ -61,9 +72,9 @@ define updateCBCI
 	kubectl rollout status sts cjoc --namespace cbci && wait
 endef
 
-.PHONY: update-simple
-update-simple: ## Install/Update CloudBees Core Modern via Helm. Adding OC Simple Casc Bundle.
-update-simple: check_kubeconfig check_envfile guard-CB_LB_CONFIG
+.PHONY: helm-update-simple
+helm-update-simple: ## Install/Update CloudBees Core Modern via Helm. Adding OC Simple Casc Bundle.
+helm-update-simple: check_kubeconfig check_envfile guard-CB_LB_CONFIG
 	$(call print_title, Load Simple OC Casc Bundle)
 	source .env && \
 		kubectl create ns "cbci" || echo "cbci exist" && \
@@ -73,9 +84,9 @@ update-simple: check_kubeconfig check_envfile guard-CB_LB_CONFIG
 	$(call print_title,Updating Remote CloudBees Helm Chart)
 	$(call updateCBCI)
 
-.PHONY: update-advance
-update-advance: ## Install/Update CloudBees Core Modern via Helm. Adding OC Advanced Casc Bundle and Local Helm Chart.
-update-advance: check_kubeconfig check_envfile guard-CB_LB_CONFIG
+.PHONY: helm-update-advanced
+helm-update-advanced: ## Install/Update CloudBees Core Modern via Helm. Adding OC Advanced Casc Bundle and Local Helm Chart.
+helm-update-advanced: check_kubeconfig check_envfile guard-CB_LB_CONFIG
 	@echo -n "Are up to date .env file and $(DIR_CHARTS)/cb-ci-local/casc/oc/modern.oc.advance/variables.yaml? [yes/No] " && read ans && [ $${ans:-No} = yes ]
 	$(call print_title,Updating Local CloudBees Helm Chart)
 	source .env && \
@@ -90,12 +101,21 @@ update-advance: check_kubeconfig check_envfile guard-CB_LB_CONFIG
 			s/\$${agentRegistryUserName}/$$REGISTRY_USER_NAME/g; \
 			s/\$${agentRegistryUserPass}/$$REGISTRY_USER_PASS/g; \
 			s/\$${agentRegistryUserMail}/$$REGISTRY_USER_MAIL/g; \
-			s/\$${NLoadControllers}/$$N_LOAD_CONTROLLER_HA/g;" < $(DIR_HELM_VALUES)/cb-ci-local.yaml > $(MKFILE)/values.cb-ci-local.yaml
+			s/\$${NLoadControllers}/$$N_LOAD_CONTROLLER_HA/g;" \
+				< $(DIR_HELM_VALUES)/cb-ci-local.yaml > $(MKFILE)/values.cb-ci-local.yaml
 	source .env && \
 		helm --debug upgrade --install cbci-local $(DIR_CHARTS)/cb-ci-local --create-namespace --namespace "cbci" \
 		-f "$(MKFILE)/values.cb-ci-local.yaml"
 	$(call print_title,Updating Remote CloudBees Helm Chart)
 	$(call updateCBCI)
+
+.PHONY: helmfile-update
+helmfile-update: ## Install/Update CloudBees Core Modern via Helmfile.
+helmfile-update: check_kubeconfig
+	@rm -f $(HELM_LOG_PATH)
+	export CI_ENABLED=false && helmfile --debug --file $(DIR_HELMFILES)/sda.eks.alb.helmfile.yml --interactive apply | tee -a $(HELM_LOG_PATH)
+	@#$(call restartOCIfExist)
+	@#kubectl rollout status sts cjoc --namespace cbci && wait
 
 .PHONY: check-availability
 check-availability: ## Check availability of the OC.
@@ -145,15 +165,22 @@ plugin-calculator:
 			-C "$$actual_plugins_folder/catalog/$(CBCI_VERSION_APP).offline.yaml" \
 			-s
 
-.PHONY: delete
-delete: ## Delete all things into CloudBees Core Modern Namespaces and Storage. Ref: https://docs.cloudbees.com/docs/cloudbees-ci/latest/kubernetes-install-guide/kubernetes-uninstall
-delete: check_kubeconfig check_envfile
+.PHONY: purge_pods
+purge_pods:
+purge_pods: #Purge Pods in cbci and cbci-agents namespaces
+	kubectl delete --all pods --grace-period=0 --force --namespace "cbci"
+	kubectl delete --all pods --grace-period=0 --force --namespace "cbci-agents"
+
+.PHONY: helm-delete
+helm-delete: ## Helm Delete all things into CloudBees Core Modern Namespaces and Storage. Ref: https://docs.cloudbees.com/docs/cloudbees-ci/latest/kubernetes-install-guide/kubernetes-uninstall
+helm-delete: check_kubeconfig check_envfile purge_pods
 	$(call print_title,Uninstall CloudBees Core via Helm)
-	source .env && \
-		kubectl delete --all pods --grace-period=0 --force --namespace "cbci" && \
-		kubectl delete --all pods --grace-period=0 --force --namespace "cbci-agents" && \
-		helm --debug uninstall cbci --namespace "cbci" || echo "Relese cbci does not exist" && \
-		helm repo remove cloudbees || echo "Repository cloudbees does not exist" && \
-		kubectl delete --all pvc --grace-period=0 --force --namespace "cbci" && \
-		kubectl delete ns "cbci-agents" || echo "There is NOT existing namespace cbci-agents" && \
-		kubectl delete ns "cbci" || echo "There is not existing namespace cbci"
+	helm --debug uninstall cbci --namespace "cbci" || echo "Relese cbci does not exist"
+	$(call postHelmDelete)
+
+.PHONY: helmfile-delete
+helmfile-delete: ## Helmfile Delete
+helmfile-delete: check_kubeconfig purge_pods
+	@rm -f $(HELM_LOG_PATH)
+	helmfile --debug --file $(DIR_HELMFILES)/sda.eks.alb.helmfile.yml destroy | tee -a $(HELM_LOG_PATH)
+	$(call postHelmDelete)
