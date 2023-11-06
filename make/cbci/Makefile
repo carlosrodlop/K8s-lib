@@ -113,7 +113,7 @@ helm-update-advanced: check_kubeconfig check_envfile guard-CB_LB_CONFIG
 helmfile-update: ## Install/Update CloudBees Core Modern via Helmfile.
 helmfile-update: check_kubeconfig
 	@rm -f $(HELM_LOG_PATH)
-	export CI_ENABLED=false && helmfile --debug --file $(DIR_HELMFILES)/sda.eks.alb.helmfile.yml --interactive apply | tee -a $(HELM_LOG_PATH)
+	PLATFORM=ci helmfile --debug --file $(DIR_HELMFILES)/sda.eks.alb.helmfile.yml --interactive apply | tee -a $(HELM_LOG_PATH)
 	@#$(call restartOCIfExist)
 	@#kubectl rollout status sts cjoc --namespace cbci && wait
 

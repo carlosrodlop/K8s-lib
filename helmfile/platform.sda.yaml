@@ -1,0 +1,8 @@
+# -- CloudBess CI
+ci:
+  # -- Enabled or Disabled
+  enabled: true
+# -- CloudBess CD
+cd:
+  # -- Enabled or Disabled
+  enabled: true

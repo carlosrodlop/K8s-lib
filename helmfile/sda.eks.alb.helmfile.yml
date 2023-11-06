@@ -22,6 +22,7 @@ environments:
         {{ $dynValues := exec "./tshow.aws.alpha.01_infra.sh" (list "arg1" "arg2") | fromYaml }}
       - cert_arn: {{ $dynValues.acm_certificate_arn.value }}
       - ingressClass: "alb"
+      - platform.{{ env "PLATFORM" | default "sda" }}.yaml
 releases:
   - name: ldap-local
     namespace: auth
@@ -45,3 +46,11 @@ releases:
     values:
       - values/cloudbees/cb-ci.common.yml.gotmpl
       - values/cloudbees/cb-ci.eks.alb.ha.yml.gotmpl
+  - name: cbcd
+    namespace: cbcd
+    version: 2.27.0
+    chart: cloudbees/cloudbees-flow
+    condition: cd.enabled
+    values:
+      - values/cloudbees/cb-cd.eks.alb.yml.gotmpl
+      - values/cloudbees/cb-cd.server.yml.gotmpl

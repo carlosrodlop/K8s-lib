@@ -12,13 +12,13 @@ platform: eks
 
 ingress:
   enabled: true
-  host: ${hostname}
+  host: {{ .Values.cd.hostname }}
   class: alb
   annotations:
-    alb.ingress.kubernetes.io/certificate-arn: ${cert_arn}
+    alb.ingress.kubernetes.io/certificate-arn: {{ .Values.cert_arn }}
     alb.ingress.kubernetes.io/scheme: internet-facing
-    alb.ingress.kubernetes.io/backend-protocol: "HTTP"
-    alb.ingress.kubernetes.io/ip-address-type: "ipv4"
+    #alb.ingress.kubernetes.io/backend-protocol: "HTTP"
+    #alb.ingress.kubernetes.io/ip-address-type: "ipv4"
     # alb.ingress.kubernetes.io/backend-protocol: "HTTP"
     # alb.ingress.kubernetes.io/ip-address-type: "ipv4"
     # alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
