@@ -26,7 +26,7 @@ agents:
   policies: false
   cache:
     # -- Cache for builds artifacts
-    enable: true
+    enable: false
     # -- Storage Class Name for PVC. Empty string will take the default one
     storageClassName: "gp3"
   # -- Image Credentials for Kaniko. https://helm.sh/docs/howto/charts_tips_and_tricks/#creating-image-pull-secrets
