@@ -7,3 +7,6 @@ GRANT ALL PRIVILEGES ON flow.* TO 'flow'@'%';
 GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, INDEX, DROP, ALTER, CREATE TEMPORARY TABLES, LOCK TABLES ON flow_upgrade.* TO 'flow'@'%';
 GRANT ALL PRIVILEGES ON flow_upgrade.* TO 'flow'@'%';
 FLUSH PRIVILEGES;
+
+SHOW DATABASES;
+Select user from mysql.user;

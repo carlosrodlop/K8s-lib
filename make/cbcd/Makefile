@@ -26,11 +26,23 @@ updateDb: check_kubeconfig check_envfile
 			--namespace db --create-namespace && \
 		kubectl rollout status sts mysql --namespace db && wait
 
+.PHONY: connectDBRemotely
+connectDBRemotely: ## Open a connection to Database remotely for CloudBees CD
+connectDBRemotely: check_envfile
+	source .env && \
+		mysql -h $$EXTERNAL_ENDPOINT_DB -u admin --password --verbose
+
 .PHONY: createDBRemotely
 createDBRemotely: ## Update Database remotely for CloudBees CD
 createDBRemotely: check_envfile
 	source .env && \
-		mysql -h $$EXTERNAL_ENDPOINT_DB -u admin --password --verbose < $(MKFILE)/init.db.sql
+		mysql -h $$EXTERNAL_ENDPOINT_DB -u admin --password --verbose < $(MKFILE)/create.db.sql
+
+.PHONY: dropDBRemotely
+dropDBRemotely: ## Delete Database remotely for CloudBees CD. Note: Database cannot be used between different deployment.
+dropDBRemotely: check_envfile
+	source .env && \
+		mysql -h $$EXTERNAL_ENDPOINT_DB -u admin --password --verbose < $(MKFILE)/drop.db.sql
 
 .PHONY: updateServer
 updateServer: ## Update CD Server
