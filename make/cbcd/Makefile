@@ -16,9 +16,9 @@ CBCD_AGENT_VERSION      := $(CBCD_SERVER_VERSION)
 CB_LB_CONFIG	:= $(shell echo $(call getEnvProperty,CB_LB_CONFIG))
 HOSTNAME		:= $(shell echo $(call getEnvProperty,HOSTNAME))
 
-.PHONY: updateDb
-updateDb: ## Create and Update Database inside Kubernetes Cluster
-updateDb: check_kubeconfig check_envfile
+.PHONY: cdUpdateDb
+cdUpdateDb: ## Create and Update Database Service inside Kubernetes Cluster. It requires to create Database for Flow
+cdUpdateDb: check_kubeconfig check_envfile
 	source .env && \
 		helm repo add bitnami https://charts.bitnami.com/bitnami && helm repo update && \
 		helm --debug upgrade --install mysql bitnami/mysql --version $(MYSQL_DB_VERSION)  \
@@ -26,27 +26,27 @@ updateDb: check_kubeconfig check_envfile
 			--namespace db --create-namespace && \
 		kubectl rollout status sts mysql --namespace db && wait
 
-.PHONY: connectDBRemotely
-connectDBRemotely: ## Open a connection to Database remotely for CloudBees CD
-connectDBRemotely: check_envfile
+.PHONY: cdConnectDBRemotely
+cdConnectDBRemotely: ## Open a connection to Database remotely for CloudBees CD
+cdConnectDBRemotely: check_envfile
 	source .env && \
 		mysql -h $$EXTERNAL_ENDPOINT_DB -u admin --password --verbose
 
-.PHONY: createDBRemotely
-createDBRemotely: ## Update Database remotely for CloudBees CD
-createDBRemotely: check_envfile
+.PHONY: cdCreateDBRemotely
+cdCreateDBRemotely: ## Update Database remotely for CloudBees CD
+cdCreateDBRemotely: check_envfile
 	source .env && \
 		mysql -h $$EXTERNAL_ENDPOINT_DB -u admin --password --verbose < $(MKFILE)/create.db.sql
 
-.PHONY: dropDBRemotely
-dropDBRemotely: ## Delete Database remotely for CloudBees CD. Note: Database cannot be used between different deployment.
-dropDBRemotely: check_envfile
+.PHONY: cdDropDBRemotely
+cdDropDBRemotely: ## Delete Database remotely for CloudBees CD. Note: Database cannot be used between different deployment.
+cdDropDBRemotely: check_envfile
 	source .env && \
 		mysql -h $$EXTERNAL_ENDPOINT_DB -u admin --password --verbose < $(MKFILE)/drop.db.sql
 
-.PHONY: updateServer
-updateServer: ## Update CD Server
-updateServer: check_kubeconfig check_envfile guard-CB_LB_CONFIG
+.PHONY: cdUpdateServer
+cdUpdateServer: ## Update CD Server
+cdUpdateServer: check_kubeconfig check_envfile guard-CB_LB_CONFIG
 	source .env && \
 		sed "s/\$${hostname}/$$HOSTNAME/g; \
 			s|\$${cert_arn}|$$CERTIFICATE_ID|g ;" < $(DIR_HELM_VALUES)/cloudbees/$(CB_LB_CONFIG).yaml > $(MKFILE)/values.$(CB_LB_CONFIG).yaml && \
@@ -63,13 +63,17 @@ updateServer: check_kubeconfig check_envfile guard-CB_LB_CONFIG
 		--namespace cbcd --create-namespace \
 		--timeout 10000s
 
-.PHONY: updateAll
-updateAll: ## Update Database + CD Server
-updateAll: updateDb updateServer
+.PHONY: cdUpdateAll
+cdUpdateAll: ## Update Database Service + CD Server. It requires to create Database for Flow.
+cdUpdateAll: cdUpdateDb cdUpdateServer
 
-.PHONY: updateAgent
-updateAgent: ## Update CD Agent
-updateAgent: check_kubeconfig check_envfile guard-CB_LB_CONFIG
+.PHONY: cdUpdateAllDBRemote
+cdUpdateAllDBRemote: ## Create Database for Flow + CD Server.
+cdUpdateAllDBRemote: cdCreateDBRemotely cdUpdateServer
+
+.PHONY: cdUpdateAgent
+cdUpdateAgent: ## Update CD Agent
+cdUpdateAgent: check_kubeconfig check_envfile guard-CB_LB_CONFIG
 	source .env && \
 		kubectl create cbcd-agent
 		kubectl create secret generic flow-agent-secret \
@@ -81,15 +85,15 @@ updateAgent: check_kubeconfig check_envfile guard-CB_LB_CONFIG
 			--namespace cbcd_AGENT \
 			--timeout 10000s
 
-.PHONY: getValues
-getValues: ## Get Helm Chart value for an specific version.
-getValues:
+.PHONY: cdGetValues
+cdGetValues: ## Get Helm Chart value for an specific version.
+cdGetValues:
 	helm repo add cloudbees https://public-charts.artifacts.cloudbees.com/repository/public/ && helm repo update
 	helm inspect values --version $(CBCD_SERVER_VERSION) cloudbees/cloudbees-flow > $(MKFILE)/values.all.$(CBCD_SERVER_VERSION).cb-cd-server.yaml
 
-.PHONY: deleteDb
-deleteDb: ## Delete Database.
-deleteDb: check_kubeconfig check_envfile
+.PHONY: cdDeleteDb
+cdDeleteDb: ## Delete Database.
+cdDeleteDb: check_kubeconfig check_envfile
 	$(call print_title,Uninstall CloudBees Core via Helm)
 	source .env && \
 		kubectl delete --all pods --grace-period=0 --force --namespace db && \
@@ -98,9 +102,9 @@ deleteDb: check_kubeconfig check_envfile
 		kubectl delete --all pvc --grace-period=0 --force --namespace db && \
 		kubectl delete ns db || echo "There is NOT existing namespace db"
 
-.PHONY: deleteServer
-deleteServer: ## Delete CloudBees CD Server.
-deleteServer: check_kubeconfig check_envfile
+.PHONY: cdDeleteServer
+cdDeleteServer: ## Delete CloudBees CD Server.
+cdDeleteServer: check_kubeconfig check_envfile
 	$(call print_title,Uninstall CloudBees Core via Helm)
 	source .env && \
 		kubectl delete --all pods --grace-period=0 --force --namespace cbcd && \
@@ -109,6 +113,10 @@ deleteServer: check_kubeconfig check_envfile
 		kubectl delete --all pvc --grace-period=0 --force --namespace cbcd && \
 		kubectl delete ns cbcd || echo "There is NOT existing namespace cbcd"
 
-.PHONY: deleteAll
-deleteAll: ## Delete CloudBees CD + Database
-deleteAll: deleteServer deleteDb
+.PHONY: cdDeleteAll
+cdDeleteAll: ## Delete CloudBees CD Release + Database Service.
+cdDeleteAll: cdDeleteServer cdDeleteDb
+
+.PHONY: cdDeleteAllDBRemote
+cdDeleteAllDBRemote: ## Delete CloudBees CD Release + Drop Database for CloudBees CD.
+cdDeleteAllDBRemote: cdDeleteServer cdDropDBRemotely

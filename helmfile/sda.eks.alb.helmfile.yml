@@ -46,7 +46,7 @@ releases:
     values:
       - values/cloudbees/cb-ci.common.yml.gotmpl
       - values/cloudbees/cb-ci.eks.alb.ha.yml.gotmpl
-  - name: cbcd
+  - name: cbcd-server
     namespace: cbcd
     version: 2.27.0
     chart: cloudbees/cloudbees-flow

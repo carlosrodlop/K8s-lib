@@ -72,9 +72,9 @@ define updateCBCI
 	kubectl rollout status sts cjoc --namespace cbci && wait
 endef
 
-.PHONY: helm-update-simple
-helm-update-simple: ## Install/Update CloudBees Core Modern via Helm. Adding OC Simple Casc Bundle.
-helm-update-simple: check_kubeconfig check_envfile guard-CB_LB_CONFIG
+.PHONY: ciHelm-update-simple
+ciHelm-update-simple: ## Install/Update CloudBees Core Modern via Helm. Adding OC Simple Casc Bundle.
+ciHelm-update-simple: check_kubeconfig check_envfile guard-CB_LB_CONFIG
 	$(call print_title, Load Simple OC Casc Bundle)
 	source .env && \
 		kubectl create ns "cbci" || echo "cbci exist" && \
@@ -84,9 +84,9 @@ helm-update-simple: check_kubeconfig check_envfile guard-CB_LB_CONFIG
 	$(call print_title,Updating Remote CloudBees Helm Chart)
 	$(call updateCBCI)
 
-.PHONY: helm-update-advanced
-helm-update-advanced: ## Install/Update CloudBees Core Modern via Helm. Adding OC Advanced Casc Bundle and Local Helm Chart.
-helm-update-advanced: check_kubeconfig check_envfile guard-CB_LB_CONFIG
+.PHONY: ciHelm-update-advanced
+ciHelm-update-advanced: ## Install/Update CloudBees Core Modern via Helm. Adding OC Advanced Casc Bundle and Local Helm Chart.
+ciHelm-update-advanced: check_kubeconfig check_envfile guard-CB_LB_CONFIG
 	@echo -n "Are up to date .env file and $(DIR_CHARTS)/cb-ci-local/casc/oc/modern.oc.advance/variables.yaml? [yes/No] " && read ans && [ $${ans:-No} = yes ]
 	$(call print_title,Updating Local CloudBees Helm Chart)
 	source .env && \
@@ -109,17 +109,17 @@ helm-update-advanced: check_kubeconfig check_envfile guard-CB_LB_CONFIG
 	$(call print_title,Updating Remote CloudBees Helm Chart)
 	$(call updateCBCI)
 
-.PHONY: helmfile-update
-helmfile-update: ## Install/Update CloudBees Core Modern via Helmfile.
-helmfile-update: check_kubeconfig
+.PHONY: ciHelmfile-update
+ciHelmfile-update: ## Install/Update CloudBees Core Modern via Helmfile.
+ciHelmfile-update: check_kubeconfig
 	@rm -f $(HELM_LOG_PATH)
 	PLATFORM=ci helmfile --debug --file $(DIR_HELMFILES)/sda.eks.alb.helmfile.yml --interactive apply | tee -a $(HELM_LOG_PATH)
 	@#$(call restartOCIfExist)
 	@#kubectl rollout status sts cjoc --namespace cbci && wait
 
-.PHONY: check-availability
-check-availability: ## Check availability of the OC.
-check-availability: guard-OC_URL
+.PHONY: ciCheck-availability
+ciCheck-availability: ## Check availability of the OC.
+ciCheck-availability: guard-OC_URL
 	source .env && \
 		until kubectl get pod -n cbci cjoc-0; do sleep 2 && echo "Waiting for Pod to get ready"; done
 	@echo "OC Pod is Ready"
@@ -130,24 +130,24 @@ check-availability: guard-OC_URL
 		until curl -u $$ADMIN_JENKINS_USER:$$ADMIN_JENKINS_PASS -s $(OC_URL)  > /dev/null; do sleep 10 && echo "Waiting for Operation Center at $(OC_URL)"; done
 	@echo "Operation Center Ready at $(OC_URL)"
 
-.PHONY: validate-casc-bundle
-validate-casc-bundle: ## Validate 1 bundle.
-validate-casc-bundle: guard-OC_URL
+.PHONY: ciValidate-casc-bundle
+ciValidate-casc-bundle: ## Validate 1 bundle.
+ciValidate-casc-bundle: guard-OC_URL
 	source .env && \
 		cd $(DIR_CHARTS)/$$PATH_BUNDLE_VAL && zip -r /tmp/bundle-to-validate.zip $$BUNDLE_VAL
 	$(call JenkinsCLI,casc-pre-validate-bundle) < /tmp/bundle-to-validate.zip | yq -o=json
 
-.PHONY: update-casc-cm
-update-casc-cm: ## Update Configuration as Code Controllers in Operation Center, Validate and Apply (if it requires)
-update-casc-cm: guard-OC_URL
+.PHONY: ciUpdate-casc-cm
+ciUpdate-casc-cm: ## Update Configuration as Code Controllers in Operation Center, Validate and Apply (if it requires)
+ciUpdate-casc-cm: guard-OC_URL
 	$(call JenkinsCLI,casc-check-out-bundles) | yq -o=json
 	$(call JenkinsCLI,casc-raw-bundle-validation-log) | yq -o=json
 	@echo -n "Do you want to Restart Controller to apply? [yes/No] " && read ans && [ $${ans:-No} = yes ]
 	$(call JenkinsCLI,build admin/restart-all-controllers -s)
 
-.PHONY: plugin-calc-bundle
-plugin-calculator: ## Provide plugin.yaml and plugin-catalog.yaml for a bundle. IMPORTANT: Require to be run from Bash5 (eg. docker-libs > bash5.alpine)
-plugin-calculator:
+.PHONY: ciPlugin-calculator
+ciPlugin-calculator: ## Provide plugin.yaml and plugin-catalog.yaml for a bundle. IMPORTANT: Require to be run from Bash5 (eg. docker-libs > bash5.alpine)
+ciPlugin-calculator:
 	source .env && \
 		current_full_bundle_path=$$(echo $$CBCI_CASC_BUNDLE_PATH/$$CBCI_CASC_BUNDLE_NAME) && \
 		actual_plugins_folder=$$(echo $(DIR_CHARTS)/cb-ci-local/casc/tmp-plugin-calculations) && \
@@ -165,22 +165,22 @@ plugin-calculator:
 			-C "$$actual_plugins_folder/catalog/$(CBCI_VERSION_APP).offline.yaml" \
 			-s
 
-.PHONY: purge_pods
-purge_pods:
-purge_pods: #Purge Pods in cbci and cbci-agents namespaces
+.PHONY: ciPurge_pods
+ciPurge_pods:
+ciPurge_pods: #Purge Pods in cbci and cbci-agents namespaces
 	kubectl delete --all pods --grace-period=0 --force --namespace "cbci"
 	kubectl delete --all pods --grace-period=0 --force --namespace "cbci-agents"
 
-.PHONY: helm-delete
-helm-delete: ## Helm Delete all things into CloudBees Core Modern Namespaces and Storage. Ref: https://docs.cloudbees.com/docs/cloudbees-ci/latest/kubernetes-install-guide/kubernetes-uninstall
-helm-delete: check_kubeconfig check_envfile purge_pods
+.PHONY: ciHelm-delete
+ciHelm-delete: ## Helm Delete all things into CloudBees Core Modern Namespaces and Storage. Ref: https://docs.cloudbees.com/docs/cloudbees-ci/latest/kubernetes-install-guide/kubernetes-uninstall
+ciHelm-delete: check_kubeconfig check_envfile ciPurge_pods
 	$(call print_title,Uninstall CloudBees Core via Helm)
 	helm --debug uninstall cbci --namespace "cbci" || echo "Relese cbci does not exist"
 	$(call postHelmDelete)
 
-.PHONY: helmfile-delete
-helmfile-delete: ## Helmfile Delete
-helmfile-delete: check_kubeconfig purge_pods
+.PHONY: ciHelmfile-delete
+ciHelmfile-delete: ## Helmfile Delete
+ciHelmfile-delete: check_kubeconfig ciPurge_pods
 	@rm -f $(HELM_LOG_PATH)
 	helmfile --debug --file $(DIR_HELMFILES)/sda.eks.alb.helmfile.yml destroy | tee -a $(HELM_LOG_PATH)
 	$(call postHelmDelete)
